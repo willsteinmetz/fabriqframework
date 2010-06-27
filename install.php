@@ -103,7 +103,7 @@ legend { color: #600; }
 
 
 <div id="body">
-  <div style="float: left;"><img src="public/images/Fabriq.png" /></div>
+  <div style="float: left;"><img src="http://fabriqframework.com/public/images/Fabriq.png" /></div>
   <div style="margin-left: 110px;">
     <h1 id="fabriq-header">Fabriq</h1>
     Stop weaving tangled webpages, start with a strong Fabriq.
