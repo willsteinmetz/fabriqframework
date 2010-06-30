@@ -131,7 +131,7 @@ abstract class Fabriq {
    * @param string $title
    * @return string
    */
-  public function title ($title = NULL) {
+  public function title($title = NULL) {
     if ($title != NULL) {
       self::$title = strip_tags($title);
     } else {
