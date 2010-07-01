@@ -9,14 +9,14 @@
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Ralivue.com nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
+ *		 * Redistributions of source code must retain the above copyright
+ *			 notice, this list of conditions and the following disclaimer.
+ *		 * Redistributions in binary form must reproduce the above copyright
+ *			 notice, this list of conditions and the following disclaimer in the
+ *			 documentation and/or other materials provided with the distribution.
+ *		 * Neither the name of the Ralivue.com nor the
+ *			 names of its contributors may be used to endorse or promote products
+ *			 derived from this software without specific prior written permission.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -78,12 +78,12 @@ class Model implements ArrayAccess, Iterator, Countable {
 			$this->data[0]->$key = $value;
 			return true;
 		} else if ($key == $this->id_name) {
-      $this->data[0]->id = $value;
-    } else if ($key == 'updated') {
-      $this->data[0]->updated = $value;
-    } else if ($key == 'created') {
-      $this->data[0]->created = $value;
-    }
+			$this->data[0]->id = $value;
+		} else if ($key == 'updated') {
+			$this->data[0]->updated = $value;
+		} else if ($key == 'created') {
+			$this->data[0]->created = $value;
+		}
 		return false;
 	}
 	
@@ -93,82 +93,82 @@ class Model implements ArrayAccess, Iterator, Countable {
 	 * @param $value
 	 */
 	public function offsetSet($offset, $value) {
-    $this->data[$offset] = $value;
-  }
-  
-  /**
-   * Implements ArrayAccess::offsetExists
-   * @param $offset
-   * @return unknown_type
-   */
-  public function offsetExists($offset) {
-    return isset($this->data[$offset]);
-  }
-  
-  /**
-   * Implements ArrayAccess::offsetUnset
-   * @param $offset
-   * @return unknown_type
-   */
-  public function offsetUnset($offset) {
-    unset($this->data[$offset]);
-  }
-  
-  /**
-   * Implements ArrayAccess::offsetGet
-   * @param $offset
-   * @return unknown_type
-   */
-  public function offsetGet($offset) {
-    return isset($this->data[$offset]) ? $this->data[$offset] : null;
-  }
-    
+		$this->data[$offset] = $value;
+	}
+	
+	/**
+	 * Implements ArrayAccess::offsetExists
+	 * @param $offset
+	 * @return unknown_type
+	 */
+	public function offsetExists($offset) {
+		return isset($this->data[$offset]);
+	}
+	
+	/**
+	 * Implements ArrayAccess::offsetUnset
+	 * @param $offset
+	 * @return unknown_type
+	 */
+	public function offsetUnset($offset) {
+		unset($this->data[$offset]);
+	}
+	
+	/**
+	 * Implements ArrayAccess::offsetGet
+	 * @param $offset
+	 * @return unknown_type
+	 */
+	public function offsetGet($offset) {
+		return isset($this->data[$offset]) ? $this->data[$offset] : null;
+	}
+		
 	/**
 	 * Implements Iterator::rewind
 	 */
 	public function rewind() {
-    $this->position = 0;
-  }
-    
-  /**
+		$this->position = 0;
+	}
+		
+	/**
 	 * Implements Iterator::current
 	 * $return unknown_type
-   */
+	 */
 	public function current() {
-    return $this->data[$this->position];
-  }
-    
-  /**
+		return $this->data[$this->position];
+	}
+		
+	/**
 	 * Implements Iterator::key
 	 * @return unknown_type
-   */
+	 */
 	public function key() {
-    return $this->position;
-  }
-    
-  /**
+		return $this->position;
+	}
+		
+	/**
 	 * Implements Iterator::next
-   */
+	 */
 	public function next() {
-    ++$this->position;
-  }
-    
-  /**
+		++$this->position;
+	}
+		
+	/**
 	 * Implements Iterator::valid
 	 * @return boolean
-   */
+	 */
 	public function valid() {
-    return isset($this->data[$this->position]);
-  }
-    
-  /**
+		return isset($this->data[$this->position]);
+	}
+		
+	/**
 	 * Implements Countable::count
 	 * @return integer
-   */
-  public function count() {
-   return count($this->data);
-  }
-    
+	 */
+	public function count() {
+	 return count($this->data);
+	}
+		
 	/**
 	 * Finds a given value or collection in the database
 	 * @param string/integer $query
@@ -178,58 +178,58 @@ class Model implements ArrayAccess, Iterator, Countable {
 	 * @param integer $start
 	 * @return boolean
 	 */
-  public function find($query = null, $limit = null, $where = null, $order = null, $start = null) {
-    global $db;
-    $inputs = array();
-    $fields = array_merge(array($this->id_name), $this->attributes, array('created', 'updated'));
+	public function find($query = null, $limit = null, $where = null, $order = null, $start = null) {
+		global $db;
+		$inputs = array();
+		$fields = array_merge(array($this->id_name), $this->attributes, array('created', 'updated'));
 
-    if (is_numeric($query)) {
-      $q = "SELECT " . implode(', ', $fields) . " FROM {$this->db_table} WHERE {$this->id_name} = ? LIMIT 1;";
-      $inputs[] = $query;
-    } else if ($query == 'first') {
-      $q = "SELECT " . implode(', ', $fields) . " FROM {$this->db_table} ORDER BY {$this->id_name} LIMIT 1;";
-    } else if ($query == 'last') {
-      $q = "SELECT " . implode(', ', $fields) . " FROM {$this->db_table} ORDER BY {$this->id_name} DESC LIMIT 1;";
-    } else {
-      $q = "SELECT " . implode(', ', $fields) . " FROM {$this->db_table} ";
-      if ($where != null) {
-        $w = $this->build_where_prepared($where);
-        $q .= $w[0];
-        $inputs = array_merge($inputs, $w[1]);
-      }
-      $q .= "ORDER BY ";
-      if ($order != null) {
-        $x = 0;
-        foreach($order as $field => $dir) {
-          $q .= " {$field} {$dir}";
-          if ($x < (count($order) - 1)) {
-            $q .= ", ";
-          }
-          $x++;
-        }
-      } else {
-        $q .= " {$this->id_name}";
-      }
-      if ($limit != null) {
-        if (is_numeric($limit)) {
-          if (($start != null) && (is_numeric($start))) {
-            $q .= " LIMIT {$start}, {$limit}";
-          } else {
-            $q .= " LIMIT {$limit}";
-          }
-        }
-      }
-      $q .= ";";
-    }
-    $results = $db->prepare_select($q, $fields, $inputs, $this->attributes);
-    
-    if ($db->num_rows == 0) {
-      return FALSE;
-    } else {
-      $this->data = $results;
-      return TRUE;
-    }
-  }
+		if (is_numeric($query)) {
+			$q = "SELECT " . implode(', ', $fields) . " FROM {$this->db_table} WHERE {$this->id_name} = ? LIMIT 1;";
+			$inputs[] = $query;
+		} else if ($query == 'first') {
+			$q = "SELECT " . implode(', ', $fields) . " FROM {$this->db_table} ORDER BY {$this->id_name} LIMIT 1;";
+		} else if ($query == 'last') {
+			$q = "SELECT " . implode(', ', $fields) . " FROM {$this->db_table} ORDER BY {$this->id_name} DESC LIMIT 1;";
+		} else {
+			$q = "SELECT " . implode(', ', $fields) . " FROM {$this->db_table} ";
+			if ($where != null) {
+				$w = $this->build_where_prepared($where);
+				$q .= $w[0];
+				$inputs = array_merge($inputs, $w[1]);
+			}
+			$q .= "ORDER BY ";
+			if ($order != null) {
+				$x = 0;
+				foreach($order as $field => $dir) {
+					$q .= " {$field} {$dir}";
+					if ($x < (count($order) - 1)) {
+						$q .= ", ";
+					}
+					$x++;
+				}
+			} else {
+				$q .= " {$this->id_name}";
+			}
+			if ($limit != null) {
+				if (is_numeric($limit)) {
+					if (($start != null) && (is_numeric($start))) {
+						$q .= " LIMIT {$start}, {$limit}";
+					} else {
+						$q .= " LIMIT {$limit}";
+					}
+				}
+			}
+			$q .= ";";
+		}
+		$results = $db->prepare_select($q, $fields, $inputs, $this->attributes);
+		
+		if ($db->num_rows == 0) {
+			return FALSE;
+		} else {
+			$this->data = $results;
+			return TRUE;
+		}
+	}
 	
 	/**
 	 * Destroys a given value in the database
@@ -238,17 +238,17 @@ class Model implements ArrayAccess, Iterator, Countable {
 	 */
 	public function destroy($index = NULL) {
 		global $db;
-	  if (is_numeric($index) && ($index < count($this->data))) {
-      $sql = "DELETE FROM {$this->db_table} WHERE {$this->id_name} = ? LIMIT 1;";
-      $db->prepare_cud($sql, array($this->data[$index]->id));
-      return $db->affected_rows;
-    } else if ($index == NULL) {
-      $sql = "DELETE FROM {$this->db_table} WHERE {$this->id_name} = ? LIMIT 1;";
-      $db->prepare_cud($sql, array($this->data[0]->id));
-      return $db->affected_rows;
-    } else {
-      return false;
-    }
+		if (is_numeric($index) && ($index < count($this->data))) {
+			$sql = "DELETE FROM {$this->db_table} WHERE {$this->id_name} = ? LIMIT 1;";
+			$db->prepare_cud($sql, array($this->data[$index]->id));
+			return $db->affected_rows;
+		} else if ($index == NULL) {
+			$sql = "DELETE FROM {$this->db_table} WHERE {$this->id_name} = ? LIMIT 1;";
+			$db->prepare_cud($sql, array($this->data[0]->id));
+			return $db->affected_rows;
+		} else {
+			return false;
+		}
 	}
 	
 	/**
@@ -256,91 +256,91 @@ class Model implements ArrayAccess, Iterator, Countable {
 	 * @return integer
 	 */
 	public function create() {
-	  global $db;
-	  
-	  $attributes = '';
-    foreach ($this->attributes as $attribute) {
-      $attributes .= "{$attribute}, ";
-    }
-    $attributes .= "created, updated";
-    $this->data[0]->created = date('Y-m-d G:i:s');
-    $this->data[0]->updated = date('Y-m-d G:i:s');
-    $valuesStr = '';
-    for ($i = 0; $i < (count($this->attributes) + 2); $i++) {
-      $valuesStr .= '?';
-      if ($i < (count($this->attributes) + 1)) {
-        $valuesStr .= ', ';
-      }
-    }
-    if (get_magic_quotes_gpc()) {
-    	foreach ($this->attributes as $attribute) {
-        if ($this->data[0]->$attribute != null) {
-        	$this->data[0]->$attribute = stripslashes($this->data[0]->$attribute);
-        }
-    	}
-    }
-    $data = array();
-    foreach ($this->attributes as $attribute) {
-    	if ($this->data[0]->$attribute != null) {
-        array_push($data, $this->data[0]->$attribute);
-    	} else {
-        array_push($data, '');
-      }
-    }
-    $values = array_merge($data, array($this->data[0]->created, $this->data[0]->updated));
-	  $sql = "INSERT INTO {$this->db_table} ({$attributes}) VALUES ({$valuesStr})";
-	  
-	  if ($db->prepare_cud($sql, $values)) {
-	    return $db->insert_id;
-	  }
-	  return FALSE;
+		global $db;
+		
+		$attributes = '';
+		foreach ($this->attributes as $attribute) {
+			$attributes .= "{$attribute}, ";
+		}
+		$attributes .= "created, updated";
+		$this->data[0]->created = date('Y-m-d G:i:s');
+		$this->data[0]->updated = date('Y-m-d G:i:s');
+		$valuesStr = '';
+		for ($i = 0; $i < (count($this->attributes) + 2); $i++) {
+			$valuesStr .= '?';
+			if ($i < (count($this->attributes) + 1)) {
+				$valuesStr .= ', ';
+			}
+		}
+		if (get_magic_quotes_gpc()) {
+			foreach ($this->attributes as $attribute) {
+				if ($this->data[0]->$attribute != null) {
+					$this->data[0]->$attribute = stripslashes($this->data[0]->$attribute);
+				}
+			}
+		}
+		$data = array();
+		foreach ($this->attributes as $attribute) {
+			if ($this->data[0]->$attribute != null) {
+				array_push($data, $this->data[0]->$attribute);
+			} else {
+				array_push($data, '');
+			}
+		}
+		$values = array_merge($data, array($this->data[0]->created, $this->data[0]->updated));
+		$sql = "INSERT INTO {$this->db_table} ({$attributes}) VALUES ({$valuesStr})";
+		
+		if ($db->prepare_cud($sql, $values)) {
+			return $db->insert_id;
+		}
+		return FALSE;
 	}
 	
-  /**
-   * Inserts object $this->data[$index] into the database
-   * @param integer $index
-   * @return integer
-   */
-  public function createAt($index) {
-    global $db;
-    
-    $attributes = '';
-    foreach ($this->attributes as $attribute) {
-      $attributes .= "{$attribute}, ";
-    }
-    $attributes .= "created, updated";
-    $this->data[$index]->created = date('Y-m-d G:i:s');
-    $this->data[$index]->updated = date('Y-m-d G:i:s');
-    $valuesStr = '';
-    for ($i = 0; $i < (count($this->attributes) + 2); $i++) {
-      $valuesStr .= '?';
-      if ($i < (count($this->attributes) + 1)) {
-        $valuesStr .= ', ';
-      }
-    }
-    if (get_magic_quotes_gpc()) {
-      foreach ($this->attributes as $attribute) {
-        if ($this->data[$index]->$attribute != null) {
-          $this->data[$index]->$attribute = stripslashes($this->data[$index]->$attribute);
-        }
-      }
-    }
-    $data = array();
-    foreach ($this->attributes as $attribute) {
-      if ($this->data[$index]->$attribute != null) {
-        array_push($data, $this->data[$index]->$attribute);
-      } else {
-        array_push($data, '');
-      }
-    }
-    $values = array_merge($data, array($this->data[$index]->created, $this->data[$index]->updated));
-    $sql = "INSERT INTO {$this->db_table} ({$attributes}) VALUES ({$valuesStr})";
-    
-    if ($db->prepare_cud($sql, $values)) {
-      return $db->insert_id;
-    }
-    return FALSE;
-  }
+	/**
+	 * Inserts object $this->data[$index] into the database
+	 * @param integer $index
+	 * @return integer
+	 */
+	public function createAt($index) {
+		global $db;
+		
+		$attributes = '';
+		foreach ($this->attributes as $attribute) {
+			$attributes .= "{$attribute}, ";
+		}
+		$attributes .= "created, updated";
+		$this->data[$index]->created = date('Y-m-d G:i:s');
+		$this->data[$index]->updated = date('Y-m-d G:i:s');
+		$valuesStr = '';
+		for ($i = 0; $i < (count($this->attributes) + 2); $i++) {
+			$valuesStr .= '?';
+			if ($i < (count($this->attributes) + 1)) {
+				$valuesStr .= ', ';
+			}
+		}
+		if (get_magic_quotes_gpc()) {
+			foreach ($this->attributes as $attribute) {
+				if ($this->data[$index]->$attribute != null) {
+					$this->data[$index]->$attribute = stripslashes($this->data[$index]->$attribute);
+				}
+			}
+		}
+		$data = array();
+		foreach ($this->attributes as $attribute) {
+			if ($this->data[$index]->$attribute != null) {
+				array_push($data, $this->data[$index]->$attribute);
+			} else {
+				array_push($data, '');
+			}
+		}
+		$values = array_merge($data, array($this->data[$index]->created, $this->data[$index]->updated));
+		$sql = "INSERT INTO {$this->db_table} ({$attributes}) VALUES ({$valuesStr})";
+		
+		if ($db->prepare_cud($sql, $values)) {
+			return $db->insert_id;
+		}
+		return FALSE;
+	}
 	
 	/**
 	 * Updates the value of $this->data[0] in the database
@@ -349,79 +349,79 @@ class Model implements ArrayAccess, Iterator, Countable {
 	public function update() {
 		global $db;
 
-	  $attributes = '';
-    foreach ($this->attributes as $attribute) {
-      $attributes .= "{$attribute}, ";
-    }
-    $attributes .= "created, updated";
-    $this->data[0]->updated = date('Y-m-d G:i:s');
-    $valuesStr = '';
-    for ($i = 0; $i < count($this->attributes); $i++) {
-      $valuesStr .= $this->attributes[$i] . ' = ?, ';
-    }
-    $valuesStr .= 'created = ?, updated = ?';
-    if (get_magic_quotes_gpc()) {
-	    foreach ($this->attributes as $attribute) {
-	      if ($this->data[0]->$attribute != null) {
-	        $this->data[0]->$attribute = stripslashes($this->data[0]->$attribute);
-	      }
-	    }
-    }
-    $data = array();
-    foreach ($this->attributes as $attribute) {
-      if ($this->data[0]->$attribute != null) {
-        array_push($data, $this->data[0]->$attribute);
-      } else {
-      	array_push($data, '');
-      }
-    }
-    $values = array_merge($data, array($this->data[0]->created, $this->data[0]->updated, $this->data[0]->id));
-    $sql = "UPDATE {$this->db_table} SET {$valuesStr} WHERE {$this->id_name} = ?";
-    
-    $db->prepare_cud($sql, $values);
-    return $db->affected_rows;
+		$attributes = '';
+		foreach ($this->attributes as $attribute) {
+			$attributes .= "{$attribute}, ";
+		}
+		$attributes .= "created, updated";
+		$this->data[0]->updated = date('Y-m-d G:i:s');
+		$valuesStr = '';
+		for ($i = 0; $i < count($this->attributes); $i++) {
+			$valuesStr .= $this->attributes[$i] . ' = ?, ';
+		}
+		$valuesStr .= 'created = ?, updated = ?';
+		if (get_magic_quotes_gpc()) {
+			foreach ($this->attributes as $attribute) {
+				if ($this->data[0]->$attribute != null) {
+					$this->data[0]->$attribute = stripslashes($this->data[0]->$attribute);
+				}
+			}
+		}
+		$data = array();
+		foreach ($this->attributes as $attribute) {
+			if ($this->data[0]->$attribute != null) {
+				array_push($data, $this->data[0]->$attribute);
+			} else {
+				array_push($data, '');
+			}
+		}
+		$values = array_merge($data, array($this->data[0]->created, $this->data[0]->updated, $this->data[0]->id));
+		$sql = "UPDATE {$this->db_table} SET {$valuesStr} WHERE {$this->id_name} = ?";
+		
+		$db->prepare_cud($sql, $values);
+		return $db->affected_rows;
 	}
 	
-  /**
-   * Updates the value of $this->data[$index] in the database
-   * @param integer $index
-   * @return integer
-   */
-  public function updateAt($index) {
-    global $db;
+	/**
+	 * Updates the value of $this->data[$index] in the database
+	 * @param integer $index
+	 * @return integer
+	 */
+	public function updateAt($index) {
+		global $db;
 
-    $attributes = '';
-    foreach ($this->attributes as $attribute) {
-      $attributes .= "{$attribute}, ";
-    }
-    $attributes .= "created, updated";
-    $this->data[$index]->updated = date('Y-m-d G:i:s');
-    $valuesStr = '';
-    for ($i = 0; $i < count($this->attributes); $i++) {
-      $valuesStr .= $this->attributes[$i] . ' = ?, ';
-    }
-    $valuesStr .= 'created = ?, updated = ?';
-    if (get_magic_quotes_gpc()) {
-      foreach ($this->attributes as $attribute) {
-        if ($this->data[$index]->$attribute != null) {
-          $this->data[$index]->$attribute = stripslashes($this->data[0]->$attribute);
-        }
-      }
-    }
-    $data = array();
-    foreach ($this->attributes as $attribute) {
-      if ($this->data[$index]->$attribute != null) {
-        array_push($data, $this->data[$index]->$attribute);
-      } else {
-        array_push($data, '');
-      }
-    }
-    $values = array_merge($data, array($this->data[$index]->created, $this->data[$index]->updated, $this->data[$index]->id));
-    $sql = "UPDATE {$this->db_table} SET {$valuesStr} WHERE {$this->id_name} = ?";
-    
-    $db->prepare_cud($sql, $values);
-    return $db->affected_rows;
-  }
+		$attributes = '';
+		foreach ($this->attributes as $attribute) {
+			$attributes .= "{$attribute}, ";
+		}
+		$attributes .= "created, updated";
+		$this->data[$index]->updated = date('Y-m-d G:i:s');
+		$valuesStr = '';
+		for ($i = 0; $i < count($this->attributes); $i++) {
+			$valuesStr .= $this->attributes[$i] . ' = ?, ';
+		}
+		$valuesStr .= 'created = ?, updated = ?';
+		if (get_magic_quotes_gpc()) {
+			foreach ($this->attributes as $attribute) {
+				if ($this->data[$index]->$attribute != null) {
+					$this->data[$index]->$attribute = stripslashes($this->data[0]->$attribute);
+				}
+			}
+		}
+		$data = array();
+		foreach ($this->attributes as $attribute) {
+			if ($this->data[$index]->$attribute != null) {
+				array_push($data, $this->data[$index]->$attribute);
+			} else {
+				array_push($data, '');
+			}
+		}
+		$values = array_merge($data, array($this->data[$index]->created, $this->data[$index]->updated, $this->data[$index]->id));
+		$sql = "UPDATE {$this->db_table} SET {$valuesStr} WHERE {$this->id_name} = ?";
+		
+		$db->prepare_cud($sql, $values);
+		return $db->affected_rows;
+	}
 	
 	/**
 	 * Builds where clause for query
@@ -429,16 +429,16 @@ class Model implements ArrayAccess, Iterator, Countable {
 	 * @return string
 	 */
 	private function build_where($where) {
-	  global $db;
-	  
-	  if (count($where) > 0) {
-  	  $w = '';
-      foreach ($where as $clause) {
-        list($f, $o, $t, $n) = $clause;
-        $w .= $db->where($f, $o, $t, $n) . ' ';
-      }
-      return 'WHERE ' . $w . " ";
-	  }
+		global $db;
+		
+		if (count($where) > 0) {
+			$w = '';
+			foreach ($where as $clause) {
+				list($f, $o, $t, $n) = $clause;
+				$w .= $db->where($f, $o, $t, $n) . ' ';
+			}
+			return 'WHERE ' . $w . " ";
+		}
 	}
 	
 	/**
@@ -447,18 +447,18 @@ class Model implements ArrayAccess, Iterator, Countable {
 	 * @return string
 	 */
 	private function build_where_prepared($where) {
-    global $db;
-    $inputs = array();
-    
-    if (count($where) > 0) {
-      $w = '';
-      foreach ($where as $clause) {
-        list($f, $o, $t, $n) = $clause;
-        $w .= $db->where_prepared($f, $o, $n) . ' ';
-        $inputs[] = $t;
-      }
-      return array('WHERE ' . $w . " ", $inputs);
-    }
+		global $db;
+		$inputs = array();
+		
+		if (count($where) > 0) {
+			$w = '';
+			foreach ($where as $clause) {
+				list($f, $o, $t, $n) = $clause;
+				$w .= $db->where_prepared($f, $o, $n) . ' ';
+				$inputs[] = $t;
+			}
+			return array('WHERE ' . $w . " ", $inputs);
+		}
 	}
 	
 	/**
@@ -466,13 +466,13 @@ class Model implements ArrayAccess, Iterator, Countable {
 	 * @param array $arr
 	 */
 	public function fill($arr) {
-	  for ($i = 0; $i < count($arr); $i++) {
-	    $temp = new stdClass();
-	    foreach ($arr[$i] as $key => $val) {
-	      $temp->$key = $val;
-	    }
-	    $this->data[] = $temp;
-	  }
+		for ($i = 0; $i < count($arr); $i++) {
+			$temp = new stdClass();
+			foreach ($arr[$i] as $key => $val) {
+				$temp->$key = $val;
+			}
+			$this->data[] = $temp;
+		}
 	}
 	
 	/**
@@ -498,7 +498,7 @@ class Model implements ArrayAccess, Iterator, Countable {
 	 */
 	public function add($obj, $index = null) {
 		if ($index == null) {
-		  $this->data[] = $obj;
+			$this->data[] = $obj;
 		} else {
 			$this->data[$index] = $obj;
 		}

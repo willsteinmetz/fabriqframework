@@ -3,11 +3,11 @@
  * @file index.php
  * The index.php file includes the core required files
  * for running a Fabriq based app:
- *   core/Fabriq.class.php
- *   core/Database.class.php
- *   core/Model.class.php
+ *	 core/Fabriq.class.php
+ *	 core/Database.class.php
+ *	 core/Model.class.php
  * as well as the main config file:
- *   config/config.inc.php
+ *	 config/config.inc.php
  * @author Will Steinmetz
  * --
  * Copyright (c)2010, Ralivue.com
@@ -15,14 +15,14 @@
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Ralivue.com nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
+ *		 * Redistributions of source code must retain the above copyright
+ *			 notice, this list of conditions and the following disclaimer.
+ *		 * Redistributions in binary form must reproduce the above copyright
+ *			 notice, this list of conditions and the following disclaimer in the
+ *			 documentation and/or other materials provided with the distribution.
+ *		 * Neither the name of the Ralivue.com nor the
+ *			 names of its contributors may be used to endorse or promote products
+ *			 derived from this software without specific prior written permission.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -61,7 +61,7 @@ $q = explode('/', $_GET['q']);
 if (count($q) > 0) {
 	if (!is_numeric($q[0])) {
 		if (trim($q[0]) != '') {
-		  Fabriq::controller($q[0]);
+			Fabriq::controller($q[0]);
 		} else {
 			Fabriq::controller($_FAPP['cdefault']);
 			Fabriq::arg(0, $_FAPP['cdefault']);
@@ -100,12 +100,12 @@ require_once('app/controllers/application.controller.php');
 if (!file_exists("app/controllers/" . Fabriq::controller() . ".controller.php")) {
 	require_once('public/404.html');
 } else {
-  if (file_exists("app/helpers/" . Fabriq::controller() . ".helper.php")) {
-    require_once("app/helpers/" . Fabriq::controller() . ".helper.php");
-  }
+	if (file_exists("app/helpers/" . Fabriq::controller() . ".helper.php")) {
+		require_once("app/helpers/" . Fabriq::controller() . ".helper.php");
+	}
 	require_once("app/controllers/" . Fabriq::controller() . ".controller.php");
 	$c = Fabriq::controller() . '_controller';
-  $controller = new $c();
+	$controller = new $c();
 	$a = str_replace('.', '_', Fabriq::action());
 	
 	if (!$controller->hasMethod($a)) {
@@ -116,56 +116,56 @@ if (!file_exists("app/controllers/" . Fabriq::controller() . ".controller.php"))
 		// run render controller if different from given controller
 		if (Fabriq::render_controller() != Fabriq::controller()) {
 			if (!file_exists("app/controllers/" . Fabriq::render_controller() . ".controller.php")) {
-			  require_once('public/404.html');
+				require_once('public/404.html');
 			} else {
 				if (file_exists("app/helpers/" . Fabriq::render_controller() . ".helper.php")) {
-			    require_once("app/helpers/" . Fabriq::render_controller() . ".helper.php");
-			  }
-			  require_once("app/controllers/" . Fabriq::render_controller() . ".controller.php");
-			  $c = Fabriq::render_controller() . '_controller';
-			  $controller = new $c();
-			  
-			  $a = str_replace('.', '_', Fabriq::render_action());
-			  if (!$controller->hasMethod($a)) {
-			    require_once('public/404.html');
-			  } else {
-			    call_user_func(array($controller, $a));
-			  }
+					require_once("app/helpers/" . Fabriq::render_controller() . ".helper.php");
+				}
+				require_once("app/controllers/" . Fabriq::render_controller() . ".controller.php");
+				$c = Fabriq::render_controller() . '_controller';
+				$controller = new $c();
+				
+				$a = str_replace('.', '_', Fabriq::render_action());
+				if (!$controller->hasMethod($a)) {
+					require_once('public/404.html');
+				} else {
+					call_user_func(array($controller, $a));
+				}
 			}
 		} else {
 			// run render action if different from given action
 			if (Fabriq::render_action() != Fabriq::action()) {
-        $a = str_replace('.', '_', Fabriq::render_action());
-        if (!$controller->hasMethod($a)) {
-          require_once('public/404.html');
-        } else {
-          call_user_func(array($controller, $a));
-        }
+				$a = str_replace('.', '_', Fabriq::render_action());
+				if (!$controller->hasMethod($a)) {
+					require_once('public/404.html');
+				} else {
+					call_user_func(array($controller, $a));
+				}
 			}
 		}
 		
 		// render view (if necessary)
 		switch(Fabriq::render()) {
 			case 'none':
-        break;
+				break;
 			case 'view':
 				if (!file_exists("app/views/" . Fabriq::render_controller() . "/" . Fabriq::render_action() . ".view.php")) {
 					require_once('public/404.html');
 				} else {
-				  require_once("app/views/" . Fabriq::render_controller() . "/" . Fabriq::render_action() . ".view.php");
+					require_once("app/views/" . Fabriq::render_controller() . "/" . Fabriq::render_action() . ".view.php");
 				}
 				break;
 			case 'layout': default:
 				if (!file_exists("app/views/" . Fabriq::render_controller() . "/" . Fabriq::render_action() . ".view.php")) {
-          require_once('public/404.html');
-        } else {
-        	if (!file_exists("app/views/layouts/" . Fabriq::layout() . ".view.php")) {
-            require_once('app/views/layouts/application.view.php');
-        	} else {
-        		require_once("app/views/layouts/" . Fabriq::layout() . ".view.php");
-        	}
-        }
-			  break;
+					require_once('public/404.html');
+				} else {
+					if (!file_exists("app/views/layouts/" . Fabriq::layout() . ".view.php")) {
+						require_once('app/views/layouts/application.view.php');
+					} else {
+						require_once("app/views/layouts/" . Fabriq::layout() . ".view.php");
+					}
+				}
+				break;
 		}
 	}
 }
