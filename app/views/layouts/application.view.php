@@ -39,19 +39,19 @@
 // changes should not be made for the title, stylesheet includes,
 // and javascript includes
 if ($_FAPP['title_pos'] == 'left') {
-  echo "<title>" . Fabriq::title() . " {$_FAPP['title_sep']} {$_FAPP['title']}</title>\n";
+	echo "<title>" . Fabriq::title() . " {$_FAPP['title_sep']} {$_FAPP['title']}</title>\n";
 } else {
-  echo "<title>{$_FAPP['title']} {$_FAPP['title_sep']} " . Fabriq::title() . "</title>\n";
+	echo "<title>{$_FAPP['title']} {$_FAPP['title_sep']} " . Fabriq::title() . "</title>\n";
 }
 
 // process css queue
 foreach (Fabriq::cssqueue() as $css) {
-  echo "<link href=\"{$css['path']}{$css['css']}.css\" media=\"{$css['media']}\" rel=\"stylesheet\" type=\"text/css\" />\n";
+	echo "<link href=\"{$css['path']}{$css['css']}.css\" media=\"{$css['media']}\" rel=\"stylesheet\" type=\"text/css\" />\n";
 }
 
 // process javascript queue
 foreach (Fabriq::jsqueue() as $js) {
-  echo "<script language=\"JavaScript\" type=\"text/javascript\" src=\"{$js['path']}{$js['js']}{$js['ext']}\"></script>\n";
+	echo "<script language=\"JavaScript\" type=\"text/javascript\" src=\"{$js['path']}{$js['js']}{$js['ext']}\"></script>\n";
 }
 ?>
 <script type="text/javascript">
