@@ -47,8 +47,8 @@ abstract class Fabriq {
 	 * @param string $media
 	 * @param string $path
 	 */
-	public function add_css($stylesheet, $media = 'screen', $path = 'public/stylesheets/') {
-		self::$cssqueue[] = array('css' => $stylesheet, 'media' => $media, 'path' => $path);
+	public function add_css($stylesheet, $media = 'screen', $path = 'public/stylesheets/', $ext = '.css') {
+		self::$cssqueue[] = array('css' => $stylesheet, 'media' => $media, 'path' => $path, 'ext' => $ext);
 	}
 	
 	/**
