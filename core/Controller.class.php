@@ -64,7 +64,7 @@ class Controller {
 	 * @param string $method
 	 * @return boolean
 	 */
-	public function hasMethodStatic($method) {
+	public static function hasMethodStatic($method) {
 		return method_exists(get_called_class(), $method);
 	}
 }
