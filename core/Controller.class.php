@@ -43,28 +43,11 @@ class Controller {
 	}
 	
 	/**
-	 * Static version to return an array of available methods
-	 * @return array
-	 */
-	public static function controllerMethodsStatic() {
-		return get_class_methods(get_called_class());
-	}
-	
-	/**
 	 * Returns boolean on whether or not method exists in controller
 	 * @param string $method
 	 * @return boolean
 	 */
 	public function hasMethod($method) {
 		return method_exists($this, $method);
-	}
-	
-	/**
-	 * Returns boolean on whether or not method exists in controllers
-	 * @param string $method
-	 * @return boolean
-	 */
-	public static function hasMethodStatic($method) {
-		return method_exists(get_called_class(), $method);
 	}
 }
