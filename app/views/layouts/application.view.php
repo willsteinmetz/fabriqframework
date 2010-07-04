@@ -46,7 +46,7 @@ if ($_FAPP['title_pos'] == 'left') {
 
 // process css queue
 foreach (Fabriq::cssqueue() as $css) {
-	echo "<link href=\"{$css['path']}{$css['css']}.{$css['ext']}\" media=\"{$css['media']}\" rel=\"stylesheet\" type=\"text/css\" />\n";
+	echo "<link href=\"{$css['path']}{$css['css']}{$css['ext']}\" media=\"{$css['media']}\" rel=\"stylesheet\" type=\"text/css\" />\n";
 }
 
 // process javascript queue
