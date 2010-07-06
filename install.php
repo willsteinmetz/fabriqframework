@@ -213,8 +213,10 @@ switch($step) {
 					$contFile = "app/controllers/{$_POST['defaultcontroller']}.controller.php";
 					$fh = fopen($contFile, 'w');
 					fwrite($fh, "<?php\n");
-					fwrite($fh, "function {$_POST['defaultaction']}() {\n");
-					fwrite($fh, "\t\n");
+					fwrite($fh, "controller {$_POST['defaultcontroller']}_controller extends Controller {\n");
+					fwrite($fh, "\tfunction {$_POST['defaultaction']}() {\n");
+					fwrite($fh, "\t\tFabriq::title('Welcome to {$_POST['pagetitle']}');\n");
+					fwrite($fh, "\t}\n");
 					fwrite($fh, "}\n");
 					fclose($fh);
 					

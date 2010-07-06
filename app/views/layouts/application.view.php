@@ -1,7 +1,7 @@
 <?php
 /**
  * @file Application layout. Modify this file for the layout of your website
- * or application. Keep an copy of this file available for websites or
+ * or application. Keep a copy of this file available for websites or
  * applications using multiple layouts.
  * --
  * Copyright (c)2010, Ralivue.com
