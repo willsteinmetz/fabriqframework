@@ -1,0 +1,23 @@
+Options         +FollowSymLinks
+
+<IfModule mod_rewrite.c>
+	RewriteEngine   On
+
+	# Rewrite rule to make sure that files located in public are served properly
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteCond %{REQUEST_URI} (.*)(public/)(.*)$
+	RewriteRule ^(.*)(public/)(.*)$ $2$3
+
+	# Rewrite rule to make sure that scripts located in app/scripts are served properly
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteCond %{REQUEST_URI} (.*)(app/scripts/)(.*)$
+	RewriteRule ^(.*)(app/scripts/)(.*)$ $2$3
+
+	# Rewrite for clean URLs
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteCond %{REQUEST_URI} !=/favicon.ico
+	RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
+</IfModule>
