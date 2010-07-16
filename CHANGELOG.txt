@@ -1,0 +1,40 @@
+Fabriq Framework change log
+  - Initiated 05/05/10 for version 0.5
+  
+Version 0.8 2010-07-15
+  - Changed create and update functions in /core/Model.class.php to do value and type checks for NULL values
+  - Moved fabriq.js to /core directory
+  - Added /core/Controller.class.php, /core/BaseMapping.class.php, and /app/PathMap.class.php
+  - Updated path mapping related functions to use new mapping classes
+  
+Version 0.7 2010-06-17
+  - Changed DOCTYPE in public/404.html and public/500.html
+  - Added core/Controller.class.php to add more OOP functionality to Fabriq and future proof future feature ideas
+  - Modified path mapping to render given controller and action and then render render_controller and render_action if different
+
+Version 0.6.4 2010-06-16
+  - Added createAt() and updateAt() methods to Model class
+
+Version 0.6.3 2010-06-12
+  - Added add() method to Model class
+  - Changed DOCTYPE in /app/views/layouts/application.view.php
+  - Aliased PHP Fabriq::build_path() method in /core/Fabriq.class.php to Fabriq.build_path() in JavaScript fabriq.js file
+
+Version 0.6.2 2010-06-02
+  - Fixed bugs left in model class after moving to use stdClass
+
+Version 0.6.1 2010-05-29
+  - Removed instances of array_push from core to reduce overhead
+  
+Version 0.6 2010-05-26
+  - Removed /core/Object.class.php in favor of using PHP's stdClass
+  - Added the remove() function to /core/Model.class.php to be able to remove items from the collection
+  - Updated install.php, index.php, and /core/Database.class.php to make use of the $_FDB['default'] settings
+    - /core/Database.class.php was updated to be able to be used for different database connections
+  
+Version 0.5 2010-05-08
+  - Moved from mysql to mysqli PHP extension
+  - Added about to use prepared queries for security
+  - Moved all functions in /core/Fabriq.function.php to an abstract class in /core/Fabriq.class.php
+  - Made all corrections in core files and index.php to reference the Fabriq abstract class
+  - Added Fabriq JavaScript functions for working AJAX

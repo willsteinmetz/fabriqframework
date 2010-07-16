@@ -1,0 +1,44 @@
+TO UPDATE TO VERSION 8.0 OF FABRIQ:
+
+ - Expand the downloaded archive (.zip or .tar.gz file)
+ 
+ - Copy the following files from the expanded archive to the /core directory
+   of your Fabriq web application(s)/website(s) (NOTE: be sure if you have edited
+   these files to back up your changes. IT IS STRONGLY RECOMMENDED THAT YOU DO NOT
+   MAKE CHANGES TO CORE FILES IN ORDER TO EASILY UPGRADE BETWEEN VERSIONS!):
+   - /core/BaseMapping.class.php
+   - /core/Controller.class.php
+   - /core/Database.class.php
+   - /core/Fabriq.class.php
+   - /core/fabriq.js
+   - /core/Model.class.php
+   
+ - Copy the following file(s) from the expanded archive to the /app directory
+   of your Fabriq web application(s)/website(s):
+   - /app/PathMap.class.php
+   
+ - Copy the index.php file from the expanded archive to the / (root) directory
+   of your Fabriq web application(s)/website(s)
+
+NOTES (READ CAREFULLY FOR FURTHER DETAILS ON UPDATING):
+ - The fabriq.js class has been removed from /public/javascripts to /core for
+   easier upgrading and to keep the core files in the same location
+   
+ - The path mapping functionality has been moved from /core/Fabriq.class.php to
+   the new /core/BaseMapping.class.php file. The /core/BaseMapping.class.php file
+   should not be edited. For customizations to mapping, the /app/PathMap.class.php
+   file extends the /core/BaseMapping.class.php file and has been provided to enable
+   developers to define custom path mapping rules. Functionality that has been moved
+   from /core/Fabriq.class.php to /core/BaseMapping.class.php is marked in the
+   documentation at http://docs.fabriqframework.com/ as deprecated. NOTE: functions
+   from /core/Fabriq.class.php that were moved to /core/BaseMapping.class.php will
+   be REMOVED in version 0.10 of Fabriq. Please update any references to those functions
+   to use the new functions in /app/PathMap.class.php.
+   
+ - When referencing mapping functions, the PathMap class should be referenced and
+   not the BaseMapping class. The PathMap class extends the BaseMapping class and
+   therefore has inherits all of the BaseMapping class' functionality.
+   
+ - The /core/Controller.class.php file has been added to extend the object-oriented
+   nature of the Framework to the controller structure. This move will also help
+   facilitate future expansion plans of the framework.
