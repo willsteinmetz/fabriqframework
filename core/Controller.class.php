@@ -1,6 +1,6 @@
 <?php
 /**
- * @files Base Controller class
+ * @files Base Controller class - DO NOT EDIT
  * @author Will Steinmetz
  * --
  * Copyright (c)2010, Ralivue.com

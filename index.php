@@ -53,43 +53,14 @@ require_once('config/config.inc.php');
 require_once('core/Database.class.php');
 require_once('core/Controller.class.php');
 require_once('core/Model.class.php');
+require_once('core/BaseMapping.class.php');
+require_once('app/PathMap.class.php');
 
 // query variable
 $q = explode('/', $_GET['q']);
 
 // determine the controller and action to render
-if (count($q) > 0) {
-	if (!is_numeric($q[0])) {
-		if (trim($q[0]) != '') {
-			Fabriq::controller($q[0]);
-		} else {
-			Fabriq::controller($_FAPP['cdefault']);
-			Fabriq::arg(0, $_FAPP['cdefault']);
-		}
-		if (count($q) > 1) {
-			if (!is_numeric($q[1])) {
-				Fabriq::action($q[1]);
-			} else {
-				Fabriq::action($_FAPP['adefault']);
-				Fabriq::arg(1, $_FAPP['adefault']);
-			}
-		} else {
-			Fabriq::action($_FAPP['adefault']);
-			Fabriq::arg(1, $_FAPP['adefault']);
-		}
-	} else {
-		Fabriq::controller($_FAPP['cdefault']);
-		Fabriq::arg(0, $_FAPP['cdefault']);
-	}
-} else {
-	Fabriq::controller($_FAPP['cdefault']);
-	Fabriq::arg(0, $_FAPP['cdefault']);
-	Fabriq::action($_FAPP['adefault']);
-	Fabriq::arg(1, $_FAPP['adefault']);
-}
-
-Fabriq::render_controller(Fabriq::controller());
-Fabriq::render_action(Fabriq::action());
+PathMap::map_path();
 
 // initialize database
 $db = new Database($_FDB['default']);
@@ -97,16 +68,16 @@ $db = new Database($_FDB['default']);
 // include the controller, action, and helper files
 require_once('app/helpers/application.helper.php');
 require_once('app/controllers/application.controller.php');
-if (!file_exists("app/controllers/" . Fabriq::controller() . ".controller.php")) {
+if (!file_exists("app/controllers/" . PathMap::controller() . ".controller.php")) {
 	require_once('public/404.html');
 } else {
-	if (file_exists("app/helpers/" . Fabriq::controller() . ".helper.php")) {
-		require_once("app/helpers/" . Fabriq::controller() . ".helper.php");
+	if (file_exists("app/helpers/" . PathMap::controller() . ".helper.php")) {
+		require_once("app/helpers/" . PathMap::controller() . ".helper.php");
 	}
-	require_once("app/controllers/" . Fabriq::controller() . ".controller.php");
-	$c = Fabriq::controller() . '_controller';
+	require_once("app/controllers/" . PathMap::controller() . ".controller.php");
+	$c = PathMap::controller() . '_controller';
 	$controller = new $c();
-	$a = str_replace('.', '_', Fabriq::action());
+	$a = str_replace('.', '_', PathMap::action());
 	
 	if (!$controller->hasMethod($a)) {
 		require_once('public/404.html');
@@ -114,18 +85,18 @@ if (!file_exists("app/controllers/" . Fabriq::controller() . ".controller.php"))
 		call_user_func(array($controller, $a));
 		
 		// run render controller if different from given controller
-		if (Fabriq::render_controller() != Fabriq::controller()) {
-			if (!file_exists("app/controllers/" . Fabriq::render_controller() . ".controller.php")) {
+		if (PathMap::render_controller() != PathMap::controller()) {
+			if (!file_exists("app/controllers/" . PathMap::render_controller() . ".controller.php")) {
 				require_once('public/404.html');
 			} else {
-				if (file_exists("app/helpers/" . Fabriq::render_controller() . ".helper.php")) {
-					require_once("app/helpers/" . Fabriq::render_controller() . ".helper.php");
+				if (file_exists("app/helpers/" . PathMap::render_controller() . ".helper.php")) {
+					require_once("app/helpers/" . PathMap::render_controller() . ".helper.php");
 				}
-				require_once("app/controllers/" . Fabriq::render_controller() . ".controller.php");
-				$c = Fabriq::render_controller() . '_controller';
+				require_once("app/controllers/" . PathMap::render_controller() . ".controller.php");
+				$c = PathMap::render_controller() . '_controller';
 				$controller = new $c();
 				
-				$a = str_replace('.', '_', Fabriq::render_action());
+				$a = str_replace('.', '_', PathMap::render_action());
 				if (!$controller->hasMethod($a)) {
 					require_once('public/404.html');
 				} else {
@@ -134,8 +105,8 @@ if (!file_exists("app/controllers/" . Fabriq::controller() . ".controller.php"))
 			}
 		} else {
 			// run render action if different from given action
-			if (Fabriq::render_action() != Fabriq::action()) {
-				$a = str_replace('.', '_', Fabriq::render_action());
+			if (PathMap::render_action() != PathMap::action()) {
+				$a = str_replace('.', '_', PathMap::render_action());
 				if (!$controller->hasMethod($a)) {
 					require_once('public/404.html');
 				} else {
@@ -149,14 +120,14 @@ if (!file_exists("app/controllers/" . Fabriq::controller() . ".controller.php"))
 			case 'none':
 				break;
 			case 'view':
-				if (!file_exists("app/views/" . Fabriq::render_controller() . "/" . Fabriq::render_action() . ".view.php")) {
+				if (!file_exists("app/views/" . PathMap::render_controller() . "/" . PathMap::render_action() . ".view.php")) {
 					require_once('public/404.html');
 				} else {
-					require_once("app/views/" . Fabriq::render_controller() . "/" . Fabriq::render_action() . ".view.php");
+					require_once("app/views/" . PathMap::render_controller() . "/" . PathMap::render_action() . ".view.php");
 				}
 				break;
 			case 'layout': default:
-				if (!file_exists("app/views/" . Fabriq::render_controller() . "/" . Fabriq::render_action() . ".view.php")) {
+				if (!file_exists("app/views/" . PathMap::render_controller() . "/" . PathMap::render_action() . ".view.php")) {
 					require_once('public/404.html');
 				} else {
 					if (!file_exists("app/views/layouts/" . Fabriq::layout() . ".view.php")) {

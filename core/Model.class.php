@@ -1,7 +1,7 @@
 <?php
 /**
  * @files Base Model class that implements the ArrayAccess, Iterator,
- * and Countable interfaces
+ * and Countable interfaces - DO NOT EDIT
  * @author Will Steinmetz
  * --
  * Copyright (c)2010, Ralivue.com
@@ -327,7 +327,7 @@ class Model implements ArrayAccess, Iterator, Countable {
 		}
 		$data = array();
 		foreach ($this->attributes as $attribute) {
-			if ($this->data[$index]->$attribute != null) {
+			if ($this->data[$index]->$attribute !== null) {
 				array_push($data, $this->data[$index]->$attribute);
 			} else {
 				array_push($data, '');
@@ -369,7 +369,7 @@ class Model implements ArrayAccess, Iterator, Countable {
 		}
 		$data = array();
 		foreach ($this->attributes as $attribute) {
-			if ($this->data[0]->$attribute != null) {
+			if ($this->data[0]->$attribute !== null) {
 				array_push($data, $this->data[0]->$attribute);
 			} else {
 				array_push($data, '');
@@ -410,7 +410,7 @@ class Model implements ArrayAccess, Iterator, Countable {
 		}
 		$data = array();
 		foreach ($this->attributes as $attribute) {
-			if ($this->data[$index]->$attribute != null) {
+			if ($this->data[$index]->$attribute !== null) {
 				array_push($data, $this->data[$index]->$attribute);
 			} else {
 				array_push($data, '');
