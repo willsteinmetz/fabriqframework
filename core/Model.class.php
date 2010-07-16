@@ -281,7 +281,7 @@ class Model implements ArrayAccess, Iterator, Countable {
 		}
 		$data = array();
 		foreach ($this->attributes as $attribute) {
-			if ($this->data[0]->$attribute != null) {
+			if ($this->data[0]->$attribute !== null) {
 				array_push($data, $this->data[0]->$attribute);
 			} else {
 				array_push($data, '');
@@ -327,7 +327,7 @@ class Model implements ArrayAccess, Iterator, Countable {
 		}
 		$data = array();
 		foreach ($this->attributes as $attribute) {
-			if ($this->data[$index]->$attribute != null) {
+			if ($this->data[$index]->$attribute !== null) {
 				array_push($data, $this->data[$index]->$attribute);
 			} else {
 				array_push($data, '');
@@ -369,7 +369,7 @@ class Model implements ArrayAccess, Iterator, Countable {
 		}
 		$data = array();
 		foreach ($this->attributes as $attribute) {
-			if ($this->data[0]->$attribute != null) {
+			if ($this->data[0]->$attribute !== null) {
 				array_push($data, $this->data[0]->$attribute);
 			} else {
 				array_push($data, '');
@@ -410,7 +410,7 @@ class Model implements ArrayAccess, Iterator, Countable {
 		}
 		$data = array();
 		foreach ($this->attributes as $attribute) {
-			if ($this->data[$index]->$attribute != null) {
+			if ($this->data[$index]->$attribute !== null) {
 				array_push($data, $this->data[$index]->$attribute);
 			} else {
 				array_push($data, '');
