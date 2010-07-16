@@ -1,7 +1,7 @@
 <?php
 /**
  * @files Base Model class that implements the ArrayAccess, Iterator,
- * and Countable interfaces
+ * and Countable interfaces - DO NOT EDIT
  * @author Will Steinmetz
  * --
  * Copyright (c)2010, Ralivue.com

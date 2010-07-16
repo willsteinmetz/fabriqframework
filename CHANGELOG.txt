@@ -1,6 +1,12 @@
 Fabriq Framework change log
   - Initiated 05/05/10 for version 0.5
   
+Version 0.8 2010-07-15
+  - Changed create and update functions in /core/Model.class.php to do value and type checks for NULL values
+  - Moved fabriq.js to /core directory
+  - Added /core/Controller.class.php, /core/BaseMapping.class.php, and /app/PathMap.class.php
+  - Updated path mapping related functions to use new mapping classes
+  
 Version 0.7 2010-06-17
   - Changed DOCTYPE in public/404.html and public/500.html
   - Added core/Controller.class.php to add more OOP functionality to Fabriq and future proof future feature ideas

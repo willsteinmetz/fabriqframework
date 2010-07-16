@@ -1,6 +1,6 @@
 <?php
 /**
- * @files This file contains functions used throughout Fabriq applications
+ * @files This file contains functions used throughout Fabriq applications - DO NOT EDIT
  * @author Will Steinmetz
  * --
  * Copyright (c)2010, Ralivue.com
@@ -36,10 +36,6 @@ abstract class Fabriq {
 	private static $title;
 	private static $render = 'layout';
 	private static $layout = 'application';
-	private static $controller;
-	private static $rendercontroller;
-	private static $action;
-	private static $renderaction;
 	
 	/**
 	 * Adds a stylesheet to the CSS queue for stylesheet includes
@@ -182,13 +178,10 @@ abstract class Fabriq {
 	 * if NULL, return the $controller variable
 	 * @param string $c
 	 * @return string
+	 * DEPRECATED - will be removed in version 0.10
 	 */
 	public function controller($c = NULL) {
-		if ($c != NULL) {
-			self::$controller = $c;
-		} else {
-			return self::$controller;
-		}
+		return PathMap::controller($c);
 	}
 	
 	/**
@@ -196,13 +189,10 @@ abstract class Fabriq {
 	 * if NULL, return the $rendercontroller variable
 	 * @param string $controller
 	 * @return string
+	 * DEPRECATED - will be removed in version 0.10
 	 */
 	public function render_controller($c = NULL) {
-		if ($c != NULL) {
-			self::$rendercontroller = $c;
-		} else {
-			return self::$rendercontroller;
-		}
+		return PathMap::render_controller($c);
 	}
 	
 	/**
@@ -210,13 +200,10 @@ abstract class Fabriq {
 	 * if NULL, return the $action variable
 	 * @param string $a
 	 * @return string
+	 * DEPRECATED - will be removed in version 0.10
 	 */
 	public function action($a = NULL) {
-		if ($a != NULL) {
-			self::$action = $a;
-		} else {
-			return self::$action;
-		}
+		return PathMap::action($a);
 	}
 	
 	/**
@@ -224,13 +211,10 @@ abstract class Fabriq {
 	 * if NULL, return the $renderaction variable
 	 * @param string $action
 	 * @return string
+	 * DEPRECATED - will be removed in version 0.10
 	 */
 	public function render_action($a = NULL) {
-		if ($a != NULL) {
-			self::$renderaction = $a;
-		} else {
-			return self::$renderaction;
-		}
+		return PathMap::render_action($a);
 	}
 	
 	/**
@@ -245,7 +229,7 @@ abstract class Fabriq {
 	 * turn on page javascript include
 	 */
 	public function page_js_on() {
-		Fabriq::add_js(self::$rendercontroller . '.script', 'app/scripts/');
+		Fabriq::add_js(PathMap::render_controller() . '.script', 'app/scripts/');
 	}
 	
 	/**
@@ -264,70 +248,46 @@ abstract class Fabriq {
 	 * @param integer $index
 	 * @param object $val
 	 * @return object
+	 * DEPRECATED - will be removed in version 0.10
 	 */
 	public function arg($index, $val = NULL) {
-		global $q;
-		
-		if ($val == NULL) {
-			if (count($q) > $index) {
-				return $q[$index];
-			} else {
-				return FALSE;
-			}
-		} else {
-			$q[$index] = $val;
-		}
+		return PathMap::arg($index, $val);
 	}
 	
 	/**
 	 * getter for the base path for the application
 	 * @return string
+	 * DEPRECATED - will be removed in version 0.10
 	 */
 	public function base_path() {
-		global $_FAPP;
-		
-		return $_FAPP['apppath'];
+		return PathMap::base_path();
 	}
 	
 	/**
 	 * Getter for if clean URLs are enabled
 	 * @return boolean
+	 * DEPRECATED - will be removed in version 0.10
 	 */
 	public function clean_urls() {
-		global $_FAPP;
-		
-		return $_FAPP['cleanurls'];
+		return PathMap::clean_urls();
 	}
 	
 	/**
 	 * Getter for string value if clean URLs are enabled
 	 * @return boolean
+	 * DEPRECATED - will be removed in version 0.10
 	 */
 	public function clean_urls_str() {
-		global $_FAPP;
-		
-		if ($_FAPP['cleanurls']) {
-			return 'true';
-		}
-		return 'false';
+		return PathMap::clean_urls_str();
 	}
 	
 	/**
 	 * Builds a path
 	 * @return string
+	 * DEPRECATED - will be removed in version 0.10
 	 */
 	public function build_path() {
-		$path = '';
-		for ($i = 0; $i < func_num_args(); $i++) {
-			$path .= func_get_arg($i);
-			if ($i < (func_num_args() - 1)) {
-				$path .= '/';
-			}
-		}
-		if (self::clean_urls()) {
-			return self::base_path() . $path;
-		} else {
-			return 'index.php?q=' . $path;
-		}
+		$args = func_get_args();
+		return PathMap::build_path($args);
 	}
 }

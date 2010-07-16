@@ -1,6 +1,6 @@
 <?php
 /**
- * @file Database connectivity file
+ * @file Database connectivity file - DO NOT EDIT
  * @author Will Steinmetz
  * --
  * Copyright (c)2010, Ralivue.com

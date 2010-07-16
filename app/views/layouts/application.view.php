@@ -56,13 +56,13 @@ foreach (Fabriq::jsqueue() as $js) {
 ?>
 <script type="text/javascript">
 //<![CDATA[
-jQuery.extend(Fabriq.settings, {"basePath": "<?php echo Fabriq::base_path(); ?>", "cleanURLs": <?php echo Fabriq::clean_urls_str(); ?>});
+jQuery.extend(Fabriq.settings, {"basePath": "<?php echo PathMap::base_path(); ?>", "cleanURLs": <?php echo PathMap::clean_urls_str(); ?>});
 //]]>
 </script>
 </head>
 <body>
 
-<?php require_once("app/views/" .Fabriq::render_controller() . "/" . Fabriq::render_action() . ".view.php"); ?>
+<?php require_once("app/views/" . PathMap::render_controller() . "/" . PathMap::render_action() . ".view.php"); ?>
 
 </body>
 </html>

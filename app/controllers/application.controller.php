@@ -30,5 +30,5 @@
  * --
  */
 Fabriq::add_js('jquery.min', 'http://code.jquery.com/');
-Fabriq::add_js('fabriq');
+Fabriq::add_js('fabriq', 'core/');
 Fabriq::add_css('fabriq.base');
