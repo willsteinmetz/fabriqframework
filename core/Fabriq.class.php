@@ -288,6 +288,6 @@ abstract class Fabriq {
 	 */
 	public function build_path() {
 		$args = func_get_args();
-		return PathMap::build_path($args);
+		return call_user_func_array(array('PathMap', 'build_path'), $args);
 	}
 }
