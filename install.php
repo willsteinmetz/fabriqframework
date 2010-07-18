@@ -71,91 +71,26 @@ function dirs_writeable() {
 		return FALSE;
 	}
 }
-?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=encoding" />
-<title>Install Fabriq for your website/web application</title>
-<style type="text/css">
-body { font-family: Arial, Helvetica, Verdana, sans-serif; margin: 0; padding: 0; background-color: #EEE; }
-image { border: none; }
-h1 { color: #333; }
-code { color: #454545; }
-.fabriq-info a:link, .fabriq-info a:active, .fabriq-info a:visited { color: #900; text-decoration: underline; }
-.fabriq-info a:hover, .fabriq-info a:focus { color: #600; text-decoration: underline; }
-#body { background-color: #FFF; border: solid 1px #d6d6d6; -moz-border-radius: 10px; -webkit-border-radius: 10px; width: 900px; margin: 10px auto; padding: 10px; }
-#fabriq-header { margin: 0; padding: 0; color: #900; font-size: 36pt; }
-#fabriq-header-text { color: #454545; }
-.required-field { font-weight: bold; color: #900; }
-fieldset { -moz-border-radius: 5px; -webkit-border-radius: 5px; }
-input[type='text'], input[type='password'] { outline: none; border: solid 1px #CCC; padding: 2px; }
-input[type='text']:focus, input[type='password']:focus { background-color: #FFF; border: solid 1px #999; }
-select { padding: 2px; outline: none; border: solid 1px #CCC; }
-select:focus { background-color: #FFF; border: solid 1px #999; }
-.form-item-description { font-size: 10pt; padding: 0 10px; color: #666; }
-.form-item-description strong { color: #900; }
-legend { color: #600; }
-.error-box { border: solid 1px #C00; -moz-border-radius: 5px; -webkit-border-radius: 5px; padding: 5px; margin: 5px 0; }
-</style>
-</head>
-<body>
 
-
-<div id="body">
-	<div style="float: left;"><img src="http://fabriqframework.com/public/images/Fabriq.png" /></div>
-	<div style="margin-left: 110px;">
-		<h1 id="fabriq-header">Fabriq</h1>
-		Stop weaving tangled webpages, start with a strong Fabriq.
-	</div>
-	<div class="clearbox">&nbsp;</div>
-<?php
-switch($step) {
+switch ($step) {
 	case 4:
 		if (!file_exists('config/config.inc.php')) {
 			header("Location: install.php?s=1");
 			exit();
 		}
-?>
-	<h1>Already installed</h1>
-	<p>This Fabriq application has already been installed.</p>
-	<p><a href="index.php">Return to the Fabriq app's homepage</a></p>
-<?php
-		break;
+	break;
 	case 3:
 		if (!file_exists('config/config.inc.php')) {
 			header("Location: install.php?s=1");
 			exit();
 		}
-?>
-	<h2>Finished!</h2>
-	<p>Congrats! You have just set up your Fabriq application!</p>
-	<p>Be sure to remove the write permissions for the following directories (<code>chmod 775</code> is sufficient for most systems):</p>
-	<ul>
-		<li><code>/config</code></li>
-		<li><code>/app/controllers</code></li>
-		<li><code>/app/views</code></li>
-	</ul>
-	<p>Now that your Fabriq app is installed, you can delete the install.php script from the directory.</p>
-	<p><a href="index.php">Return to the Fabriq app's homepage</a></p>
-<?php
-		break;
+	break;
 	case 2:
 		if (file_exists('config/config.inc.php')) {
 			header("Location: install.php?s=4");
 			exit();
 		}
-		if (!dirs_writeable()) {
-			echo "<div class=\"error-box\">\n";
-			echo "<p>Before you can continue, you must fix the following problems:</p>\n";
-			echo "<ul>\n";
-			foreach($errors as $error) {
-				echo "\t<li><em>{$error}</em></li>\n";
-			}
-			echo "</ul>\n";
-			echo "</div>\n";
-		}
-		else {
+		if (dirs_writeable()) {
 			if (isset($_POST['submit'])) {
 				if (strlen(trim($_POST['pagetitle'])) == 0) {
 					array_push($errors, 'You must enter a page title');
@@ -213,7 +148,7 @@ switch($step) {
 					$contFile = "app/controllers/{$_POST['defaultcontroller']}.controller.php";
 					$fh = fopen($contFile, 'w');
 					fwrite($fh, "<?php\n");
-					fwrite($fh, "controller {$_POST['defaultcontroller']}_controller extends Controller {\n");
+					fwrite($fh, "class {$_POST['defaultcontroller']}_controller extends Controller {\n");
 					fwrite($fh, "\tfunction {$_POST['defaultaction']}() {\n");
 					fwrite($fh, "\t\tFabriq::title('Welcome to {$_POST['pagetitle']}');\n");
 					fwrite($fh, "\t}\n");
@@ -231,6 +166,88 @@ switch($step) {
 					exit();
 				}
 			}
+		}
+	break;
+	case 1: default:
+		if (file_exists('config/config.inc.php')) {
+			header("Location: install.php?s=4");
+			exit();
+		}
+	break;
+}
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=encoding" />
+<title>Install Fabriq for your website/web application</title>
+<style type="text/css">
+body { font-family: Arial, Helvetica, Verdana, sans-serif; margin: 0; padding: 0; background-color: #EEE; }
+image { border: none; }
+h1 { color: #333; }
+code { color: #454545; }
+.fabriq-info a:link, .fabriq-info a:active, .fabriq-info a:visited { color: #900; text-decoration: underline; }
+.fabriq-info a:hover, .fabriq-info a:focus { color: #600; text-decoration: underline; }
+#body { background-color: #FFF; border: solid 1px #d6d6d6; -moz-border-radius: 10px; -webkit-border-radius: 10px; width: 900px; margin: 10px auto; padding: 10px; }
+#fabriq-header { margin: 0; padding: 0; color: #900; font-size: 36pt; }
+#fabriq-header-text { color: #454545; }
+.required-field { font-weight: bold; color: #900; }
+fieldset { -moz-border-radius: 5px; -webkit-border-radius: 5px; }
+input[type='text'], input[type='password'] { outline: none; border: solid 1px #CCC; padding: 2px; }
+input[type='text']:focus, input[type='password']:focus { background-color: #FFF; border: solid 1px #999; }
+select { padding: 2px; outline: none; border: solid 1px #CCC; }
+select:focus { background-color: #FFF; border: solid 1px #999; }
+.form-item-description { font-size: 10pt; padding: 0 10px; color: #666; }
+.form-item-description strong { color: #900; }
+legend { color: #600; }
+.error-box { border: solid 1px #C00; -moz-border-radius: 5px; -webkit-border-radius: 5px; padding: 5px; margin: 5px 0; }
+</style>
+</head>
+<body>
+
+
+<div id="body">
+	<div style="float: left;"><img src="http://fabriqframework.com/public/images/Fabriq.png" /></div>
+	<div style="margin-left: 110px;">
+		<h1 id="fabriq-header">Fabriq</h1>
+		Stop weaving tangled webpages, start with a strong Fabriq.
+	</div>
+	<div class="clearbox">&nbsp;</div>
+<?php
+switch($step) {
+	case 4:
+?>
+	<h1>Already installed</h1>
+	<p>This Fabriq application has already been installed.</p>
+	<p><a href="index.php">Return to the Fabriq app's homepage</a></p>
+<?php
+		break;
+	case 3:
+?>
+	<h2>Finished!</h2>
+	<p>Congrats! You have just set up your Fabriq application!</p>
+	<p>Be sure to remove the write permissions for the following directories (<code>chmod 775</code> is sufficient for most systems):</p>
+	<ul>
+		<li><code>/config</code></li>
+		<li><code>/app/controllers</code></li>
+		<li><code>/app/views</code></li>
+	</ul>
+	<p>Now that your Fabriq app is installed, you can delete the install.php script from the directory.</p>
+	<p><a href="index.php">Return to the Fabriq app's homepage</a></p>
+<?php
+		break;
+	case 2:
+		if (!dirs_writeable()) {
+			echo "<div class=\"error-box\">\n";
+			echo "<p>Before you can continue, you must fix the following problems:</p>\n";
+			echo "<ul>\n";
+			foreach($errors as $error) {
+				echo "\t<li><em>{$error}</em></li>\n";
+			}
+			echo "</ul>\n";
+			echo "</div>\n";
+		}
+		else {
 ?>
 	<h2>Step 2: Entering site details</h2>
 <?php
@@ -263,17 +280,17 @@ if (count($errors) > 0) {
 			<div class="form-item-description">The default controller can only contain alpha-numeric and underscore characters and <strong>must begin with a letter</strong>. The default and <strong>recommended</strong> controller is <strong>homepage</strong>.</div>
 			<label for="defaultaction">Default action <span class="required-field">*</span>: </label><input type="text" id="default-action" name="defaultaction" size="50" tabindex="6" value="<?php echo ($submitted) ? $_POST['defaultaction'] : 'index'; ?>" /><br />
 			<div class="form-item-description">The default action of your default controller can only contain alpha-numeric and underscore characters and <strong>must begin with a letter</strong>. The default and <strong>recommended</strong> action is <strong>index</strong>.</div>
-			<label for="apppath">Application path <span class="required-field">*</span>: </label><input type="text" id="apppath" name="apppath" value="<?php echo ($submitted) ? $_POST['apppath'] : '/'; ?>" /><br />
+			<label for="apppath">Application path <span class="required-field">*</span>: </label><input type="text" id="apppath" name="apppath" value="<?php echo ($submitted) ? $_POST['apppath'] : '/'; ?>" tabindex="7" /><br />
 			<div class="form-item-description">The application path is the root to your application on your server. If your application is stored in the default root directory, leave the application path set to /. Otherwise, set the path to the location that your application is stored on the server. <strong>Be sure that your application path begins and ends with a /</strong>.</div>
 		</fieldset>
 		<fieldset>
 			<legend>Database information</legend>
-			<label for="dbname">Database name <span class="required-field">*</span>: </label><input type="text" id="db-name" name="dbname" size="50" tabindex="7"<?php if ($submitted) { echo ' value="' . $_POST['dbname'] . '"'; } ?> /><br />
+			<label for="dbname">Database name <span class="required-field">*</span>: </label><input type="text" id="db-name" name="dbname" size="50" tabindex="8"<?php if ($submitted) { echo ' value="' . $_POST['dbname'] . '"'; } ?> /><br />
 			<div class="form-item-description">This database must already exist</div>
-			<label for="dbuser">Database user <span class="required-field">*</span>: </label><input type="text" id="db-user" name="dbuser" size="50" tabindex="8"<?php if ($submitted) { echo ' value="' . $_POST['dbuser'] . '"'; } ?> /><br />
+			<label for="dbuser">Database user <span class="required-field">*</span>: </label><input type="text" id="db-user" name="dbuser" size="50" tabindex="9"<?php if ($submitted) { echo ' value="' . $_POST['dbuser'] . '"'; } ?> /><br />
 			<div class="form-item-description">This user must have privileges to use the selected database</div>
-			<label for="dbpwd">Password <span class="required-field">*</span>: </label><input type="password" id="db-pwd" name="dbpwd" size="50" tabindex="9" /><br />
-			<label for="dbserver">Database server <span class="required-field">*</span>: </label><input type="text" id="db-server" name="dbserver" size="50" tabindex="10"<?php if ($submitted) { echo ' value="' . $_POST['dbserver'] . '"'; } ?> /><br />
+			<label for="dbpwd">Password <span class="required-field">*</span>: </label><input type="password" id="db-pwd" name="dbpwd" size="50" tabindex="10" /><br />
+			<label for="dbserver">Database server <span class="required-field">*</span>: </label><input type="text" id="db-server" name="dbserver" size="50" tabindex="11"<?php if ($submitted) { echo ' value="' . $_POST['dbserver'] . '"'; } ?> /><br />
 		</fieldset>
 		<div style="float: left;">
 			<input type="button" value="&laquo; Back" onclick="window.location = 'install.php?s=1';" />
@@ -287,10 +304,6 @@ if (count($errors) > 0) {
 		}
 		break;
 	case 1: default:
-		if (file_exists('config/config.inc.php')) {
-			header("Location: install.php?s=4");
-			exit();
-		}
 ?>
 	<h2>Step 1: Getting stared</h2>
 	<p>Before moving on to the next step, make sure of the following:</p>

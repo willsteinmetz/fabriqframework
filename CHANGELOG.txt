@@ -1,6 +1,12 @@
 Fabriq Framework change log
   - Initiated 05/05/10 for version 0.5
-  
+
+Version 0.8.2 2010-07-18
+  - Fix for install.php script errors
+
+Version 0.8.1 2010-07-17
+  - Added fix to deprecated Fabriq::build_path() function
+
 Version 0.8 2010-07-15
   - Changed create and update functions in /core/Model.class.php to do value and type checks for NULL values
   - Moved fabriq.js to /core directory
