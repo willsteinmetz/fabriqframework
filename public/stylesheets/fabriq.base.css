@@ -9,3 +9,35 @@ body {
 	height: 0;
 	font-size: 0;
 }
+
+.message {
+	padding: 10px;
+	margin: 10px; auto;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+}
+
+.message ul {
+	margin: 0px;
+}
+
+.errors {
+	background-color: #fcc;
+	border: solid 1px #600;
+}
+
+.messages {
+	background-color: #E1F3FF;
+	border: solid 1px #069;
+}
+
+.successes {
+	background-color: #cf9;
+	border: solid 1px #6c0;
+}
+
+.warnings {
+	background-color: #FFF4C9;
+	border: solid 1px #fc0;
+}

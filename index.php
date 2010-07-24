@@ -55,6 +55,7 @@ require_once('core/Controller.class.php');
 require_once('core/Model.class.php');
 require_once('core/BaseMapping.class.php');
 require_once('app/PathMap.class.php');
+require_once('core/Messaging.class.php');
 
 // query variable
 $q = explode('/', $_GET['q']);

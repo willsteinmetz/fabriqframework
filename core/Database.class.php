@@ -38,6 +38,8 @@ class Database {
 	public $insert_id;
 	public $num_rows;
 	public $total_queries = 0;
+	private $errorNo;
+	private $errorStr; 
 	
 	// private variables
 	
@@ -58,6 +60,8 @@ class Database {
 		$this->last = $sql;
 		$this->result = $this->db->query($sql) or die (mysqli_error() . "<br />-----<br />$sql");
 		$this->affected_rows = $this->db->affected_rows;
+		$this->errorNo = $this->db->errno;
+		$this->errorStr = $this->db->error;
 		$this->total_queries++;
 	}
 	
@@ -94,6 +98,8 @@ class Database {
 			$stmt->execute();
 			$this->affected_rows = $stmt->affected_rows;
 			$this->insert_id = $stmt->insert_id;
+			$this->errorNo = $stmt->errno;
+			$this->errorStr = $stmt->error;
 			$stmt->close();
 			
 			return TRUE;
@@ -169,6 +175,8 @@ class Database {
 			}
 			
 			$this->num_rows = $stmt->num_rows;
+			$this->errorNo = $stmt->errno;
+			$this->errorStr = $stmt->error;
 			
 			return $results;
 		}
@@ -222,5 +230,31 @@ class Database {
 	public function close() {
 		// mysql
 		$this->db->close();
+	}
+	
+	/**
+	 * Returns the database error number
+	 * @return integer/boolean
+	 */
+	public function errno() {
+		if ($this->errorNo !== NULL) {
+			return $this->errorNo;
+		}
+		return FALSE;
+	}
+	
+	/**
+	 * Returns the database error string
+	 * @return string/boolean
+	 */
+	public function error() {
+		if ($this->errorStr !== NULL) {
+			return $this->errorStr;
+		}
+		return FALSE;
+	}
+	
+	public function error_str() {
+		return $this->errorNo . ': ' . $this->errorStr;
 	}
 }

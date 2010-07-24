@@ -1,6 +1,12 @@
 Fabriq Framework change log
   - Initiated 05/05/10 for version 0.5
 
+Version 0.9
+  - Added error reporting in the Database class
+  - Added the messaging system class
+  - Added default message box styles to the base stylesheet
+  - Fixed .htaccess file to properly map files called in the /core directory
+
 Version 0.8.2 2010-07-18
   - Fix for install.php script errors
 
