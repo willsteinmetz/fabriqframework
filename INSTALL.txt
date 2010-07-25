@@ -1,0 +1,18 @@
+TO INSTALL THIS VERSION OF FABRIQ:
+
+ - Expand the downloaded archive (.zip or .tar.gz file)
+ 
+ - Copy the expanded directory to its proper location
+ 
+ - Navigate to the directory with your web browser and follow the
+   instructions to set up the config file for your Fabriq
+   web application/website
+   
+ - When installing is complete and you are returned to the first page
+   of your web application/website, remove the following files from
+   your web application/website's directory:
+    - CHANGELOG.txt
+    - INSTALL.txt
+    - LICENSE.txt
+    - UPDATE.txt
+    - install.php
