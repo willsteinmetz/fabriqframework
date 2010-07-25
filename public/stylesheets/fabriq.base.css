@@ -22,22 +22,22 @@ body {
 	margin: 0px;
 }
 
-.errors {
+.message.errors {
 	background-color: #fcc;
 	border: solid 1px #600;
 }
 
-.messages {
+.message.messages {
 	background-color: #E1F3FF;
 	border: solid 1px #069;
 }
 
-.successes {
+.message.successes {
 	background-color: #cf9;
 	border: solid 1px #6c0;
 }
 
-.warnings {
+.message.warnings {
 	background-color: #FFF4C9;
 	border: solid 1px #fc0;
 }

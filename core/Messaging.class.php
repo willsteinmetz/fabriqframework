@@ -76,7 +76,7 @@ class Messaging {
 	
 	public static function display_messages($type = 'errors') {
 		if (count(self::$$type) > 0) {
-			$output = "<div class=\"message \">\n";
+			$output = "<div class=\"message \n";
 			switch ($type) {
 				case 'messages':
 					$output .= "messages\">\n";
