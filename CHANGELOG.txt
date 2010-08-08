@@ -1,7 +1,27 @@
 Fabriq Framework change log
   - Initiated 05/05/10 for version 0.5
+  
+Version 0.10 2010-08-08
+  - Cleaned up find function in the Model class. If your code uses the old version, your code can be updated
+    to call find_old, however, you should update your code to use Database::prepare_select(). find_old in
+    the Model class will be removed in version 1.0
+  - The find function in the Model class now accepts the string 'all' to select all records from the database
+    and insert them into the collection. Please note that for very large collections, it is possible that PHP
+    will time out before returning all of the records. Be sure to only use 'all' for small collections.
+  - Added fields and fieldsStr functions to the Model class to make it easier to work with the
+    Database::prepare_select() function
+  - Merged update and updateAt functions in the Model class. updateAt will be removed in version 1.0
+  - Merged create and createAt functions in the Model class. createAt will be removed in version 1.0
+  - Functions in the Fabriq class that are marked as deprecated will now be removed in version 1.0
+  - Added 404 (page not found) and 500 (internal server error) base functions to the framework in the
+    errors controller. You can set up your server to point to the proper actions by pointing them to
+    http://example.com/404 and http://example.com/500 (replacing http://example.com with your domain).
+    This functionality can easily be extended to include other errors as well as custom error codes
+    by adding them to the errors controller, creating the proper views, and updating the /app/PathMap.class.php
+    file. Please note that when creating new errors, your functions should be named with string values
+    rather than numeric values (ex: 404 is the action fourohfour and 500 is the action fiveohoh).
 
-Version 0.9
+Version 0.9 2010-07-25
   - Added error reporting in the Database class
   - Added the messaging system class
   - Added default message box styles to the base stylesheet

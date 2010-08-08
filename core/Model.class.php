@@ -168,6 +168,43 @@ class Model implements ArrayAccess, Iterator, Countable {
 	public function count() {
 	 return count($this->data);
 	}
+	
+	/**
+	 * Finds a given value or collection
+	 * @param string/integer $query
+	 * @return boolean
+	 */
+	public function find($query = 'all') {
+		global $db;
+		$inputs = array();
+		$fields = array_merge(array($this->id_name), $this->attributes, array('created', 'updated'));
+		
+		if (is_numeric($query)) {
+			$q = "SELECT " . implode(', ', $fields) . " FROM {$this->db_table} WHERE {$this->id_name} = ? LIMIT 1;";
+			$inputs[] = $query;
+		} else {
+			switch($query) {
+				case 'first':
+					$q = "SELECT " . implode(', ', $fields) . " FROM {$this->db_table} ORDER BY {$this->id_name} LIMIT 1;";
+				break;
+				case 'last':
+					$q = "SELECT " . implode(', ', $fields) . " FROM {$this->db_table} ORDER BY {$this->id_name} DESC LIMIT 1;";
+				break;
+				case 'all': default:
+					$q = "SELECT " . implode(', ', $fields) . " FROM {$this->db_table} ORDER BY {$this->id_name}";
+				break;
+			}
+		}
+		
+		$results = $db->prepare_select($q, $fields, $inputs, $this->attributes);
+		
+		if ($db->num_rows == 0) {
+			return FALSE;
+		} else {
+			$this->data = $results;
+			return TRUE;
+		}
+	}
 		
 	/**
 	 * Finds a given value or collection in the database
@@ -177,8 +214,11 @@ class Model implements ArrayAccess, Iterator, Countable {
 	 * @param array $order
 	 * @param integer $start
 	 * @return boolean
+	 * DEPRECATED - Will be removed in version 1.0
+	 *   Update all code that uses this function to use the Database::prepared_select()
+	 *   function instead of this one for more advanced queries.
 	 */
-	public function find($query = null, $limit = null, $where = null, $order = null, $start = null) {
+	public function find_old($query = null, $limit = null, $where = null, $order = null, $start = null) {
 		global $db;
 		$inputs = array();
 		$fields = array_merge(array($this->id_name), $this->attributes, array('created', 'updated'));
@@ -252,56 +292,11 @@ class Model implements ArrayAccess, Iterator, Countable {
 	}
 	
 	/**
-	 * Inserts object $this->data[0] into the database
-	 * @return integer
-	 */
-	public function create() {
-		global $db;
-		
-		$attributes = '';
-		foreach ($this->attributes as $attribute) {
-			$attributes .= "{$attribute}, ";
-		}
-		$attributes .= "created, updated";
-		$this->data[0]->created = date('Y-m-d G:i:s');
-		$this->data[0]->updated = date('Y-m-d G:i:s');
-		$valuesStr = '';
-		for ($i = 0; $i < (count($this->attributes) + 2); $i++) {
-			$valuesStr .= '?';
-			if ($i < (count($this->attributes) + 1)) {
-				$valuesStr .= ', ';
-			}
-		}
-		if (get_magic_quotes_gpc()) {
-			foreach ($this->attributes as $attribute) {
-				if ($this->data[0]->$attribute != null) {
-					$this->data[0]->$attribute = stripslashes($this->data[0]->$attribute);
-				}
-			}
-		}
-		$data = array();
-		foreach ($this->attributes as $attribute) {
-			if ($this->data[0]->$attribute !== null) {
-				array_push($data, $this->data[0]->$attribute);
-			} else {
-				array_push($data, '');
-			}
-		}
-		$values = array_merge($data, array($this->data[0]->created, $this->data[0]->updated));
-		$sql = "INSERT INTO {$this->db_table} ({$attributes}) VALUES ({$valuesStr})";
-		
-		if ($db->prepare_cud($sql, $values)) {
-			return $db->insert_id;
-		}
-		return FALSE;
-	}
-	
-	/**
 	 * Inserts object $this->data[$index] into the database
 	 * @param integer $index
 	 * @return integer
 	 */
-	public function createAt($index) {
+	public function create($index = 0) {
 		global $db;
 		
 		$attributes = '';
@@ -343,43 +338,13 @@ class Model implements ArrayAccess, Iterator, Countable {
 	}
 	
 	/**
-	 * Updates the value of $this->data[0] in the database
+	 * Inserts object $this->data[$index] into the database
+	 * @param integer $index
 	 * @return integer
+	 * DEPRECATED - will be removed in version 1.0
 	 */
-	public function update() {
-		global $db;
-
-		$attributes = '';
-		foreach ($this->attributes as $attribute) {
-			$attributes .= "{$attribute}, ";
-		}
-		$attributes .= "created, updated";
-		$this->data[0]->updated = date('Y-m-d G:i:s');
-		$valuesStr = '';
-		for ($i = 0; $i < count($this->attributes); $i++) {
-			$valuesStr .= $this->attributes[$i] . ' = ?, ';
-		}
-		$valuesStr .= 'created = ?, updated = ?';
-		if (get_magic_quotes_gpc()) {
-			foreach ($this->attributes as $attribute) {
-				if ($this->data[0]->$attribute != null) {
-					$this->data[0]->$attribute = stripslashes($this->data[0]->$attribute);
-				}
-			}
-		}
-		$data = array();
-		foreach ($this->attributes as $attribute) {
-			if ($this->data[0]->$attribute !== null) {
-				array_push($data, $this->data[0]->$attribute);
-			} else {
-				array_push($data, '');
-			}
-		}
-		$values = array_merge($data, array($this->data[0]->created, $this->data[0]->updated, $this->data[0]->id));
-		$sql = "UPDATE {$this->db_table} SET {$valuesStr} WHERE {$this->id_name} = ?";
-		
-		$db->prepare_cud($sql, $values);
-		return $db->affected_rows;
+	public function createAt($index = 0) {
+		return $this->create($index);
 	}
 	
 	/**
@@ -387,7 +352,7 @@ class Model implements ArrayAccess, Iterator, Countable {
 	 * @param integer $index
 	 * @return integer
 	 */
-	public function updateAt($index) {
+	public function update($index = 0) {
 		global $db;
 
 		$attributes = '';
@@ -421,6 +386,16 @@ class Model implements ArrayAccess, Iterator, Countable {
 		
 		$db->prepare_cud($sql, $values);
 		return $db->affected_rows;
+	}
+	
+	/**
+	 * Updates the value of $this->data[$index] in the database
+	 * @param integer $index
+	 * @return integer
+	 * DEPRECATED - will be removed in version 1.0
+	 */
+	function updateAt($index = 0) {
+		return $this->update($index);
 	}
 	
 	/**
@@ -502,5 +477,23 @@ class Model implements ArrayAccess, Iterator, Countable {
 		} else {
 			$this->data[$index] = $obj;
 		}
+	}
+	
+	/**
+	 * Returns the database fields for easier use of the Database::prepare_select()
+	 * function
+	 * @return array
+	 */
+	public function fields() {
+		return array_merge(array('id'), $this->attributes, array('updated', 'created'));
+	}
+	
+	/**
+	 * Returns the string value of the database fields for easier use of the
+	 * Database::prepare_select() function
+	 * @return string;
+	 */
+	public function fieldsStr() {
+		return implode(', ', $this->fields());
 	}
 }

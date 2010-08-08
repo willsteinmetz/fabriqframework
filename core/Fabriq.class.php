@@ -178,7 +178,7 @@ abstract class Fabriq {
 	 * if NULL, return the $controller variable
 	 * @param string $c
 	 * @return string
-	 * DEPRECATED - will be removed in version 0.10
+	 * DEPRECATED - will be removed in version 1.0
 	 */
 	public function controller($c = NULL) {
 		return PathMap::controller($c);
@@ -189,7 +189,7 @@ abstract class Fabriq {
 	 * if NULL, return the $rendercontroller variable
 	 * @param string $controller
 	 * @return string
-	 * DEPRECATED - will be removed in version 0.10
+	 * DEPRECATED - will be removed in version 1.0
 	 */
 	public function render_controller($c = NULL) {
 		return PathMap::render_controller($c);
@@ -200,7 +200,7 @@ abstract class Fabriq {
 	 * if NULL, return the $action variable
 	 * @param string $a
 	 * @return string
-	 * DEPRECATED - will be removed in version 0.10
+	 * DEPRECATED - will be removed in version 1.0
 	 */
 	public function action($a = NULL) {
 		return PathMap::action($a);
@@ -211,7 +211,7 @@ abstract class Fabriq {
 	 * if NULL, return the $renderaction variable
 	 * @param string $action
 	 * @return string
-	 * DEPRECATED - will be removed in version 0.10
+	 * DEPRECATED - will be removed in version 1.0
 	 */
 	public function render_action($a = NULL) {
 		return PathMap::render_action($a);
@@ -222,7 +222,7 @@ abstract class Fabriq {
 	 */
 	public function fabriq_error() {
 		Fabriq::render('none');
-		require_once('public/500.html');
+		header('Location: ' . PathMap::build_path(500));
 	}
 	
 	/**
@@ -248,7 +248,7 @@ abstract class Fabriq {
 	 * @param integer $index
 	 * @param object $val
 	 * @return object
-	 * DEPRECATED - will be removed in version 0.10
+	 * DEPRECATED - will be removed in version 1.0
 	 */
 	public function arg($index, $val = NULL) {
 		return PathMap::arg($index, $val);
@@ -257,7 +257,7 @@ abstract class Fabriq {
 	/**
 	 * getter for the base path for the application
 	 * @return string
-	 * DEPRECATED - will be removed in version 0.10
+	 * DEPRECATED - will be removed in version 1.0
 	 */
 	public function base_path() {
 		return PathMap::base_path();
@@ -266,7 +266,7 @@ abstract class Fabriq {
 	/**
 	 * Getter for if clean URLs are enabled
 	 * @return boolean
-	 * DEPRECATED - will be removed in version 0.10
+	 * DEPRECATED - will be removed in version 1.0
 	 */
 	public function clean_urls() {
 		return PathMap::clean_urls();
@@ -275,7 +275,7 @@ abstract class Fabriq {
 	/**
 	 * Getter for string value if clean URLs are enabled
 	 * @return boolean
-	 * DEPRECATED - will be removed in version 0.10
+	 * DEPRECATED - will be removed in version 1.0
 	 */
 	public function clean_urls_str() {
 		return PathMap::clean_urls_str();
@@ -284,7 +284,7 @@ abstract class Fabriq {
 	/**
 	 * Builds a path
 	 * @return string
-	 * DEPRECATED - will be removed in version 0.10
+	 * DEPRECATED - will be removed in version 1.0
 	 */
 	public function build_path() {
 		$args = func_get_args();

@@ -175,27 +175,22 @@ class BaseMapping {
 		global $_FAPP;
 		
 		if (count($q) > 0) {
-			if (!is_numeric($q[0])) {
-				if (trim($q[0]) != '') {
-					self::controller($q[0]);
-				} else {
-					self::controller($_FAPP['cdefault']);
-					self::arg(0, $_FAPP['cdefault']);
-				}
-				if (count($q) > 1) {
-					if (!is_numeric($q[1])) {
-						self::action($q[1]);
-					} else {
-						self::action($_FAPP['adefault']);
-						self::arg(1, $_FAPP['adefault']);
-					}
+			if (trim($q[0]) != '') {
+				self::controller($q[0]);
+			} else {
+				self::controller($_FAPP['cdefault']);
+				self::arg(0, $_FAPP['cdefault']);
+			}
+			if (count($q) > 1) {
+				if (!is_numeric($q[1])) {
+					self::action($q[1]);
 				} else {
 					self::action($_FAPP['adefault']);
 					self::arg(1, $_FAPP['adefault']);
 				}
 			} else {
-				self::controller($_FAPP['cdefault']);
-				self::arg(0, $_FAPP['cdefault']);
+				self::action($_FAPP['adefault']);
+				self::arg(1, $_FAPP['adefault']);
 			}
 		} else {
 			self::controller($_FAPP['cdefault']);

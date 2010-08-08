@@ -70,7 +70,7 @@ $db = new Database($_FDB['default']);
 require_once('app/helpers/application.helper.php');
 require_once('app/controllers/application.controller.php');
 if (!file_exists("app/controllers/" . PathMap::controller() . ".controller.php")) {
-	require_once('public/404.html');
+	header('Location: ' . PathMap::build_path(404));
 } else {
 	if (file_exists("app/helpers/" . PathMap::controller() . ".helper.php")) {
 		require_once("app/helpers/" . PathMap::controller() . ".helper.php");
@@ -81,14 +81,14 @@ if (!file_exists("app/controllers/" . PathMap::controller() . ".controller.php")
 	$a = str_replace('.', '_', PathMap::action());
 	
 	if (!$controller->hasMethod($a)) {
-		require_once('public/404.html');
+		header('Location: ' . PathMap::build_path(404));
 	} else {
 		call_user_func(array($controller, $a));
 		
 		// run render controller if different from given controller
 		if (PathMap::render_controller() != PathMap::controller()) {
 			if (!file_exists("app/controllers/" . PathMap::render_controller() . ".controller.php")) {
-				require_once('public/404.html');
+				header('Location: ' . PathMap::build_path(404));
 			} else {
 				if (file_exists("app/helpers/" . PathMap::render_controller() . ".helper.php")) {
 					require_once("app/helpers/" . PathMap::render_controller() . ".helper.php");
@@ -99,7 +99,7 @@ if (!file_exists("app/controllers/" . PathMap::controller() . ".controller.php")
 				
 				$a = str_replace('.', '_', PathMap::render_action());
 				if (!$controller->hasMethod($a)) {
-					require_once('public/404.html');
+					header('Location: ' . PathMap::build_path(404));
 				} else {
 					call_user_func(array($controller, $a));
 				}
@@ -109,7 +109,7 @@ if (!file_exists("app/controllers/" . PathMap::controller() . ".controller.php")
 			if (PathMap::render_action() != PathMap::action()) {
 				$a = str_replace('.', '_', PathMap::render_action());
 				if (!$controller->hasMethod($a)) {
-					require_once('public/404.html');
+					header('Location: ' . PathMap::build_path(404));
 				} else {
 					call_user_func(array($controller, $a));
 				}
@@ -122,14 +122,14 @@ if (!file_exists("app/controllers/" . PathMap::controller() . ".controller.php")
 				break;
 			case 'view':
 				if (!file_exists("app/views/" . PathMap::render_controller() . "/" . PathMap::render_action() . ".view.php")) {
-					require_once('public/404.html');
+					header('Location: ' . PathMap::build_path(404));
 				} else {
 					require_once("app/views/" . PathMap::render_controller() . "/" . PathMap::render_action() . ".view.php");
 				}
 				break;
 			case 'layout': default:
 				if (!file_exists("app/views/" . PathMap::render_controller() . "/" . PathMap::render_action() . ".view.php")) {
-					require_once('public/404.html');
+					header('Location: ' . PathMap::build_path(404));
 				} else {
 					if (!file_exists("app/views/layouts/" . Fabriq::layout() . ".view.php")) {
 						require_once('app/views/layouts/application.view.php');
