@@ -20,8 +20,34 @@ TO UPDATE TO VERSION 0.9 OF FABRIQ FROM 0.8
    
  - Copy the index.php file from the expanded archive to the / (root) directory
    of your Fabriq web application(s)/website(s)
+ 
+ - Copy the following snippet to your /app/PathMap.class.php file's map_path() function below the
+   line with parent::map_path();
+switch(self::controller()) {
+	case '404':
+		self::controller('errors');
+		self::action('fourohfour');
+		self::render_controller('errors');
+		self::render_action('fourohfour');
+	break;
+	case '500':
+		self::controller('errors');
+		self::action('fiveohoh');
+		self::render_controller('errors');
+		self::render_action('fiveohoh');
+	break;
+}
 
-TO UPDATE TO VERSION 0.9 OF FABRIQ FROM 0.7:
+ - Copy the following file(s) from the expanded archive to the /app/controllers directory
+   of your Fabriq web application(s)/website(s)
+   - /app/controllers/errors.controller.php
+ 
+ - Copy the following file(s) from the expanded archive to the /app/views/errors directory
+   (NOTE: you may have to create this directory) of your Fabriq web application(s)/website(s)
+   - /app/views/errors/fourohfour.view.php
+   - /app/views/errors/fiveohoh.view.php
+
+TO UPDATE TO VERSION 0.10 OF FABRIQ FROM 0.7:
 
  - Expand the downloaded archive (.zip or .tar.gz file)
  
@@ -42,6 +68,15 @@ TO UPDATE TO VERSION 0.9 OF FABRIQ FROM 0.7:
    
  - Copy the index.php file from the expanded archive to the / (root) directory
    of your Fabriq web application(s)/website(s)
+
+ - Copy the following file(s) from the expanded archive to the /app/controllers directory
+   of your Fabriq web application(s)/website(s)
+   - /app/controllers/errors.controller.php
+ 
+ - Copy the following file(s) from the expanded archive to the /app/views/errors directory
+   (NOTE: you may have to create this directory) of your Fabriq web application(s)/website(s)
+   - /app/views/errors/fourohfour.view.php
+   - /app/views/errors/fiveohoh.view.php
 
 NOTES (READ CAREFULLY FOR FURTHER DETAILS ON UPDATING):
  - In version 0.8, the fabriq.js class was removed from /public/javascripts to /core for
