@@ -159,16 +159,16 @@ class Database {
 			if ($attributes == NULL) {
 				while ($stmt->fetch()) {
 					$r = array();
-					for ($i = 0; $i < $cols; $i++) {
-						$r[$fields[$i]] = $result[$fields[$i]];
+					foreach ($result as $key => $val) {
+						$r[$key] = $val;
 					}
 					$results[] = $r;
 				}
 			} else {
 				while ($stmt->fetch()) {
 					$obj = new stdClass();
-					for ($i = 0; $i < $cols; $i++) {
-						$obj->{$fields[$i]} = $result[$fields[$i]];
+					foreach ($result as $key => $val) {
+						$obj->$key = $val;
 					}
 					$results[] = $obj;
 				}

@@ -31,7 +31,7 @@
  */
 
 class PathMap extends BaseMapping {
-	public function map_path() {
+	public static function map_path() {
 		// all basic mapping is done by parent class
 		parent::map_path();
 		

@@ -42,7 +42,7 @@ class BaseMapping {
 	 * @param string $c
 	 * @return string
 	 */
-	public function controller($c = NULL) {
+	public static function controller($c = NULL) {
 		if ($c != NULL) {
 			self::$controller = $c;
 		} else {
@@ -56,7 +56,7 @@ class BaseMapping {
 	 * @param string $controller
 	 * @return string
 	 */
-	public function render_controller($c = NULL) {
+	public static function render_controller($c = NULL) {
 		if ($c != NULL) {
 			self::$rendercontroller = $c;
 		} else {
@@ -70,7 +70,7 @@ class BaseMapping {
 	 * @param string $a
 	 * @return string
 	 */
-	public function action($a = NULL) {
+	public static function action($a = NULL) {
 		if ($a != NULL) {
 			self::$action = $a;
 		} else {
@@ -84,7 +84,7 @@ class BaseMapping {
 	 * @param string $action
 	 * @return string
 	 */
-	public function render_action($a = NULL) {
+	public static function render_action($a = NULL) {
 		if ($a != NULL) {
 			self::$renderaction = $a;
 		} else {
@@ -96,7 +96,7 @@ class BaseMapping {
 	 * getter for the base path for the application
 	 * @return string
 	 */
-	public function base_path() {
+	public static function base_path() {
 		global $_FAPP;
 		
 		return $_FAPP['apppath'];
@@ -106,7 +106,7 @@ class BaseMapping {
 	 * Getter for if clean URLs are enabled
 	 * @return boolean
 	 */
-	public function clean_urls() {
+	public static function clean_urls() {
 		global $_FAPP;
 		
 		return $_FAPP['cleanurls'];
@@ -116,7 +116,7 @@ class BaseMapping {
 	 * Getter for string value if clean URLs are enabled
 	 * @return boolean
 	 */
-	public function clean_urls_str() {
+	public static function clean_urls_str() {
 		global $_FAPP;
 		
 		if ($_FAPP['cleanurls']) {
@@ -129,7 +129,7 @@ class BaseMapping {
 	 * Builds a path
 	 * @return string
 	 */
-	public function build_path() {
+	public static function build_path() {
 		$path = '';
 		for ($i = 0; $i < func_num_args(); $i++) {
 			$path .= func_get_arg($i);
@@ -150,7 +150,7 @@ class BaseMapping {
 	 * @param object $val
 	 * @return object
 	 */
-	public function arg($index, $val = NULL) {
+	public static function arg($index, $val = NULL) {
 		global $q;
 		
 		if ($val == NULL) {
@@ -170,7 +170,7 @@ class BaseMapping {
 	 * can be extended in the /app/PathMap.class.php file to add custom
 	 * functionality.
 	 */
-	public function map_path() {
+	public static function map_path() {
 		global $q;
 		global $_FAPP;
 		
