@@ -30,6 +30,10 @@
  * --
  */
 
+function __autoload($model) {
+	require_once("app/models/{$model}.model.php");
+}
+
 abstract class Fabriq {
 	private static $cssqueue = array();
 	private static $jsqueue = array();
@@ -43,7 +47,7 @@ abstract class Fabriq {
 	 * @param string $media
 	 * @param string $path
 	 */
-	public function add_css($stylesheet, $media = 'screen', $path = 'public/stylesheets/', $ext = '.css') {
+	public static function add_css($stylesheet, $media = 'screen', $path = 'public/stylesheets/', $ext = '.css') {
 		self::$cssqueue[] = array('css' => $stylesheet, 'media' => $media, 'path' => $path, 'ext' => $ext);
 	}
 	
@@ -51,7 +55,7 @@ abstract class Fabriq {
 	 * Public getter for $cssqueue
 	 * @return array
 	 */
-	public function cssqueue() {
+	public static function cssqueue() {
 		return self::$cssqueue;
 	}
 	
@@ -61,7 +65,7 @@ abstract class Fabriq {
 	 * @param string $path
 	 * @param string $ext
 	 */
-	public function add_js($javascript, $path = 'public/javascripts/', $ext = '.js') {
+	public static function add_js($javascript, $path = 'public/javascripts/', $ext = '.js') {
 		self::$jsqueue[] = array('js' => $javascript, 'path' => $path, 'ext' => $ext);
 	}
 	
@@ -69,7 +73,7 @@ abstract class Fabriq {
 	 * Public getter for $jsqueue
 	 * @return array
 	 */
-	public function jsqueue() {
+	public static function jsqueue() {
 		return self::$jsqueue;
 	}
 	
@@ -81,7 +85,7 @@ abstract class Fabriq {
 	 * @param array $queries
 	 * @param boolean $blank
 	 */
-	public function link_to($linktext, $controller, $action = NULL, $queries = false, $blank = false, $title = NULL) {
+	public static function link_to($linktext, $controller, $action = NULL, $queries = false, $blank = false, $title = NULL) {
 		global $_FAPP;
 		
 		echo "<a href=\"";
@@ -116,8 +120,10 @@ abstract class Fabriq {
 	/**
 	 * Includes the specified model
 	 * @param string $model
+	 * DEPRECATED - will be removed in version 1.0
 	 */
-	public function model($model) {
+	public static function model($model) {
+		Messaging::message('The function Fabriq::model() has been deprecated and will be removed in the next release of Fabriq', 'warning');
 		require_once("app/models/{$model}.model.php");
 	}
 	
@@ -127,7 +133,7 @@ abstract class Fabriq {
 	 * @param string $title
 	 * @return string
 	 */
-	public function title($title = NULL) {
+	public static function title($title = NULL) {
 		if ($title != NULL) {
 			self::$title = strip_tags($title);
 		} else {
@@ -141,7 +147,7 @@ abstract class Fabriq {
 	 * @param string $render
 	 * @return string
 	 */
-	public function render($r = NULL) {
+	public static function render($r = NULL) {
 		if ($r != NULL) {
 			switch($r) {
 				case 'none':
@@ -165,7 +171,7 @@ abstract class Fabriq {
 	 * @param string $layout
 	 * @return string
 	 */
-	public function layout($l = NULL) {
+	public static function layout($l = NULL) {
 		if ($l != NULL) {
 			self::$layout = $l;
 		} else {
@@ -180,7 +186,8 @@ abstract class Fabriq {
 	 * @return string
 	 * DEPRECATED - will be removed in version 1.0
 	 */
-	public function controller($c = NULL) {
+	public static function controller($c = NULL) {
+		Messaging::message('The function Fabriq::controller() has been deprecated and will be removed in the next release of Fabriq', 'warning');
 		return PathMap::controller($c);
 	}
 	
@@ -191,7 +198,8 @@ abstract class Fabriq {
 	 * @return string
 	 * DEPRECATED - will be removed in version 1.0
 	 */
-	public function render_controller($c = NULL) {
+	public static function render_controller($c = NULL) {
+		Messaging::message('The function Fabriq::render_controller() has been deprecated and will be removed in the next release of Fabriq', 'warning');
 		return PathMap::render_controller($c);
 	}
 	
@@ -202,7 +210,8 @@ abstract class Fabriq {
 	 * @return string
 	 * DEPRECATED - will be removed in version 1.0
 	 */
-	public function action($a = NULL) {
+	public static function action($a = NULL) {
+		Messaging::message('The function Fabriq::action() has been deprecated and will be removed in the next release of Fabriq', 'warning');
 		return PathMap::action($a);
 	}
 	
@@ -213,14 +222,15 @@ abstract class Fabriq {
 	 * @return string
 	 * DEPRECATED - will be removed in version 1.0
 	 */
-	public function render_action($a = NULL) {
+	public static function render_action($a = NULL) {
+		Messaging::message('The function Fabriq::render_action() has been deprecated and will be removed in the next release of Fabriq', 'warning');
 		return PathMap::render_action($a);
 	}
 	
 	/**
 	 * Issue a server error
 	 */
-	public function fabriq_error() {
+	public static function fabriq_error() {
 		Fabriq::render('none');
 		header('Location: ' . PathMap::build_path(500));
 	}
@@ -228,7 +238,7 @@ abstract class Fabriq {
 	/**
 	 * turn on page javascript include
 	 */
-	public function page_js_on() {
+	public static function page_js_on() {
 		Fabriq::add_js(PathMap::render_controller() . '.script', 'app/scripts/');
 	}
 	
@@ -236,7 +246,7 @@ abstract class Fabriq {
 	 * Determines whether or not the configuration file has been
 	 * created yet
 	 */
-	public function installed() {
+	public static function installed() {
 		if (!file_exists('config/config.inc.php')) {
 			header("Location: install.php");
 			exit();
@@ -250,7 +260,8 @@ abstract class Fabriq {
 	 * @return object
 	 * DEPRECATED - will be removed in version 1.0
 	 */
-	public function arg($index, $val = NULL) {
+	public static function arg($index, $val = NULL) {
+		Messaging::message('The function Fabriq::arg() has been deprecated and will be removed in the next release of Fabriq', 'warning');
 		return PathMap::arg($index, $val);
 	}
 	
@@ -259,7 +270,8 @@ abstract class Fabriq {
 	 * @return string
 	 * DEPRECATED - will be removed in version 1.0
 	 */
-	public function base_path() {
+	public static function base_path() {
+		Messaging::message('The function Fabriq::base_path() has been deprecated and will be removed in the next release of Fabriq', 'warning');
 		return PathMap::base_path();
 	}
 	
@@ -268,7 +280,8 @@ abstract class Fabriq {
 	 * @return boolean
 	 * DEPRECATED - will be removed in version 1.0
 	 */
-	public function clean_urls() {
+	public static function clean_urls() {
+		Messaging::message('The function Fabriq::clean_urls() has been deprecated and will be removed in the next release of Fabriq', 'warning');
 		return PathMap::clean_urls();
 	}
 	
@@ -277,7 +290,8 @@ abstract class Fabriq {
 	 * @return boolean
 	 * DEPRECATED - will be removed in version 1.0
 	 */
-	public function clean_urls_str() {
+	public static function clean_urls_str() {
+		Messaging::message('The function Fabriq::clean_urls_str() has been deprecated and will be removed in the next release of Fabriq', 'warning');
 		return PathMap::clean_urls_str();
 	}
 	
@@ -286,7 +300,8 @@ abstract class Fabriq {
 	 * @return string
 	 * DEPRECATED - will be removed in version 1.0
 	 */
-	public function build_path() {
+	public static function build_path() {
+		Messaging::message('The function Fabriq::build_path() has been deprecated and will be removed in the next release of Fabriq', 'warning');
 		$args = func_get_args();
 		return call_user_func_array(array('PathMap', 'build_path'), $args);
 	}

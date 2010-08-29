@@ -219,6 +219,7 @@ class Model implements ArrayAccess, Iterator, Countable {
 	 *   function instead of this one for more advanced queries.
 	 */
 	public function find_old($query = null, $limit = null, $where = null, $order = null, $start = null) {
+		Messaging::message('The function Model::find_old() has been deprecated and will be removed in the next release of Fabriq', 'warning');
 		global $db;
 		$inputs = array();
 		$fields = array_merge(array($this->id_name), $this->attributes, array('created', 'updated'));
@@ -344,6 +345,7 @@ class Model implements ArrayAccess, Iterator, Countable {
 	 * DEPRECATED - will be removed in version 1.0
 	 */
 	public function createAt($index = 0) {
+		Messaging::message('The function Model::createAt() has been deprecated and will be removed in the next release of Fabriq', 'warning');
 		return $this->create($index);
 	}
 	
@@ -395,6 +397,7 @@ class Model implements ArrayAccess, Iterator, Countable {
 	 * DEPRECATED - will be removed in version 1.0
 	 */
 	function updateAt($index = 0) {
+		Messaging::message('The function Model::updateAt() has been deprecated and will be removed in the next release of Fabriq', 'warning');
 		return $this->update($index);
 	}
 	

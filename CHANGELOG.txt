@@ -1,6 +1,14 @@
 Fabriq Framework change log
   - Initiated 05/05/10 for version 0.5
   
+Version 0.11 2010-08-29
+  - Fixed Database::prepare_select() to set data pulled from the database to the right keys
+  - You no longer need to call Fabriq::model('ModelName') to load models. Models will now be automatically
+    loaded whenever you instantiate a new copy.
+  - Added the static keyword where appropriate
+  - NOTE: all deprecated functions are maked with the warning class. Please update your code to remove them.
+    The next release of Fabriq will not have deprecated functions in it.
+  
 Version 0.10 2010-08-08
   - Cleaned up find function in the Model class. If your code uses the old version, your code can be updated
     to call find_old, however, you should update your code to use Database::prepare_select(). find_old in
