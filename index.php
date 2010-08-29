@@ -131,8 +131,8 @@ if (!file_exists("app/controllers/" . PathMap::controller() . ".controller.php")
 				if (!file_exists("app/views/" . PathMap::render_controller() . "/" . PathMap::render_action() . ".view.php")) {
 					header('Location: ' . PathMap::build_path(404));
 				} else {
-					if (Messaging::has_messages('warning')) {
-						Messaging::display_messages('warning'); // @TODO remove for version 0.12
+					if (Messaging::has_messages('warnings')) {
+						Messaging::display_messages('warnings'); // @TODO remove for version 0.12
 					}
 					if (!file_exists("app/views/layouts/" . Fabriq::layout() . ".view.php")) {
 						require_once('app/views/layouts/application.view.php');
