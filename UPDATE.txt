@@ -21,6 +21,11 @@ TO UPDATE TO VERSION 0.11 OF FABRIQ FROM 0.10
  - Copy the index.php file from the expanded archive to the / (root) directory
    of your Fabriq web application(s)/website(s)
    
+ - IMPORTANT: In the file /app/PathMap.class.php, change the line:
+      public function map_path() {
+   to
+      public static function map_path() {
+   
  - NOTE: all deprecated functions are maked with the warning class. Please update your code to remove them.
    The next release of Fabriq will not have deprecated functions in it.
 
