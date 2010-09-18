@@ -205,72 +205,6 @@ class Model implements ArrayAccess, Iterator, Countable {
 			return TRUE;
 		}
 	}
-		
-	/**
-	 * Finds a given value or collection in the database
-	 * @param string/integer $query
-	 * @param integer $limit
-	 * @param array $where
-	 * @param array $order
-	 * @param integer $start
-	 * @return boolean
-	 * DEPRECATED - Will be removed in version 1.0
-	 *   Update all code that uses this function to use the Database::prepared_select()
-	 *   function instead of this one for more advanced queries.
-	 */
-	public function find_old($query = null, $limit = null, $where = null, $order = null, $start = null) {
-		Messaging::message('The function Model::find_old() has been deprecated and will be removed in the next release of Fabriq', 'warning');
-		global $db;
-		$inputs = array();
-		$fields = array_merge(array($this->id_name), $this->attributes, array('created', 'updated'));
-
-		if (is_numeric($query)) {
-			$q = "SELECT " . implode(', ', $fields) . " FROM {$this->db_table} WHERE {$this->id_name} = ? LIMIT 1;";
-			$inputs[] = $query;
-		} else if ($query == 'first') {
-			$q = "SELECT " . implode(', ', $fields) . " FROM {$this->db_table} ORDER BY {$this->id_name} LIMIT 1;";
-		} else if ($query == 'last') {
-			$q = "SELECT " . implode(', ', $fields) . " FROM {$this->db_table} ORDER BY {$this->id_name} DESC LIMIT 1;";
-		} else {
-			$q = "SELECT " . implode(', ', $fields) . " FROM {$this->db_table} ";
-			if ($where != null) {
-				$w = $this->build_where_prepared($where);
-				$q .= $w[0];
-				$inputs = array_merge($inputs, $w[1]);
-			}
-			$q .= "ORDER BY ";
-			if ($order != null) {
-				$x = 0;
-				foreach($order as $field => $dir) {
-					$q .= " {$field} {$dir}";
-					if ($x < (count($order) - 1)) {
-						$q .= ", ";
-					}
-					$x++;
-				}
-			} else {
-				$q .= " {$this->id_name}";
-			}
-			if ($limit != null) {
-				if (is_numeric($limit)) {
-					if (($start != null) && (is_numeric($start))) {
-						$q .= " LIMIT {$start}, {$limit}";
-					} else {
-						$q .= " LIMIT {$limit}";
-					}
-				}
-			}
-			$q .= ";";
-		}
-		$results = $db->prepare_select($q, $fields, $inputs, $this->attributes);
-		
-		if ($db->num_rows == 0) {
-			return FALSE;
-		} else {
-			$this->data = $results;
-			return TRUE;
-		}
-	}
 	
 	/**
 	 * Destroys a given value in the database
@@ -339,17 +273,6 @@ class Model implements ArrayAccess, Iterator, Countable {
 	}
 	
 	/**
-	 * Inserts object $this->data[$index] into the database
-	 * @param integer $index
-	 * @return integer
-	 * DEPRECATED - will be removed in version 1.0
-	 */
-	public function createAt($index = 0) {
-		Messaging::message('The function Model::createAt() has been deprecated and will be removed in the next release of Fabriq', 'warning');
-		return $this->create($index);
-	}
-	
-	/**
 	 * Updates the value of $this->data[$index] in the database
 	 * @param integer $index
 	 * @return integer
@@ -388,17 +311,6 @@ class Model implements ArrayAccess, Iterator, Countable {
 		
 		$db->prepare_cud($sql, $values);
 		return $db->affected_rows;
-	}
-	
-	/**
-	 * Updates the value of $this->data[$index] in the database
-	 * @param integer $index
-	 * @return integer
-	 * DEPRECATED - will be removed in version 1.0
-	 */
-	function updateAt($index = 0) {
-		Messaging::message('The function Model::updateAt() has been deprecated and will be removed in the next release of Fabriq', 'warning');
-		return $this->update($index);
 	}
 	
 	/**

@@ -1,6 +1,9 @@
 Fabriq Framework change log
   - Initiated 05/05/10 for version 0.5
   
+Version 0.12 2010-09-17
+  - Removed all deprecated functions from the code
+  
 Version 0.11 2010-08-29
   - Fixed Database::prepare_select() to set data pulled from the database to the right keys
   - You no longer need to call Fabriq::model('ModelName') to load models. Models will now be automatically

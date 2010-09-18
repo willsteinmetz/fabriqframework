@@ -1,4 +1,4 @@
-TO UPDATE TO VERSION 0.11 OF FABRIQ FROM 0.10
+TO UPDATE TO VERSION 0.12 OF FABRIQ FROM 0.11
 
  - Expand the downloaded archive (.zip or .tar.gz file)
  
@@ -21,13 +21,7 @@ TO UPDATE TO VERSION 0.11 OF FABRIQ FROM 0.10
  - Copy the index.php file from the expanded archive to the / (root) directory
    of your Fabriq web application(s)/website(s)
    
- - IMPORTANT: In the file /app/PathMap.class.php, change the line:
-      public function map_path() {
-   to
-      public static function map_path() {
-   
- - NOTE: all deprecated functions are maked with the warning class. Please update your code to remove them.
-   The next release of Fabriq will not have deprecated functions in it.
+ - WARNING: All functions that have been marked as deprecated in past versions have been removed
 
 NOTES (READ CAREFULLY FOR FURTHER DETAILS ON UPDATING):
  - In version 0.8, the fabriq.js class was removed from /public/javascripts to /core for
@@ -40,8 +34,8 @@ NOTES (READ CAREFULLY FOR FURTHER DETAILS ON UPDATING):
    developers to define custom path mapping rules. Functionality that has been moved
    from /core/Fabriq.class.php to /core/BaseMapping.class.php is marked in the
    documentation at http://docs.fabriqframework.com/ as deprecated. NOTE: functions
-   from /core/Fabriq.class.php that were moved to /core/BaseMapping.class.php will
-   be REMOVED in version 0.12 of Fabriq. Please update any references to those functions
+   from /core/Fabriq.class.php that were moved to /core/BaseMapping.class.php were removed in
+   this version. Please update any references to those functions
    to use the new functions in /app/PathMap.class.php.
    
  - When referencing mapping functions, the PathMap class should be referenced and

@@ -254,6 +254,10 @@ class Database {
 		return FALSE;
 	}
 	
+	/**
+	 * Returns string version of the database error with the error number and string
+	 * @return string
+	 */
 	public function error_str() {
 		return $this->errorNo . ': ' . $this->errorStr;
 	}
