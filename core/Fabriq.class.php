@@ -118,16 +118,6 @@ abstract class Fabriq {
 	}
 	
 	/**
-	 * Includes the specified model
-	 * @param string $model
-	 * DEPRECATED - will be removed in version 1.0
-	 */
-	public static function model($model) {
-		Messaging::message('The function Fabriq::model() has been deprecated and will be removed in the next release of Fabriq', 'warning');
-		require_once("app/models/{$model}.model.php");
-	}
-	
-	/**
 	 * page title getter/setter
 	 * if NULL, return the page title
 	 * @param string $title
@@ -180,54 +170,6 @@ abstract class Fabriq {
 	}
 	
 	/**
-	 * Controller getter/setter
-	 * if NULL, return the $controller variable
-	 * @param string $c
-	 * @return string
-	 * DEPRECATED - will be removed in version 1.0
-	 */
-	public static function controller($c = NULL) {
-		Messaging::message('The function Fabriq::controller() has been deprecated and will be removed in the next release of Fabriq', 'warning');
-		return PathMap::controller($c);
-	}
-	
-	/**
-	 * Render controller getter/setter
-	 * if NULL, return the $rendercontroller variable
-	 * @param string $controller
-	 * @return string
-	 * DEPRECATED - will be removed in version 1.0
-	 */
-	public static function render_controller($c = NULL) {
-		Messaging::message('The function Fabriq::render_controller() has been deprecated and will be removed in the next release of Fabriq', 'warning');
-		return PathMap::render_controller($c);
-	}
-	
-	/**
-	 * Action getter/setter
-	 * if NULL, return the $action variable
-	 * @param string $a
-	 * @return string
-	 * DEPRECATED - will be removed in version 1.0
-	 */
-	public static function action($a = NULL) {
-		Messaging::message('The function Fabriq::action() has been deprecated and will be removed in the next release of Fabriq', 'warning');
-		return PathMap::action($a);
-	}
-	
-	/**
-	 * Render action getter/setter
-	 * if NULL, return the $renderaction variable
-	 * @param string $action
-	 * @return string
-	 * DEPRECATED - will be removed in version 1.0
-	 */
-	public static function render_action($a = NULL) {
-		Messaging::message('The function Fabriq::render_action() has been deprecated and will be removed in the next release of Fabriq', 'warning');
-		return PathMap::render_action($a);
-	}
-	
-	/**
 	 * Issue a server error
 	 */
 	public static function fabriq_error() {
@@ -251,58 +193,5 @@ abstract class Fabriq {
 			header("Location: install.php");
 			exit();
 		}
-	}
-	
-	/**
-	 * Argument getter/setter
-	 * @param integer $index
-	 * @param object $val
-	 * @return object
-	 * DEPRECATED - will be removed in version 1.0
-	 */
-	public static function arg($index, $val = NULL) {
-		Messaging::message('The function Fabriq::arg() has been deprecated and will be removed in the next release of Fabriq', 'warning');
-		return PathMap::arg($index, $val);
-	}
-	
-	/**
-	 * getter for the base path for the application
-	 * @return string
-	 * DEPRECATED - will be removed in version 1.0
-	 */
-	public static function base_path() {
-		Messaging::message('The function Fabriq::base_path() has been deprecated and will be removed in the next release of Fabriq', 'warning');
-		return PathMap::base_path();
-	}
-	
-	/**
-	 * Getter for if clean URLs are enabled
-	 * @return boolean
-	 * DEPRECATED - will be removed in version 1.0
-	 */
-	public static function clean_urls() {
-		Messaging::message('The function Fabriq::clean_urls() has been deprecated and will be removed in the next release of Fabriq', 'warning');
-		return PathMap::clean_urls();
-	}
-	
-	/**
-	 * Getter for string value if clean URLs are enabled
-	 * @return boolean
-	 * DEPRECATED - will be removed in version 1.0
-	 */
-	public static function clean_urls_str() {
-		Messaging::message('The function Fabriq::clean_urls_str() has been deprecated and will be removed in the next release of Fabriq', 'warning');
-		return PathMap::clean_urls_str();
-	}
-	
-	/**
-	 * Builds a path
-	 * @return string
-	 * DEPRECATED - will be removed in version 1.0
-	 */
-	public static function build_path() {
-		Messaging::message('The function Fabriq::build_path() has been deprecated and will be removed in the next release of Fabriq', 'warning');
-		$args = func_get_args();
-		return call_user_func_array(array('PathMap', 'build_path'), $args);
 	}
 }
