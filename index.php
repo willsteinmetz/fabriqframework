@@ -49,6 +49,7 @@ require_once('core/Fabriq.class.php');
 // check to make sure application has been configured
 Fabriq::installed();
 
+// include core files
 require_once('config/config.inc.php');
 require_once('core/Database.class.php');
 require_once('core/Controller.class.php');
@@ -56,6 +57,7 @@ require_once('core/Model.class.php');
 require_once('core/BaseMapping.class.php');
 require_once('app/PathMap.class.php');
 require_once('core/Messaging.class.php');
+require_once('app/helpers/application.helper.php');
 
 // query variable
 $q = explode('/', $_GET['q']);
@@ -67,7 +69,6 @@ PathMap::map_path();
 $db = new Database($_FDB['default']);
 
 // include the controller, action, and helper files
-require_once('app/helpers/application.helper.php');
 require_once('app/controllers/application.controller.php');
 if (!file_exists("app/controllers/" . PathMap::controller() . ".controller.php")) {
 	header('Location: ' . PathMap::build_path(404));
