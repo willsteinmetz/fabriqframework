@@ -180,18 +180,18 @@ class Model implements ArrayAccess, Iterator, Countable {
 		$fields = array_merge(array($this->id_name), $this->attributes, array('created', 'updated'));
 		
 		if (is_numeric($query)) {
-			$q = "SELECT " . implode(', ', $fields) . " FROM {$this->db_table} WHERE {$this->id_name} = ? LIMIT 1;";
+			$q = "SELECT `" . implode('`, `', $fields) . "` FROM {$this->db_table} WHERE {$this->id_name} = ? LIMIT 1;";
 			$inputs[] = $query;
 		} else {
 			switch($query) {
 				case 'first':
-					$q = "SELECT " . implode(', ', $fields) . " FROM {$this->db_table} ORDER BY {$this->id_name} LIMIT 1;";
+					$q = "SELECT `" . implode('`, `', $fields) . "` FROM {$this->db_table} ORDER BY {$this->id_name} LIMIT 1;";
 				break;
 				case 'last':
-					$q = "SELECT " . implode(', ', $fields) . " FROM {$this->db_table} ORDER BY {$this->id_name} DESC LIMIT 1;";
+					$q = "SELECT `" . implode('`, `', $fields) . "` FROM {$this->db_table} ORDER BY {$this->id_name} DESC LIMIT 1;";
 				break;
 				case 'all': default:
-					$q = "SELECT " . implode(', ', $fields) . " FROM {$this->db_table} ORDER BY {$this->id_name}";
+					$q = "SELECT `" . implode('`, `', $fields) . "` FROM {$this->db_table} ORDER BY {$this->id_name}";
 				break;
 			}
 		}
@@ -236,9 +236,9 @@ class Model implements ArrayAccess, Iterator, Countable {
 		
 		$attributes = '';
 		foreach ($this->attributes as $attribute) {
-			$attributes .= "{$attribute}, ";
+			$attributes .= "`{$attribute}`, ";
 		}
-		$attributes .= "created, updated";
+		$attributes .= "`created`, `updated`";
 		$this->data[$index]->created = date('Y-m-d G:i:s');
 		$this->data[$index]->updated = date('Y-m-d G:i:s');
 		$valuesStr = '';
@@ -280,17 +280,12 @@ class Model implements ArrayAccess, Iterator, Countable {
 	public function update($index = 0) {
 		global $db;
 
-		$attributes = '';
-		foreach ($this->attributes as $attribute) {
-			$attributes .= "{$attribute}, ";
-		}
-		$attributes .= "created, updated";
 		$this->data[$index]->updated = date('Y-m-d G:i:s');
 		$valuesStr = '';
 		for ($i = 0; $i < count($this->attributes); $i++) {
-			$valuesStr .= $this->attributes[$i] . ' = ?, ';
+			$valuesStr .= '`' . $this->attributes[$i] . '` = ?, ';
 		}
-		$valuesStr .= 'created = ?, updated = ?';
+		$valuesStr .= '`created` = ?, `updated` = ?';
 		if (get_magic_quotes_gpc()) {
 			foreach ($this->attributes as $attribute) {
 				if ($this->data[$index]->$attribute != null) {
