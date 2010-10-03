@@ -1,6 +1,13 @@
 Fabriq Framework change log
   - Initiated 05/05/10 for version 0.5
-  
+
+Version 1.0 2010-10-03
+  - Official version 1.0 is released!
+  - Action setting in the BaseMapping class was fixed to not accidentally overwrite values passed in through the path
+
+Version 0.12.1 2010-09-26
+  - Moved include for /app/helpers/application.helper.php file to be included before PathMap::map_path() is called in index.php
+
 Version 0.12 2010-09-17
   - Removed all deprecated functions from the code
   
