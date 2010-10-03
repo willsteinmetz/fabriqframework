@@ -186,11 +186,9 @@ class BaseMapping {
 					self::action($q[1]);
 				} else {
 					self::action($_FAPP['adefault']);
-					self::arg(1, $_FAPP['adefault']);
 				}
 			} else {
 				self::action($_FAPP['adefault']);
-				self::arg(1, $_FAPP['adefault']);
 			}
 		} else {
 			self::controller($_FAPP['cdefault']);
