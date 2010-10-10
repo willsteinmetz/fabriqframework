@@ -1,6 +1,6 @@
 <?php
 /**
- * @file Database connectivity file - DO NOT EDIT
+ * @file MySQL Database connectivity file - DO NOT EDIT
  * @author Will Steinmetz
  * --
  * Copyright (c)2010, Ralivue.com
@@ -29,7 +29,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * --
  */
-class Database {
+class DatabaseMySQL implements Database {
 	// public variables
 	public $db;
 	public $last;
@@ -47,7 +47,6 @@ class Database {
 	 * Constructor
 	 */
 	public function __construct($db_info) {
-		// mysql
 		$this->db = new mysqli($db_info['server'], $db_info['user'], $db_info['pwd'], $db_info['db']) or die ("A database error occurred. Please contact the administrator.");
 	}
 	
@@ -56,7 +55,6 @@ class Database {
 	 * @param string $sql
 	 */
 	public function query($sql) {
-		// mysql
 		$this->last = $sql;
 		$this->result = $this->db->query($sql) or die (mysqli_error() . "<br />-----<br />$sql");
 		$this->affected_rows = $this->db->affected_rows;
@@ -73,7 +71,6 @@ class Database {
 	 * @return boolean success
 	 */
 	public function prepare_cud($sql, $inputs) {
-		// mysql
 		$stmt = $this->db->stmt_init();
 		if ($stmt->prepare($sql)) {
 			$types = '';
@@ -116,7 +113,6 @@ class Database {
 	 * @return array/boolean
 	 */
 	public function prepare_select($sql, $fields, $inputs = array(), $attributes = NULL) {
-		// mysql
 		$stmt = $this->db->stmt_init();
 		
 		if ($stmt->prepare($sql)) {
@@ -188,7 +184,6 @@ class Database {
 	 * @param string $str
 	 */
 	public function escape_string($str) {
-		// mysql
 		return $this->db->real_escape_string($str);
 	}
 	
@@ -199,8 +194,8 @@ class Database {
 	 * @param string $test
 	 * @param string $next
 	 */
+	// DEPRECATED - will be removed in version 2.0 RC
 	public function where($field, $operator, $test, $next = NULL) {
-		// mysql
 		if ($next == NULL) {
 			return $this->escape_string(trim($field)) . ' ' . $this->escape_string(trim($operator)) . " '" . $this->escape_string(trim($test)) . "' ";
 		} else {
@@ -215,8 +210,8 @@ class Database {
 	 * @param string $operator
 	 * @param string $next
 	 */
+	// DEPRECATED - will be removed in version 2.0 RC
 	public function where_prepared($field, $operator, $next = NULL) {
-		// mysql
 		if ($next == NULL) {
 			return $this->escape_string(trim($field)) . ' ' . $this->escape_string(trim($operator)) . " ? ";
 		} else {
@@ -228,7 +223,6 @@ class Database {
 	 * Closes the database connection
 	 */
 	public function close() {
-		// mysql
 		$this->db->close();
 	}
 	

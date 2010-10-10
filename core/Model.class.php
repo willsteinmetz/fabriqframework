@@ -313,6 +313,7 @@ class Model implements ArrayAccess, Iterator, Countable {
 	 * @param array $where
 	 * @return string
 	 */
+	// DEPRECATED - will be removed in version 2.0 RC
 	private function build_where($where) {
 		global $db;
 		
@@ -331,6 +332,7 @@ class Model implements ArrayAccess, Iterator, Countable {
 	 * @param unknown_type $where
 	 * @return string
 	 */
+	// DEPRECATED - will be removed in version 2.0 RC
 	private function build_where_prepared($where) {
 		global $db;
 		$inputs = array();
