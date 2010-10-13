@@ -68,16 +68,18 @@ class DatabasepgSQL implements Database {
 	 * @param array $inputs
 	 * @return boolean success
 	 */
-	public function prepare_cud($sql, $inputs) {
-		// @TODO fill in prepare create, update, delete function for pgSQL
-	}
-	
-	/**
-	 * Escapes string for database call
-	 * @param string $str
-	 */
-	public function escape_string($str) {
-		return pg_escape_string($this->db, $str);
+	public function prepare_cud($sql, $inputs, $tableName = NULL) {
+		$queryName = date('YmdHis');
+
+		if ($this->result = pg_prepare($this->db, $queryName, $sql)) {
+			$this->result = pg_execute($this->db, $queryName, $inputs);
+			
+			$this->affected_rows = pg_affected_rows($this->result);
+			$this->error = pg_last_error($this->db);
+			
+			return TRUE;
+		}
+		return FALSE;
 	}
 	
 	/**
@@ -89,7 +91,41 @@ class DatabasepgSQL implements Database {
 	 * @return array/boolean
 	 */
 	public function prepare_select($sql, $fields, $inputs = array(), $attributes = NULL) {
-		// @TODO fill in prepare select for pgSQL
+		$queryName = date('YmdHis');
+		if ($this->result = pg_prepare($this->db, $queryName, $sql)) {
+			$results = array();
+			if ($attributes == NULL) {
+				while ($row = pg_fetch_assoc($this->result)) {
+					$r = array();
+					foreach ($row as $key => $val) {
+						$r[$key] = $val;
+					}
+					$results[] = $r;
+				}
+			} else {
+				while ($row = pg_fetch_assoc($this->result)) {
+					$obj = new stdClass();
+					foreach ($row as $key => $val) {
+						$obj->$key = $val;
+					}
+					$results[] = $obj;
+				}
+			}
+			
+			$this->num_rows = count($result);
+			$this->error = pg_last_error($this->db);
+			
+			return $results;
+		}
+		return FALSE;
+	}
+	
+	/**
+	 * Escapes string for database call
+	 * @param string $str
+	 */
+	public function escape_string($str) {
+		return pg_escape_string($this->db, $str);
 	}
 	
 	/**

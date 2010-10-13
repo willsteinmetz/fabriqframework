@@ -52,7 +52,6 @@ Fabriq::installed();
 // include core files
 require_once('config/config.inc.php');
 require_once('core/Database.interface.php');
-//require_once('core/Database.class.php');
 require_once('core/Controller.class.php');
 require_once('core/Model.class.php');
 require_once('core/BaseMapping.class.php');
@@ -67,6 +66,9 @@ $q = explode('/', $_GET['q']);
 PathMap::map_path();
 
 // initialize database
+if (!isset($_FDB['default']['type'])) {
+	$_FDB['default']['type'] = 'MySQL';
+}
 $dbType = 'Database' . $_FDB['default']['type'];
 $db = new $dbType($_FDB['default']);
 
