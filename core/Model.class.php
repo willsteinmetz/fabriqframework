@@ -269,7 +269,7 @@ class Model implements ArrayAccess, Iterator, Countable {
 		if ($_FDB['type'] == 'MySQL') {
 			$data[] = 0;
 		} else {
-			$data[] = "nextval('{$this->db_table}')";
+			$data[] = "nextval('{$this->db_table}_{$this->id_name}_seq'::regclass)";
 		}
 		foreach ($this->attributes as $attribute) {
 			if ($this->data[$index]->$attribute !== null) {
@@ -279,7 +279,7 @@ class Model implements ArrayAccess, Iterator, Countable {
 			}
 		}
 		$values = array_merge($data, array($this->data[$index]->created, $this->data[$index]->updated));
-		$sql = "INSERT INTO {$delim}{$this->db_table}{$delim} ({$attributes}) VALUES ({$valuesStr})";
+		$sql = "INSERT INTO {$this->db_table} ({$attributes}) VALUES ({$valuesStr})";
 		
 		if ($db->prepare_cud($sql, $values)) {
 			return $db->insert_id;
