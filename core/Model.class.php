@@ -308,7 +308,7 @@ class Model implements ArrayAccess, Iterator, Countable {
 		if ($_FDB['type'] == 'MySQL') {
 			$valuesStr .= '`created` = ?, `updated` = ?';
 		} else {
-			$valuesStr .= '"created" = ' . (count($this->attributes) + 1) . ', "updated" = ' . (count($this->attributes) + 2) . '';
+			$valuesStr .= '"created" = $' . (count($this->attributes) + 1) . ', "updated" = $' . (count($this->attributes) + 2) . '';
 		}
 		if (get_magic_quotes_gpc()) {
 			foreach ($this->attributes as $attribute) {
