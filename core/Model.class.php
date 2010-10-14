@@ -183,18 +183,18 @@ class Model implements ArrayAccess, Iterator, Countable {
 		$fields = array_merge(array($this->id_name), $this->attributes, array('created', 'updated'));
 		
 		if (is_numeric($query)) {
-			$q = "SELECT {$delim}" . $this->fieldsStr($delim) . "{$delim} FROM {$this->db_table} WHERE {$delim}{$this->id_name}{$delim} = " . (($db->type == 'MySQL') ? '?' : '$1') . " LIMIT 1;";
+			$q = "SELECT " . $this->fieldsStr($delim) . " FROM {$this->db_table} WHERE {$delim}{$this->id_name}{$delim} = " . (($db->type == 'MySQL') ? '?' : '$1') . " LIMIT 1;";
 			$inputs[] = $query;
 		} else {
 			switch($query) {
 				case 'first':
-					$q = "SELECT {$delim}" . $this->fieldsStr($delim) . "{$delim} FROM {$this->db_table} ORDER BY {$delim}{$this->id_name}{$delim} LIMIT 1;";
+					$q = "SELECT " . $this->fieldsStr($delim) . " FROM {$this->db_table} ORDER BY {$delim}{$this->id_name}{$delim} LIMIT 1;";
 				break;
 				case 'last':
-					$q = "SELECT {$delim}" . $this->fieldsStr($delim) . "{$delim} FROM {$this->db_table} ORDER BY {$delim}{$this->id_name}{$delim} DESC LIMIT 1;";
+					$q = "SELECT " . $this->fieldsStr($delim) . " FROM {$this->db_table} ORDER BY {$delim}{$this->id_name}{$delim} DESC LIMIT 1;";
 				break;
 				case 'all': default:
-					$q = "SELECT {$delim}" . $this->fieldsStr($delim) . "{$delim} FROM {$this->db_table} ORDER BY {$delim}{$this->id_name}{$delim}";
+					$q = "SELECT " . $this->fieldsStr($delim) . " FROM {$this->db_table} ORDER BY {$delim}{$this->id_name}{$delim}";
 				break;
 			}
 		}
