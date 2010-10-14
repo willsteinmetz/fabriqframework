@@ -90,6 +90,7 @@ class DatabasepgSQL implements Database {
 	 */
 	public function prepare_select($sql, $fields, $inputs = array(), $attributes = NULL) {
 		if ($this->result = pg_prepare($this->db, "", $sql)) {
+			$this->result = pg_execute($this->db, "", $inputs);
 			$results = array();
 			if ($attributes == NULL) {
 				while ($row = pg_fetch_assoc($this->result)) {
