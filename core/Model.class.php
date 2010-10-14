@@ -177,14 +177,13 @@ class Model implements ArrayAccess, Iterator, Countable {
 	 */
 	public function find($query = 'all') {
 		global $db;
-		global $_FDB;
 		
-		$delim = $this->delims[$_FDB['type']];
+		$delim = $this->delims[$db->type];
 		$inputs = array();
 		$fields = array_merge(array($this->id_name), $this->attributes, array('created', 'updated'));
 		
 		if (is_numeric($query)) {
-			$q = "SELECT {$delim}" . $this->fieldsStr($delim) . "{$delim} FROM {$this->db_table} WHERE {$delim}{$this->id_name}{$delim} = " . (($_FDB['type'] == 'MySQL') ? '?' : '$1') . " LIMIT 1;";
+			$q = "SELECT {$delim}" . $this->fieldsStr($delim) . "{$delim} FROM {$this->db_table} WHERE {$delim}{$this->id_name}{$delim} = " . (($db->type == 'MySQL') ? '?' : '$1') . " LIMIT 1;";
 			$inputs[] = $query;
 		} else {
 			switch($query) {
@@ -217,15 +216,14 @@ class Model implements ArrayAccess, Iterator, Countable {
 	 */
 	public function destroy($index = NULL) {
 		global $db;
-		global $_FDB;
 		
-		$delim = $this->delims[$_FDB['type']];
+		$delim = $this->delims[$db->type];
 		if (is_numeric($index) && ($index < count($this->data))) {
-			$sql = "DELETE FROM {$this->db_table} WHERE {$delim}{$this->id_name}{$delim} = " . (($_FDB['type'] == 'MySQL') ? '?' : '$1') . " LIMIT 1;";
+			$sql = "DELETE FROM {$this->db_table} WHERE {$delim}{$this->id_name}{$delim} = " . (($db->type == 'MySQL') ? '?' : '$1') . " LIMIT 1;";
 			$db->prepare_cud($sql, array($this->data[$index]->id));
 			return $db->affected_rows;
 		} else if ($index == NULL) {
-			$sql = "DELETE FROM {$this->db_table} WHERE {$delim}{$this->id_name}{$delim} = " . (($_FDB['type'] == 'MySQL') ? '?' : '$1') . " LIMIT 1;";
+			$sql = "DELETE FROM {$this->db_table} WHERE {$delim}{$this->id_name}{$delim} = " . (($db->type == 'MySQL') ? '?' : '$1') . " LIMIT 1;";
 			$db->prepare_cud($sql, array($this->data[0]->id));
 			return $db->affected_rows;
 		} else {
@@ -240,9 +238,8 @@ class Model implements ArrayAccess, Iterator, Countable {
 	 */
 	public function create($index = 0) {
 		global $db;
-		global $_FDB;
 		
-		$delim = $this->delims[$_FDB['type']];
+		$delim = $this->delims[$db->type];
 		
 		$attributes = "{$delim}{$this->id_name}{$delim}, ";
 		foreach ($this->attributes as $attribute) {
@@ -253,7 +250,7 @@ class Model implements ArrayAccess, Iterator, Countable {
 		$this->data[$index]->updated = date('Y-m-d G:i:s');
 		$valuesStr = '';
 		for ($i = 1; $i <= (count($this->attributes) + 2); $i++) {
-			$valuesStr .= ($_FDB['type'] == 'MySQL') ? '?' : ('$' . $i);
+			$valuesStr .= ($db->type == 'MySQL') ? '?' : ('$' . $i);
 			if ($i < (count($this->attributes) + 2)) {
 				$valuesStr .= ', ';
 			}
@@ -266,7 +263,7 @@ class Model implements ArrayAccess, Iterator, Countable {
 			}
 		}
 		
-		if ($_FDB['type'] == 'MySQL') {
+		if ($db->type == 'MySQL') {
 			$idField = 0;
 		} else {
 			$idField = "nextval('{$this->db_table}_{$this->id_name}_seq'::regclass)";
@@ -293,19 +290,17 @@ class Model implements ArrayAccess, Iterator, Countable {
 	 * @param integer $index
 	 * @return integer
 	 */
-	// @TODO fix update code
 	public function update($index = 0) {
 		global $db;
-		global $_FDB;
 		
-		$delim = $this->delims[$_FDB['type']];
+		$delim = $this->delims[$db->type];
 
 		$this->data[$index]->updated = date('Y-m-d G:i:s');
 		$valuesStr = '';
 		for ($i = 0; $i < count($this->attributes); $i++) {
-			$valuesStr .= $delim . $this->attributes[$i] . $delim . ' = ' . (($_FDB['type'] == 'MySQL') ? '?' : ('$' . ($i + 1))) . ', ';
+			$valuesStr .= $delim . $this->attributes[$i] . $delim . ' = ' . (($db->type == 'MySQL') ? '?' : ('$' . ($i + 1))) . ', ';
 		}
-		if ($_FDB['type'] == 'MySQL') {
+		if ($db->type == 'MySQL') {
 			$valuesStr .= '`created` = ?, `updated` = ?';
 		} else {
 			$valuesStr .= '"created" = $' . (count($this->attributes) + 1) . ', "updated" = $' . (count($this->attributes) + 2) . '';
@@ -326,7 +321,7 @@ class Model implements ArrayAccess, Iterator, Countable {
 			}
 		}
 		$values = array_merge($data, array($this->data[$index]->created, $this->data[$index]->updated, $this->data[$index]->id));
-		$sql = "UPDATE {$this->db_table} SET {$valuesStr} WHERE {$delim}{$this->id_name}{$delim} = " . (($_FDB['type'] == 'MySQL') ? '?' : ('$' . (count($this->attributes) + 3)));
+		$sql = "UPDATE {$this->db_table} SET {$valuesStr} WHERE {$delim}{$this->id_name}{$delim} = " . (($db->type == 'MySQL') ? '?' : ('$' . (count($this->attributes) + 3)));
 		
 		$db->prepare_cud($sql, $values);
 		return $db->affected_rows;

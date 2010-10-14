@@ -39,7 +39,8 @@ class DatabaseMySQL implements Database {
 	public $num_rows;
 	public $total_queries = 0;
 	private $errorNo;
-	private $errorStr; 
+	private $errorStr;
+	public $type = 'MySQL';
 	
 	// private variables
 	
