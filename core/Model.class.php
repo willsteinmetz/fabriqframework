@@ -252,9 +252,9 @@ class Model implements ArrayAccess, Iterator, Countable {
 		$this->data[$index]->created = date('Y-m-d G:i:s');
 		$this->data[$index]->updated = date('Y-m-d G:i:s');
 		$valuesStr = '';
-		for ($i = 1; $i <= (count($this->attributes) + 3); $i++) {
+		for ($i = 1; $i <= (count($this->attributes) + 2); $i++) {
 			$valuesStr .= ($_FDB['type'] == 'MySQL') ? '?' : ('$' . $i);
-			if ($i < (count($this->attributes) + 3)) {
+			if ($i < (count($this->attributes) + 2)) {
 				$valuesStr .= ', ';
 			}
 		}
