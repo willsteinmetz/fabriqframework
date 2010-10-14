@@ -39,6 +39,7 @@ class Model implements ArrayAccess, Iterator, Countable {
 	// private variables
 	private $position;
 	private $data = array();
+	private $delims = array('pgSQL' => '"', 'MySQL' => '`');
 	
 	/**
 	 * Constructor
@@ -176,22 +177,25 @@ class Model implements ArrayAccess, Iterator, Countable {
 	 */
 	public function find($query = 'all') {
 		global $db;
+		global $_FDB;
+		
+		$delim = $this->delims[$_FDB['type']];
 		$inputs = array();
 		$fields = array_merge(array($this->id_name), $this->attributes, array('created', 'updated'));
 		
 		if (is_numeric($query)) {
-			$q = "SELECT `" . implode('`, `', $fields) . "` FROM {$this->db_table} WHERE {$this->id_name} = ? LIMIT 1;";
+			$q = "SELECT {$delim}" . $this->fieldsStr($delim) . "{$delim} FROM {$delim}{$this->db_table}{$delim} WHERE {$delim}{$this->id_name}{$delim} = " . (($_FDB['type'] == 'MySQL') ? '?' : '$1') . " LIMIT 1;";
 			$inputs[] = $query;
 		} else {
 			switch($query) {
 				case 'first':
-					$q = "SELECT `" . implode('`, `', $fields) . "` FROM {$this->db_table} ORDER BY {$this->id_name} LIMIT 1;";
+					$q = "SELECT {$delim}" . $this->fieldsStr($delim) . "{$delim} FROM {$delim}{$this->db_table}{$delim} ORDER BY {$delim}{$this->id_name}{$delim} LIMIT 1;";
 				break;
 				case 'last':
-					$q = "SELECT `" . implode('`, `', $fields) . "` FROM {$this->db_table} ORDER BY {$this->id_name} DESC LIMIT 1;";
+					$q = "SELECT {$delim}" . $this->fieldsStr($delim) . "{$delim} FROM {$delim}{$this->db_table}{$delim} ORDER BY {$delim}{$this->id_name}{$delim} DESC LIMIT 1;";
 				break;
 				case 'all': default:
-					$q = "SELECT `" . implode('`, `', $fields) . "` FROM {$this->db_table} ORDER BY {$this->id_name}";
+					$q = "SELECT {$delim}" . $this->fieldsStr($delim) . "{$delim} FROM {$delim}{$this->db_table}{$delim} ORDER BY {$delim}{$this->id_name}{$delim}";
 				break;
 			}
 		}
@@ -213,12 +217,15 @@ class Model implements ArrayAccess, Iterator, Countable {
 	 */
 	public function destroy($index = NULL) {
 		global $db;
+		global $_FDB;
+		
+		$delim = $this->delims[$_FDB['type']];
 		if (is_numeric($index) && ($index < count($this->data))) {
-			$sql = "DELETE FROM {$this->db_table} WHERE {$this->id_name} = ? LIMIT 1;";
+			$sql = "DELETE FROM {$delim}{$this->db_table}{$delim} WHERE {$delim}{$this->id_name}{$delim} = " . (($_FDB['type'] == 'MySQL') ? '?' : '$1') . " LIMIT 1;";
 			$db->prepare_cud($sql, array($this->data[$index]->id));
 			return $db->affected_rows;
 		} else if ($index == NULL) {
-			$sql = "DELETE FROM {$this->db_table} WHERE {$this->id_name} = ? LIMIT 1;";
+			$sql = "DELETE FROM {$delim}{$this->db_table}{$delim} WHERE {$delim}{$this->id_name}{$delim} = " . (($_FDB['type'] == 'MySQL') ? '?' : '$1') . " LIMIT 1;";
 			$db->prepare_cud($sql, array($this->data[0]->id));
 			return $db->affected_rows;
 		} else {
@@ -233,18 +240,21 @@ class Model implements ArrayAccess, Iterator, Countable {
 	 */
 	public function create($index = 0) {
 		global $db;
+		global $_FDB;
 		
-		$attributes = '';
+		$delim = $this->delims[$_FDB['type']];
+		
+		$attributes = "{$delim}{$this->id_name}{$delim}, ";
 		foreach ($this->attributes as $attribute) {
-			$attributes .= "`{$attribute}`, ";
+			$attributes .= "{$delim}{$attribute}{$delim}, ";
 		}
-		$attributes .= "`created`, `updated`";
+		$attributes .= "{$delim}created{$delim}, {$delim}updated{$delim}";
 		$this->data[$index]->created = date('Y-m-d G:i:s');
 		$this->data[$index]->updated = date('Y-m-d G:i:s');
 		$valuesStr = '';
-		for ($i = 0; $i < (count($this->attributes) + 2); $i++) {
-			$valuesStr .= '?';
-			if ($i < (count($this->attributes) + 1)) {
+		for ($i = 1; $i <= (count($this->attributes) + 3); $i++) {
+			$valuesStr .= ($_FDB['type'] == 'MySQL') ? '?' : ('$' . $i);
+			if ($i < (count($this->attributes) + 3)) {
 				$valuesStr .= ', ';
 			}
 		}
@@ -256,15 +266,20 @@ class Model implements ArrayAccess, Iterator, Countable {
 			}
 		}
 		$data = array();
+		if ($_FDB['type'] == 'MySQL') {
+			$data[] = 0;
+		} else {
+			$data[] = "nextval('{$this->db_table}')";
+		}
 		foreach ($this->attributes as $attribute) {
 			if ($this->data[$index]->$attribute !== null) {
-				array_push($data, $this->data[$index]->$attribute);
+				$data[] = $this->data[$index]->$attribute;
 			} else {
-				array_push($data, '');
+				$data[] = '';
 			}
 		}
 		$values = array_merge($data, array($this->data[$index]->created, $this->data[$index]->updated));
-		$sql = "INSERT INTO {$this->db_table} ({$attributes}) VALUES ({$valuesStr})";
+		$sql = "INSERT INTO {$delim}{$this->db_table}{$delim} ({$attributes}) VALUES ({$valuesStr})";
 		
 		if ($db->prepare_cud($sql, $values)) {
 			return $db->insert_id;
@@ -277,6 +292,7 @@ class Model implements ArrayAccess, Iterator, Countable {
 	 * @param integer $index
 	 * @return integer
 	 */
+	// @TODO fix update code
 	public function update($index = 0) {
 		global $db;
 
@@ -405,7 +421,7 @@ class Model implements ArrayAccess, Iterator, Countable {
 	 * Database::prepare_select() function
 	 * @return string;
 	 */
-	public function fieldsStr() {
-		return implode(', ', $this->fields());
+	public function fieldsStr($delim = '') {
+		return $delim . implode("{$delim}, {$delim}", $this->fields()) . $delim;
 	}
 }
