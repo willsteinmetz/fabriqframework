@@ -296,13 +296,20 @@ class Model implements ArrayAccess, Iterator, Countable {
 	// @TODO fix update code
 	public function update($index = 0) {
 		global $db;
+		global $_FDB;
+		
+		$delim = $this->delims[$_FDB['type']];
 
 		$this->data[$index]->updated = date('Y-m-d G:i:s');
 		$valuesStr = '';
 		for ($i = 0; $i < count($this->attributes); $i++) {
-			$valuesStr .= '`' . $this->attributes[$i] . '` = ?, ';
+			$valuesStr .= $delim . $this->attributes[$i] . $delim . ' = ' . (($_FDB['type'] == 'MySQL') ? '?' : ('$' . ($i + 1))) . ', ';
 		}
-		$valuesStr .= '`created` = ?, `updated` = ?';
+		if ($_FDB['type'] == 'MySQL') {
+			$valuesStr .= '`created` = ?, `updated` = ?';
+		} else {
+			$valuesStr .= '"created" = ' . (count($this->attributes) + 1) . ', "updated" = ' . (count($this->attributes) + 2) . '';
+		}
 		if (get_magic_quotes_gpc()) {
 			foreach ($this->attributes as $attribute) {
 				if ($this->data[$index]->$attribute != null) {
@@ -319,7 +326,7 @@ class Model implements ArrayAccess, Iterator, Countable {
 			}
 		}
 		$values = array_merge($data, array($this->data[$index]->created, $this->data[$index]->updated, $this->data[$index]->id));
-		$sql = "UPDATE {$this->db_table} SET {$valuesStr} WHERE {$this->id_name} = ?";
+		$sql = "UPDATE {$this->db_table} SET {$valuesStr} WHERE {$delim}{$this->id_name}{$delim} = " . (($_FDB['type'] == 'MySQL') ? '?' : ('$' . (count($this->attributes) + 3)));
 		
 		$db->prepare_cud($sql, $values);
 		return $db->affected_rows;
