@@ -184,18 +184,18 @@ class Model implements ArrayAccess, Iterator, Countable {
 		$fields = array_merge(array($this->id_name), $this->attributes, array('created', 'updated'));
 		
 		if (is_numeric($query)) {
-			$q = "SELECT {$delim}" . $this->fieldsStr($delim) . "{$delim} FROM {$delim}{$this->db_table}{$delim} WHERE {$delim}{$this->id_name}{$delim} = " . (($_FDB['type'] == 'MySQL') ? '?' : '$1') . " LIMIT 1;";
+			$q = "SELECT {$delim}" . $this->fieldsStr($delim) . "{$delim} FROM {$this->db_table} WHERE {$delim}{$this->id_name}{$delim} = " . (($_FDB['type'] == 'MySQL') ? '?' : '$1') . " LIMIT 1;";
 			$inputs[] = $query;
 		} else {
 			switch($query) {
 				case 'first':
-					$q = "SELECT {$delim}" . $this->fieldsStr($delim) . "{$delim} FROM {$delim}{$this->db_table}{$delim} ORDER BY {$delim}{$this->id_name}{$delim} LIMIT 1;";
+					$q = "SELECT {$delim}" . $this->fieldsStr($delim) . "{$delim} FROM {$this->db_table} ORDER BY {$delim}{$this->id_name}{$delim} LIMIT 1;";
 				break;
 				case 'last':
-					$q = "SELECT {$delim}" . $this->fieldsStr($delim) . "{$delim} FROM {$delim}{$this->db_table}{$delim} ORDER BY {$delim}{$this->id_name}{$delim} DESC LIMIT 1;";
+					$q = "SELECT {$delim}" . $this->fieldsStr($delim) . "{$delim} FROM {$this->db_table} ORDER BY {$delim}{$this->id_name}{$delim} DESC LIMIT 1;";
 				break;
 				case 'all': default:
-					$q = "SELECT {$delim}" . $this->fieldsStr($delim) . "{$delim} FROM {$delim}{$this->db_table}{$delim} ORDER BY {$delim}{$this->id_name}{$delim}";
+					$q = "SELECT {$delim}" . $this->fieldsStr($delim) . "{$delim} FROM {$this->db_table} ORDER BY {$delim}{$this->id_name}{$delim}";
 				break;
 			}
 		}
@@ -221,11 +221,11 @@ class Model implements ArrayAccess, Iterator, Countable {
 		
 		$delim = $this->delims[$_FDB['type']];
 		if (is_numeric($index) && ($index < count($this->data))) {
-			$sql = "DELETE FROM {$delim}{$this->db_table}{$delim} WHERE {$delim}{$this->id_name}{$delim} = " . (($_FDB['type'] == 'MySQL') ? '?' : '$1') . " LIMIT 1;";
+			$sql = "DELETE FROM {$this->db_table} WHERE {$delim}{$this->id_name}{$delim} = " . (($_FDB['type'] == 'MySQL') ? '?' : '$1') . " LIMIT 1;";
 			$db->prepare_cud($sql, array($this->data[$index]->id));
 			return $db->affected_rows;
 		} else if ($index == NULL) {
-			$sql = "DELETE FROM {$delim}{$this->db_table}{$delim} WHERE {$delim}{$this->id_name}{$delim} = " . (($_FDB['type'] == 'MySQL') ? '?' : '$1') . " LIMIT 1;";
+			$sql = "DELETE FROM {$this->db_table} WHERE {$delim}{$this->id_name}{$delim} = " . (($_FDB['type'] == 'MySQL') ? '?' : '$1') . " LIMIT 1;";
 			$db->prepare_cud($sql, array($this->data[0]->id));
 			return $db->affected_rows;
 		} else {
@@ -265,12 +265,13 @@ class Model implements ArrayAccess, Iterator, Countable {
 				}
 			}
 		}
-		$data = array();
+		
 		if ($_FDB['type'] == 'MySQL') {
-			$data[] = 0;
+			$idField = 0;
 		} else {
-			$data[] = "nextval('{$this->db_table}_{$this->id_name}_seq'::regclass)";
+			$idField = "nextval('{$this->db_table}_{$this->id_name}_seq'::regclass)";
 		}
+		$data = array();
 		foreach ($this->attributes as $attribute) {
 			if ($this->data[$index]->$attribute !== null) {
 				$data[] = $this->data[$index]->$attribute;
@@ -279,7 +280,7 @@ class Model implements ArrayAccess, Iterator, Countable {
 			}
 		}
 		$values = array_merge($data, array($this->data[$index]->created, $this->data[$index]->updated));
-		$sql = "INSERT INTO {$this->db_table} ({$attributes}) VALUES ({$valuesStr})";
+		$sql = "INSERT INTO {$this->db_table} ({$attributes}) VALUES ({$idField}, {$valuesStr})";
 		
 		if ($db->prepare_cud($sql, $values)) {
 			return $db->insert_id;
