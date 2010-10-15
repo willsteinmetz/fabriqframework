@@ -217,7 +217,7 @@ class Model implements ArrayAccess, Iterator, Countable {
 	public function destroy($index = NULL) {
 		global $db;
 		
-		$delim = $this->delims[$db->type];$sql = sprintf("DELETE FROM %s WHERE %s%s%s = %s LIMIT 1", $this->db_table, $delim, $this->id_name, $delim, (($db->type == 'MySQL') ? '?' : '$1'));
+		$delim = $this->delims[$db->type];$sql = sprintf("DELETE FROM %s WHERE %s%s%s = %s", $this->db_table, $delim, $this->id_name, $delim, (($db->type == 'MySQL') ? '?' : '$1'));
 		if (is_numeric($index) && ($index < count($this->data))) {
 			$db->prepare_cud($sql, array($this->data[$index]->id));
 			return $db->affected_rows;
