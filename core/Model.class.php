@@ -183,23 +183,23 @@ class Model implements ArrayAccess, Iterator, Countable {
 		$fields = array_merge(array($this->id_name), $this->attributes, array('created', 'updated'));
 		
 		if (is_numeric($query)) {
-			$q = sprintf("SELECT %s FROM %s WHERE %s%s%s = %s LIMIT 1", $this->fieldsStr($delim), $this->db_table, $delim, $this->id_name, $delim, (($db->type == 'MySQL') ? '?' : '$1'));
+			$sql = sprintf("SELECT %s FROM %s WHERE %s%s%s = %s LIMIT 1", $this->fieldsStr($delim), $this->db_table, $delim, $this->id_name, $delim, (($db->type == 'MySQL') ? '?' : '$1'));
 			$inputs[] = $query;
 		} else {
 			switch($query) {
 				case 'first':
-					$q = sprintf("SELECT %s FROM %s ORDER BY %s%s%s LIMIT 1", $this->fieldsStr($delim), $this->db_table, $delim, $this->id_name, $delim);
+					$sql = sprintf("SELECT %s FROM %s ORDER BY %s%s%s LIMIT 1", $this->fieldsStr($delim), $this->db_table, $delim, $this->id_name, $delim);
 				break;
 				case 'last':
-					$q = sprintf("SELECT %s FROM %s ORDER BY %s%s%s DESC LIMIT 1", $this->fieldsStr($delim), $this->db_table, $delim, $this->id_name, $delim);
+					$sql = sprintf("SELECT %s FROM %s ORDER BY %s%s%s DESC LIMIT 1", $this->fieldsStr($delim), $this->db_table, $delim, $this->id_name, $delim);
 				break;
 				case 'all': default:
-					$q = sprintf("SELECT %s FROM %s ORDER BY %s%s%s", $this->fieldsStr($delim), $this->db_table, $delim, $this->id_name, $delim);
+					$sql = sprintf("SELECT %s FROM %s ORDER BY %s%s%s", $this->fieldsStr($delim), $this->db_table, $delim, $this->id_name, $delim);
 				break;
 			}
 		}
 		
-		$this->fill($db->prepare_select($q, $fields, $inputs));
+		$this->fill($db->prepare_select($sql, $fields, $inputs));
 		
 		if ($db->num_rows == 0) {
 			return FALSE;
@@ -217,13 +217,11 @@ class Model implements ArrayAccess, Iterator, Countable {
 	public function destroy($index = NULL) {
 		global $db;
 		
-		$delim = $this->delims[$db->type];
+		$delim = $this->delims[$db->type];$sql = sprintf("DELETE FROM %s WHERE %s%s%s = %s LIMIT 1", $this->db_table, $delim, $this->id_name, $delim, (($db->type == 'MySQL') ? '?' : '$1'));
 		if (is_numeric($index) && ($index < count($this->data))) {
-			$sql = "DELETE FROM {$this->db_table} WHERE {$delim}{$this->id_name}{$delim} = " . (($db->type == 'MySQL') ? '?' : '$1') . " LIMIT 1;";
 			$db->prepare_cud($sql, array($this->data[$index]->id));
 			return $db->affected_rows;
 		} else if ($index == NULL) {
-			$sql = "DELETE FROM {$this->db_table} WHERE {$delim}{$this->id_name}{$delim} = " . (($db->type == 'MySQL') ? '?' : '$1') . " LIMIT 1;";
 			$db->prepare_cud($sql, array($this->data[0]->id));
 			return $db->affected_rows;
 		} else {
