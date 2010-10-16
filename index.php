@@ -57,6 +57,9 @@ require_once('core/Model.class.php');
 require_once('core/BaseMapping.class.php');
 require_once('app/PathMap.class.php');
 require_once('core/Messaging.class.php');
+require_once('core/FabriqLibs.class.php');
+
+// include the application helper file
 require_once('app/helpers/application.helper.php');
 
 // query variable

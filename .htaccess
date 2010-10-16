@@ -1,4 +1,5 @@
 Options         +FollowSymLinks
+Options		-Indexes
 
 <IfModule mod_rewrite.c>
 	RewriteEngine   On
@@ -20,6 +21,12 @@ Options         +FollowSymLinks
 	RewriteCond %{REQUEST_FILENAME} !-d
 	RewriteCond %{REQUEST_URI} (.*)(core/)(.*)$
 	RewriteRule ^(.*)(core/)(.*)$ $2$3
+
+	# Rewrite rule to make sure that scripts and stylesheets located in libs are served properly
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteCond %{REQUEST_URI} (.*)(libs/)(.*)$
+	RewriteRule ^(.*)(libs/)(.*)$ $2$3
 
 	# Rewrite for clean URLs
 	RewriteCond %{REQUEST_FILENAME} !-f
