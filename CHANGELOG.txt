@@ -1,6 +1,19 @@
 Fabriq Framework change log
   - Initiated 05/05/10 for version 0.5
 
+Version 1.1
+  - Added support for PostgreSQL. When setting up a new app, you now have the choice between MySQL (default) and
+    PostgreSQL. The Model class has been updated to work with PostgreSQL as well and you can continue to use
+    Model::find(), Model::create(), Model::update(), and Model::destroy() the same way for both MySQL and PostgreSQL
+    See the Database interface for the common functions between the MySQL and PostgreSQL Database classes.
+  - Updated .htaccess so that directory listing is disabled. To re-enable, open the .htaccess file and change the line
+       Option -Indexes
+    to
+       Option +Indexes
+  - Added the libs directory for organizing and using external libraries with Fabriq. A local copy of jQuery is now
+    stored in the directory /libs/javascript/jquery/ for use.
+  - Added core class FabriqLibs for working with external libraries
+
 Version 1.0 2010-10-03
   - Official version 1.0 is released!
   - Action setting in the BaseMapping class was fixed to not accidentally overwrite values passed in through the path

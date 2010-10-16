@@ -51,12 +51,15 @@ Fabriq::installed();
 
 // include core files
 require_once('config/config.inc.php');
-require_once('core/Database.class.php');
+require_once('core/Database.interface.php');
 require_once('core/Controller.class.php');
 require_once('core/Model.class.php');
 require_once('core/BaseMapping.class.php');
 require_once('app/PathMap.class.php');
 require_once('core/Messaging.class.php');
+require_once('core/FabriqLibs.class.php');
+
+// include the application helper file
 require_once('app/helpers/application.helper.php');
 
 // query variable
@@ -66,7 +69,11 @@ $q = explode('/', $_GET['q']);
 PathMap::map_path();
 
 // initialize database
-$db = new Database($_FDB['default']);
+if (!isset($_FDB['default']['type'])) {
+	$_FDB['default']['type'] = 'MySQL';
+}
+$dbType = 'Database' . $_FDB['default']['type'];
+$db = new $dbType($_FDB['default']);
 
 // include the controller, action, and helper files
 require_once('app/controllers/application.controller.php');

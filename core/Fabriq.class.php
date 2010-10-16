@@ -30,8 +30,14 @@
  * --
  */
 
-function __autoload($model) {
-	require_once("app/models/{$model}.model.php");
+function __autoload($class) {
+	// autoload appropriate database class
+	if (strpos($class, 'Database') !== FALSE) {
+		require_once("core/{$class}.class.php");
+	// autoload model
+	} else {
+		require_once("app/models/{$class}.model.php");
+	}
 }
 
 abstract class Fabriq {

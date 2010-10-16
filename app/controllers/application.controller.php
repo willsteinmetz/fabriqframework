@@ -29,6 +29,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * --
  */
-Fabriq::add_js('jquery.min', 'http://code.jquery.com/');
+FabriqLibs::js_lib('jquery-1.4.3.min', 'jquery');
 Fabriq::add_js('fabriq', 'core/');
 Fabriq::add_css('fabriq.base');

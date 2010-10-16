@@ -116,6 +116,9 @@ switch ($step) {
 				if (strlen(trim($_POST['dbserver'])) == 0) {
 					array_push($errors, 'You must enter a database server');
 				}
+				if (trim($_POST['dbtype']) == '') {
+					array_push($errors, 'You must select a database type');
+				}
 				
 				$submitted = TRUE;
 				if (count($errors) == 0) {
@@ -140,7 +143,8 @@ switch ($step) {
 					fwrite($fh, "	'user' => '{$_POST['dbuser']}',\n");
 					fwrite($fh, "	'pwd' => '{$_POST['dbpwd']}',\n");
 					fwrite($fh, "	'db' => '{$_POST['dbname']}',\n");
-					fwrite($fh, "	'server' => '{$_POST['dbserver']}'\n");
+					fwrite($fh, "	'server' => '{$_POST['dbserver']}',\n");
+					fwrite($fh, "	'type' => '{$_POST['dbtype']}'\n");
 					fwrite($fh, ");\n");
 					fclose($fh);
 					
@@ -285,12 +289,17 @@ if (count($errors) > 0) {
 		</fieldset>
 		<fieldset>
 			<legend>Database information</legend>
-			<label for="dbname">Database name <span class="required-field">*</span>: </label><input type="text" id="db-name" name="dbname" size="50" tabindex="8"<?php if ($submitted) { echo ' value="' . $_POST['dbname'] . '"'; } ?> /><br />
+			<label for="dbtype">Database type <span class="required-field">*</span>: </label><select name="dbtype" id="db-type" tabindex="8">
+				<option>-- Select one --</option>
+				<option value="MySQL">MySQL</option>
+				<option value="pgSQL">PostgreSQL</option>
+			</select><br />
+			<label for="dbname">Database name <span class="required-field">*</span>: </label><input type="text" id="db-name" name="dbname" size="50" tabindex="9"<?php if ($submitted) { echo ' value="' . $_POST['dbname'] . '"'; } ?> /><br />
 			<div class="form-item-description">This database must already exist</div>
-			<label for="dbuser">Database user <span class="required-field">*</span>: </label><input type="text" id="db-user" name="dbuser" size="50" tabindex="9"<?php if ($submitted) { echo ' value="' . $_POST['dbuser'] . '"'; } ?> /><br />
+			<label for="dbuser">Database user <span class="required-field">*</span>: </label><input type="text" id="db-user" name="dbuser" size="50" tabindex="10"<?php if ($submitted) { echo ' value="' . $_POST['dbuser'] . '"'; } ?> /><br />
 			<div class="form-item-description">This user must have privileges to use the selected database</div>
-			<label for="dbpwd">Password <span class="required-field">*</span>: </label><input type="password" id="db-pwd" name="dbpwd" size="50" tabindex="10" /><br />
-			<label for="dbserver">Database server <span class="required-field">*</span>: </label><input type="text" id="db-server" name="dbserver" size="50" tabindex="11"<?php if ($submitted) { echo ' value="' . $_POST['dbserver'] . '"'; } ?> /><br />
+			<label for="dbpwd">Password <span class="required-field">*</span>: </label><input type="password" id="db-pwd" name="dbpwd" size="50" tabindex="11" /><br />
+			<label for="dbserver">Database server <span class="required-field">*</span>: </label><input type="text" id="db-server" name="dbserver" size="50" tabindex="12"<?php if ($submitted) { echo ' value="' . $_POST['dbserver'] . '"'; } ?> /><br />
 		</fieldset>
 		<div style="float: left;">
 			<input type="button" value="&laquo; Back" onclick="window.location = 'install.php?s=1';" />
@@ -323,6 +332,7 @@ if (count($errors) > 0) {
 				<li>Database username with privileges to the database</li>
 				<li>Database password</li>
 				<li>Database server</li>
+				<li>Database type (Fabriq currently supports MySQL and PostregSQL)</li>
 			</ul>
 		</li>
 	</ul>
