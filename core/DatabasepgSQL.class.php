@@ -48,7 +48,7 @@ class DatabasepgSQL implements Database {
 	 * Constructor
 	 */
 	public function __construct($db_info) {
-		$this->db = pg_connect("host={$db_info['server']} port=5432 dbname={$db_info['db']} user={$db_info['user']} password={$db_info['pwd']}");
+		$this->db = pg_connect("host={$db_info['server']} port=5432 dbname={$db_info['db']} user={$db_info['user']} password={$db_info['pwd']}", PGSQL_CONNECT_FORCE_NEW);
 	}
 	
 	/**
