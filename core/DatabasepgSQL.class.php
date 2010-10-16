@@ -40,6 +40,7 @@ class DatabasepgSQL implements Database {
 	public $total_queries = 0;
 	private $error; 
 	public $type = 'pgSQL';
+	public $delim = '"';
 	
 	// private variables
 	

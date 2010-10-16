@@ -41,6 +41,7 @@ class DatabaseMySQL implements Database {
 	private $errorNo;
 	private $errorStr;
 	public $type = 'MySQL';
+	public $delim = '`';
 	
 	// private variables
 	
