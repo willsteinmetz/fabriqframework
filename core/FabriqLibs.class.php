@@ -37,8 +37,8 @@ abstract class FabriqLibs {
 	 * @param string $libdir
 	 * @param string $ext
 	 */
-	public static function js_lib($file, $libdir = '', $ext = 'js') {
-		Fabriq::add_js($file, 'libs/javascript/' . $libdir . '/', $ext);
+	public static function js_lib($file_name, $libdir = '', $ext = '.js') {
+		Fabriq::add_js($file_name, 'libs/javascript/' . $libdir . '/', $ext);
 	}
 	
 	/**
@@ -48,8 +48,8 @@ abstract class FabriqLibs {
 	 * @param string $ext
 	 * @param string $media
 	 */
-	public static function css_lib($file, $libdir = '', $ext = 'js', $media = 'screen') {
-		Fabriq::add_css($file, $media, '/libs/css/' . $libdir . '/', $ext);
+	public static function css_lib($file_name, $libdir = '', $ext = '.css', $media = 'screen') {
+		Fabriq::add_css($file_name, $media, '/libs/css/' . $libdir . '/', $ext);
 	}
 	
 	/**
@@ -73,7 +73,7 @@ abstract class FabriqLibs {
 	 * @param unknown_type $file
 	 * @param unknown_type $libdir
 	 */
-	public static function php_lib($file, $libdir = '') {
-		self::$phpqueue[] = 'libs/php/' . $libdir . '/' . $file;
+	public static function php_lib($file_name, $libdir = '') {
+		self::$phpqueue[] = 'libs/php/' . $libdir . '/' . $file_name;
 	}
 }
