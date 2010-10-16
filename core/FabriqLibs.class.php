@@ -49,7 +49,7 @@ abstract class FabriqLibs {
 	 * @param string $media
 	 */
 	public static function css_lib($file_name, $libdir = '', $ext = '.css', $media = 'screen') {
-		Fabriq::add_css($file_name, $media, '/libs/css/' . $libdir . '/', $ext);
+		Fabriq::add_css($file_name, $media, 'libs/css/' . $libdir . '/', $ext);
 	}
 	
 	/**
