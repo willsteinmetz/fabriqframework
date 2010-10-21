@@ -201,7 +201,6 @@ class Model implements ArrayAccess, Iterator, Countable {
 		if ($db->num_rows == 0) {
 			return FALSE;
 		} else {
-			$this->data = $results;
 			return TRUE;
 		}
 	}
