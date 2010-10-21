@@ -196,7 +196,7 @@ class Model implements ArrayAccess, Iterator, Countable {
 			}
 		}
 		
-		$this->fill($db->prepare_select($sql, $this->fields, $inputs));
+		$this->fill($db->prepare_select($sql, $this->fields(), $inputs));
 		
 		if ($db->num_rows == 0) {
 			return FALSE;
