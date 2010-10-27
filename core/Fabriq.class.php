@@ -13,6 +13,8 @@ function __autoload($class) {
 	if (strpos($class, 'Database') !== FALSE) {
 		require_once("core/{$class}.class.php");
 	// autoload model
+	} else if (strpos($class, '_controller') !== FALSE) {
+		return false;
 	} else {
 		require_once("app/models/{$class}.model.php");
 	}

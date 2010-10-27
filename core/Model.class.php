@@ -340,12 +340,14 @@ class Model implements ArrayAccess, Iterator, Countable {
 	 * @param array $arr
 	 */
 	public function fill($arr) {
-		for ($i = 0; $i < count($arr); $i++) {
-			$temp = new stdClass();
-			foreach ($arr[$i] as $key => $val) {
-				$temp->$key = $val;
+		if (is_array($arr)) {
+			for ($i = 0; $i < count($arr); $i++) {
+				$temp = new stdClass();
+				foreach ($arr[$i] as $key => $val) {
+					$temp->$key = $val;
+				}
+				$this->data[] = $temp;
 			}
-			$this->data[] = $temp;
 		}
 	}
 	

@@ -292,7 +292,7 @@ if (count($errors) > 0) {
 		break;
 	case 1: default:
 ?>
-	<h2>Step 1: Getting stared</h2>
+	<h2>Step 1: Getting started</h2>
 	<p>Before moving on to the next step, make sure of the following:</p>
 	<ul>
 		<li>
