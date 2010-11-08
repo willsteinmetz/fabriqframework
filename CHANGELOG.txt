@@ -1,6 +1,9 @@
 Fabriq Framework change log
   - Initiated 05/05/10 for version 0.5
 
+Version 1.3
+  - Added templating system
+
 Version 1.2
   - Fixed bugs in Model::find()
   - Fixed a bug in Model::fill() that didn't properly display zero count when empty

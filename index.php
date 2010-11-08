@@ -47,6 +47,17 @@ if (!isset($_FDB['default']['type'])) {
 $dbType = 'Database' . $_FDB['default']['type'];
 $db = new $dbType($_FDB['default']);
 
+// determine whether to use templating by default
+if (!isset($_FAPP['templating'])) {
+	$_FAPP['templating'] = false;
+} else {
+	require_once('core/FabriqTemplates.class.php');
+	if (!isset($_FAPP['templates']['default'])) {
+		$_FAPP['templates']['default'] = 'application';
+	}
+	FabriqTemplates::template($_FAPP['templates']['default']);
+}
+
 // include the controller, action, and helper files
 require_once('app/controllers/application.controller.php');
 if (!file_exists("app/controllers/" . PathMap::controller() . ".controller.php")) {
@@ -114,28 +125,32 @@ if (PathMap::render_controller() != PathMap::controller()) {
 	}
 }
 
-// render view (if necessary)
-switch(Fabriq::render()) {
-	case 'none':
-		break;
-	case 'view':
-		if (!file_exists("app/views/" . PathMap::render_controller() . "/" . PathMap::render_action() . ".view.php")) {
-			require_once("app/views/errors/fourohfour.view.php");
-		} else {
-			require_once("app/views/" . PathMap::render_controller() . "/" . PathMap::render_action() . ".view.php");
-		}
-		break;
-	case 'layout': default:
-		if (!file_exists("app/views/" . PathMap::render_controller() . "/" . PathMap::render_action() . ".view.php")) {
-			require_once("app/views/errors/fourohfour.view.php");
-		} else {
-			if (!file_exists("app/views/layouts/" . Fabriq::layout() . ".view.php")) {
-				require_once('app/views/layouts/application.view.php');
+if ($_FAPP['templating']) {
+	FabriqTemplates::render();
+} else {
+	// render view (if necessary)
+	switch(Fabriq::render()) {
+		case 'none':
+			break;
+		case 'view':
+			if (!file_exists("app/views/" . PathMap::render_controller() . "/" . PathMap::render_action() . ".view.php")) {
+				require_once("app/views/errors/fourohfour.view.php");
 			} else {
-				require_once("app/views/layouts/" . Fabriq::layout() . ".view.php");
+				require_once("app/views/" . PathMap::render_controller() . "/" . PathMap::render_action() . ".view.php");
 			}
-		}
-		break;
+			break;
+		case 'layout': default:
+			if (!file_exists("app/views/" . PathMap::render_controller() . "/" . PathMap::render_action() . ".view.php")) {
+				require_once("app/views/errors/fourohfour.view.php");
+			} else {
+				if (!file_exists("app/views/layouts/" . Fabriq::layout() . ".view.php")) {
+					require_once('app/views/layouts/application.view.php');
+				} else {
+					require_once("app/views/layouts/" . Fabriq::layout() . ".view.php");
+				}
+			}
+			break;
+	}
 }
 
 // close the database connection
