@@ -34,6 +34,11 @@ require_once('core/FabriqLibs.class.php');
 // include the application helper file
 require_once('app/helpers/application.helper.php');
 
+// determine whether or not to load module files on init
+if (isset($_FAPP['loadmodulecode']) && $_FAPP['loadmodulecode'])  {
+	Fabriq::init_module_core();
+}
+
 // query variable
 $q = explode('/', $_GET['q']);
 
