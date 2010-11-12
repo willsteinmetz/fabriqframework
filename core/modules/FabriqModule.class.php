@@ -18,7 +18,7 @@ class FabriqModule extends Controller {
 	 * @param string $ext;
 	 */
 	public function add_css($stylesheet, $media = 'screen', $path = '', $ext = '.css') {
-		Fabriq::add_css($stylesheet, $media, "modules/{$this->name}/{$path}", $ext);
+		Fabriq::add_css($stylesheet, $media, "modules/{$this->name}/stylesheets/{$path}", $ext);
 	}
 	
 	/**
@@ -28,7 +28,7 @@ class FabriqModule extends Controller {
 	 * @param string $ext
 	 */
 	public function add_js($javascript, $path = '', $ext = '.js') {
-		Fabriq::add_js($javascript, "modules/{$this->name}/{$path}", $ext);
+		Fabriq::add_js($javascript, "modules/{$this->name}/javascripts/{$path}", $ext);
 	}
 }
 	

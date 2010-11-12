@@ -10,16 +10,14 @@
 class ModuleModel extends Model {
 	/**
 	 * Module model base class constructor
-	 * Module tables must be prefixed with fabmod_. If the module models are not
-	 * defined with fabmod_ prefixed, it will be automatically added
+	 * Module tables must be prefixed with fabmod_[modulename]_.
+	 * When defining the model, do not provide fabmod_[modulename]_
 	 * @param array $attributes
 	 * @param string $db_table
 	 * @param string $id_name
 	 */
-	function __construct($attributes, $db_table, $id_name = 'id') {
-		if (substr($table, 0, 7) != 'fabmod_') {
-			$table = 'fabmod_' . $table;
-		}
+	function __construct($module, $attributes, $db_table, $id_name = 'id') {
+		$db_table = "fabmod_{$module}_{$db_table}";
 		parent::__construct($attributes, $db_table, $id_name);
 	}
 }
