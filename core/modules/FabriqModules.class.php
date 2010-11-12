@@ -114,7 +114,7 @@ abstract class FabriqModules {
 	 */
 	public static function &module($module) {
 		if (!array_key_exists(self::$modules, $module)) {
-			throw new Exception("Module {$module} has not been loaded");
+			FabriqModules::load($module);
 		}
 		
 		return self::$modules[$module];

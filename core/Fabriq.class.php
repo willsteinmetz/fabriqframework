@@ -13,6 +13,8 @@ function __autoload($class) {
 	if (strpos($class, 'Database') !== FALSE) {
 		require_once("core/{$class}.class.php");
 	// autoload model
+	} else if (trim($class) == 'FabriqModules') {
+		Fabriq::init_module_core();
 	} else if (strpos($class, '_controller') !== FALSE) {
 		return false;
 	} else {
@@ -186,6 +188,7 @@ abstract class Fabriq {
 	 */
 	public static function init_module_core() {
 		require_once('core/modules/FabriqModules.class.php');
+		require_once('core/modules/FabriqModule.class.php');
 		require_once('core/modules/ModuleModel.class.php');
 	}
 }
