@@ -94,7 +94,7 @@ abstract class FabriqModules {
 	 */
 	public static function load($module) {
 		// check to see if module is already loaded
-		if (array_key_exists(self::$modules, $module)) {
+		if (array_key_exists($module, self::$modules)) {
 			return;
 		}
 		// try to load the module file
@@ -113,7 +113,7 @@ abstract class FabriqModules {
 	 * @return object
 	 */
 	public static function &module($module) {
-		if (!array_key_exists(self::$modules, $module)) {
+		if (!array_key_exists($module, self::$modules)) {
 			FabriqModules::load($module);
 		}
 		

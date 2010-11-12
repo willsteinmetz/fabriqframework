@@ -191,4 +191,18 @@ abstract class Fabriq {
 		require_once('core/modules/FabriqModule.class.php');
 		require_once('core/modules/ModuleModel.class.php');
 	}
+	
+	/**
+	 * Returns a config setting
+	 * @param string $var
+	 * @return mixed
+	 */
+	public static function config($var) {
+		global $_FAPP;
+		
+		if (!array_key_exists($var, $_FAPP)) {
+			return null;
+		}
+		return $_FAPP[$var];
+	}
 }
