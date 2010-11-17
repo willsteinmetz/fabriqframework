@@ -8,17 +8,18 @@
  * http://fabriqframework.com/license
  */
 
-function __autoload($class) {
+function fabriq_default_autoload($class) {
 	// autoload appropriate database class
 	if (strpos($class, 'Database') !== FALSE) {
 		require_once("core/{$class}.class.php");
 	// autoload model
 	} else if (trim($class) == 'FabriqModules') {
 		Fabriq::init_module_core();
-	} else if (strpos($class, '_controller') !== FALSE) {
-		return false;
 	} else {
-		require_once("app/models/{$class}.model.php");
+		$model = "app/models/{$class}.model.php";
+		if ($model) {
+			require_once($model);
+		}
 	}
 }
 

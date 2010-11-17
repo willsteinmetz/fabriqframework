@@ -16,10 +16,14 @@ error_reporting(E_ALL & ~E_NOTICE);
 // start sessions
 session_start();
 
+// require base Fabriq class
 require_once('core/Fabriq.class.php');
 
 // check to make sure application has been configured
 Fabriq::installed();
+
+// register default __autoload function
+spl_autoload_register('fabriq_default_autoload');
 
 // include core files
 require_once('config/config.inc.php');
