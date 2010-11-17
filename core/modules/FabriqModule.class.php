@@ -19,6 +19,7 @@ class FabriqModule extends Controller {
 	 * @param string $class
 	 */
 	public static function autoload($class) {
+		$class = str_replace("_mm", '', $class);
 		require_once("modules/" . self::$name . "/models/{$class}.model.php");
 	}
 	
