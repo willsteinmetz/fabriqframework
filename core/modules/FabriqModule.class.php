@@ -10,6 +10,18 @@
 class FabriqModule extends Controller {
 	public $name;
 	
+	function __construct() {
+		spl_autoload_register(__CLASS__ . '::autoload');
+	}
+	
+	/**
+	 * Module specific autoloading function for modules
+	 * @param string $class
+	 */
+	public static function autoload($class) {
+		require_once("modules/" . self::$name . "/models/{$class}.model.php");
+	}
+	
 	/**
 	 * Add a module stylesheet to the CSS queue
 	 * @param string $stylesheet

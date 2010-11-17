@@ -119,5 +119,21 @@ abstract class FabriqModules {
 		
 		return self::$modules[$module];
 	}
+	
+	/**
+	 * Returns whether or the module is enabled
+	 * @param string $module
+	 * @return bool
+	 */
+	public static function enabled($module) {
+		global $db;
+		
+		$sql = "SELECT enabled FROM fabriq_modules WHERE module = " . ($db->name == 'MySQL') ? '?' : '$1';
+		$data = $db->prepare_select($sql, array('enabled'), array($module));
+		if (count($data) == 0) {
+			return FALSE;
+		}
+		return ($data[0]['enabled'] == 1) ? TRUE : FALSE;
+	}
 }
 	
