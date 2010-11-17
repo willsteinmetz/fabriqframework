@@ -43,18 +43,18 @@ if (isset($_FAPP['loadmodulecode']) && $_FAPP['loadmodulecode'])  {
 	Fabriq::init_module_core();
 }
 
-// query variable
-$q = explode('/', $_GET['q']);
-
-// determine the controller and action to render
-PathMap::map_path();
-
 // initialize database
 if (!isset($_FDB['default']['type'])) {
 	$_FDB['default']['type'] = 'MySQL';
 }
 $dbType = 'Database' . $_FDB['default']['type'];
 $db = new $dbType($_FDB['default']);
+
+// query variable
+$q = explode('/', $_GET['q']);
+
+// determine the controller and action to render
+PathMap::map_path();
 
 // determine whether to use templating by default
 if (!isset($_FAPP['templating'])) {

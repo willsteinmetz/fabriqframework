@@ -9,6 +9,7 @@
  */
 class FabriqModule extends Controller {
 	public $name;
+	public static $mname;
 	
 	function __construct() {
 		spl_autoload_register(__CLASS__ . '::autoload');
@@ -20,7 +21,7 @@ class FabriqModule extends Controller {
 	 */
 	public static function autoload($class) {
 		$class = str_replace("_mm", '', $class);
-		require_once("modules/" . self::$name . "/models/{$class}.model.php");
+		require_once("modules/" . self::$mname . "/models/{$class}.model.php");
 	}
 	
 	/**

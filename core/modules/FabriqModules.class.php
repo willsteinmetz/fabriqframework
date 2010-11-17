@@ -103,7 +103,7 @@ abstract class FabriqModules {
 			throw new Exception("Module {$module} could not be loaded");
 		}
 		require_once($modfile);
-		eval('$mod = new ' . $module . '_module');
+		eval('$mod = new ' . $module . '_module();');
 		self::$modules[$module] = $mod;
 	}
 	
@@ -128,7 +128,7 @@ abstract class FabriqModules {
 	public static function enabled($module) {
 		global $db;
 		
-		$sql = "SELECT enabled FROM fabriq_modules WHERE module = " . ($db->name == 'MySQL') ? '?' : '$1';
+		$sql = "SELECT enabled FROM fabmods_modules WHERE module = " . (($db->type == 'MySQL') ? '?' : '$1');
 		$data = $db->prepare_select($sql, array('enabled'), array($module));
 		if (count($data) == 0) {
 			return FALSE;

@@ -17,7 +17,7 @@ function fabriq_default_autoload($class) {
 		Fabriq::init_module_core();
 	} else {
 		$model = "app/models/{$class}.model.php";
-		if ($model) {
+		if (file_exists($model)) {
 			require_once($model);
 		}
 	}
