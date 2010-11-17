@@ -152,12 +152,12 @@ class BaseMapping {
 		global $q;
 		global $_FAPP;
 		
+		$mapped = false;
+		
 		if (count($q) > 0) {
-			if (trim($q[0]) != '') {
+			if ((trim($q[0]) != '') && (file_exists("app/controllers/{$q[0]}.controller.php"))) {
 				self::controller($q[0]);
-			} else {
-				self::controller($_FAPP['cdefault']);
-				self::arg(0, $_FAPP['cdefault']);
+				$mapped = true;
 			}
 			if (count($q) > 1) {
 				if (!is_numeric($q[1])) {
@@ -168,14 +168,29 @@ class BaseMapping {
 			} else {
 				self::action($_FAPP['adefault']);
 			}
-		} else {
-			self::controller($_FAPP['cdefault']);
-			self::arg(0, $_FAPP['cdefault']);
-			self::action($_FAPP['adefault']);
-			self::arg(1, $_FAPP['adefault']);
 		}
 		
-		self::render_controller(self::controller());
-		self::render_action(self::action());
+		// try to map path with pathmap module if enabled and necessary
+		if (FabriqModules::enabled('pathmap') && !$mapped) {
+			$pathmap = &FabriqModules::module('pathmap');
+			$pathmap->redirect($_GET['q']);
+		}
+		
+		// resolve controller and action if not already declared
+		if (PathMap::controller() == '') {
+			if (count($q) == 0) {
+				PathMap::controller($_FAPP['cdefault']);
+				PathMap::arg(0, $_FAPP['cdefault']);
+				PathMap::action($_FAPP['adefault']);
+				PathMap::arg(1, $_FAPP['adefault']);
+			} else if (($q[0] != '') && (!file_exists("app/controllers/{$q[0]}.controller.php"))) {
+				PathMap::controller('errors');
+				PathMap::action('fourohfour');
+			}
+		}
+		
+		// resolve render controller and action
+		PathMap::render_controller(PathMap::controller());
+		PathMap::render_action(PathMap::action());
 	}
 }
