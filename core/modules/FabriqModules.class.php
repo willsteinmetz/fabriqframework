@@ -11,6 +11,7 @@ abstract class FabriqModules {
 	private static $modules = array();
 	private static $body = '';
 	private static $module_vars = array();
+	private static $render_positions = array();
 	
 	/**
 	 * Calls the install function to install a module for use in the
@@ -190,8 +191,7 @@ abstract class FabriqModules {
 	
 	/**
 	 * Adds the output of this view to the body variable that is appended to the
-	 * FabriqModules class' $body variable. This variable's content is appended
-	 * the output content of a page. For rendering a module to put in a specific place
+	 * FabriqModules class' $body variable. For rendering one module at a time,
 	 * use FabriqModules::render_now();
 	 * @param string $module
 	 * @param string $action
@@ -207,6 +207,14 @@ abstract class FabriqModules {
 	}
 	
 	/**
+	 * Returns the rendered module content
+	 * @return string
+	 */
+	public static function body() {
+		return self::$body;
+	}
+	
+	/**
 	 * Renders the module action's view content and returns it to be added at
 	 * a specific place
 	 * @param string $module
@@ -216,6 +224,7 @@ abstract class FabriqModules {
 		if (!file_exists("modules/{$module}/views/{$action}.view.php")) {
 			throw new Exception("View for {$module}'s {$action} action does not exist");
 		}
+		self::$render_positions[] = $module;
 		ob_start();
 		extract(self::$module_vars[$module]);
 		require_once("modules/{$module}/views/{$action}.view.php");
