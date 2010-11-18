@@ -9,6 +9,8 @@
  */
 abstract class FabriqModules {
 	private static $modules = array();
+	private static $body = '';
+	private static $module_vars = array();
 	
 	/**
 	 * Calls the install function to install a module for use in the
@@ -105,6 +107,7 @@ abstract class FabriqModules {
 		require_once($modfile);
 		eval('$mod = new ' . $module . '_module();');
 		self::$modules[$module] = $mod;
+		self::$module_vars[$module] = array();
 	}
 	
 	/**
@@ -134,6 +137,89 @@ abstract class FabriqModules {
 			return FALSE;
 		}
 		return ($data[0]['enabled'] == 1) ? TRUE : FALSE;
+	}
+	
+	/**
+	 * Adds a module variable
+	 * @param string $module
+	 * @param string $name
+	 * @param mixed $var
+	 */
+	public static function set_var($module, $name, $var) {
+		self::$module_vars[$module][$name] = $var;
+	}
+	
+	/**
+	 * Adds a set of module variables at once
+	 * @param string $module
+	 * @param array $vars
+	 */
+	public static function set_vars($module, $vars) {
+		if (count($vars) == 0) {
+			return;
+		}
+		foreach ($vars as $key => $val) {
+			self::$module_vars[$module][$key] = $val;
+		}
+	}
+	
+	/**
+	 * Returns a module variable
+	 * @param string $module
+	 * @param string $module
+	 * @return mixed
+	 */
+	public static function get_var($module, $var) {
+		if (array_key_exists($var, self::$module_vars[$module])) {
+			return self::$module_vars[$module][$var];
+		}
+		return false;
+	}
+	
+	/**
+	 * Returns the module variables for a module
+	 * @param string $module
+	 * @return array
+	 */
+	public static function get_vars($module) {
+		if (array_key_exists($module, self::$module_vars)) {
+			return self::$module_vars[$module];
+		}
+		return false;
+	}
+	
+	/**
+	 * Adds the output of this view to the body variable that is appended to the
+	 * FabriqModules class' $body variable. This variable's content is appended
+	 * the output content of a page. For rendering a module to put in a specific place
+	 * use FabriqModules::render_now();
+	 * @param string $module
+	 * @param string $action
+	 */
+	public static function render($module, $action) {
+		if (!file_exists("modules/{$module}/views/{$action}.view.php")) {
+			throw new Exception("View for {$module}'s {$action} action does not exist");
+		}
+		ob_start();
+		extract(self::$module_vars[$module]);
+		require_once("modules/{$module}/views/{$action}.view.php");
+		self::$body .= ob_get_clean();
+	}
+	
+	/**
+	 * Renders the module action's view content and returns it to be added at
+	 * a specific place
+	 * @param string $module
+	 * @param string $action
+	 */
+	public static function render_now($module, $action) {
+		if (!file_exists("modules/{$module}/views/{$action}.view.php")) {
+			throw new Exception("View for {$module}'s {$action} action does not exist");
+		}
+		ob_start();
+		extract(self::$module_vars[$module]);
+		require_once("modules/{$module}/views/{$action}.view.php");
+		return ob_get_clean();
 	}
 }
 	
