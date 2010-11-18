@@ -9,4 +9,6 @@
  * Licensed under the BSD license.
  * http://fabriqframework.com/license
  */
+
+echo FabriqModules::body();
 ?>

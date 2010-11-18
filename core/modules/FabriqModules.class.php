@@ -54,9 +54,9 @@ abstract class FabriqModules {
 			throw new Exception('Module does not exist');
 		}
 		$perm_ids = array();
-		foreach ($perms as $perm) {
+		foreach ($perms as $p) {
 			$perm = new Model(array('permission', 'module'), 'fabmods_perms');
-			$perm->permission = $perm;
+			$perm->permission = $p;
 			$perm->module = $module_id;
 			$perm_ids[] = $perm->create();
 		}
