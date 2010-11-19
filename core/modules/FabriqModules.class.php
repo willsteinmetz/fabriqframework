@@ -35,7 +35,7 @@ abstract class FabriqModules {
 	 * @param string $module
 	 */
 	public static function register_module($module) {
-		$mod = new Model(array('module', 'enabled'), 'fabmods_modules');
+		$mod = new Modules();
 		$mod->module = $module;
 		$mod->enabled = 0;
 		return $mod->create();
@@ -48,8 +48,7 @@ abstract class FabriqModules {
 	 * @return array
 	 */
 	public static function register_perms($module_id, $perms) {
-		$mod = new Model(array('module', 'enabled'), 'fabmods_modules');
-		$mod->find($module_id);
+		$mod = new Module($module_id);
 		if (($mod->id == null) || ($mod->id == '')) {
 			throw new Exception('Module does not exist');
 		}

@@ -188,6 +188,7 @@ abstract class Fabriq {
 	 * Loads the module core classes
 	 */
 	public static function init_module_core() {
+		require_once('core/modules/Modules.model.php');
 		require_once('core/modules/FabriqModules.class.php');
 		require_once('core/modules/FabriqModule.class.php');
 		require_once('core/modules/ModuleModel.class.php');
