@@ -54,6 +54,9 @@ class DatabaseMySQL implements Database {
 		$stmt = $this->db->stmt_init();
 		if ($stmt->prepare($sql)) {
 			$types = '';
+			if (!is_array($inputs)) {
+				$inputs = array($inputs);
+			}
 			foreach ($inputs as $input) {
 				if (is_int($input)) {
 					$types .= 'i';
@@ -96,6 +99,9 @@ class DatabaseMySQL implements Database {
 		$stmt = $this->db->stmt_init();
 		
 		if ($stmt->prepare($sql)) {
+			if (!is_array($inputs)) {
+				$inputs = array($inputs);
+			}
 			if (count($inputs) > 0) {
 				$types = '';
 				foreach ($inputs as $input) {

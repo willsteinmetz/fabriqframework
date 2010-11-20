@@ -3,6 +3,9 @@ Fabriq Framework change log
 
 Version 1.3
   - Added templating system
+  - Added module system
+  - Updated database prepare function to check that inputs are in an array and if a single input, to put it into
+    an array
 
 Version 1.2
   - Fixed bugs in Model::find()

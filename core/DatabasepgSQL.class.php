@@ -50,6 +50,9 @@ class DatabasepgSQL implements Database {
 	 */
 	public function prepare_cud($sql, $inputs, $tableName = NULL) {
 		if ($this->result = pg_prepare($this->db, "", $sql)) {
+			if (!is_array($inputs)) {
+				$inputs = array($inputs);
+			}
 			$this->result = pg_execute($this->db, "", $inputs);
 			
 			$this->affected_rows = pg_affected_rows($this->result);
@@ -70,6 +73,9 @@ class DatabasepgSQL implements Database {
 	 */
 	public function prepare_select($sql, $fields, $inputs = array(), $attributes = NULL) {
 		if ($this->result = pg_prepare($this->db, "", $sql)) {
+			if (!is_array($inputs)) {
+				$inputs = array($inputs);
+			}
 			$this->result = pg_execute($this->db, "", $inputs);
 			$results = array();
 			if ($attributes == NULL) {

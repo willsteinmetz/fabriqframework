@@ -54,7 +54,7 @@ abstract class FabriqModules {
 		}
 		$perm_ids = array();
 		foreach ($perms as $p) {
-			$perm = new Model(array('permission', 'module'), 'fabmods_perms');
+			$perm = new Perms();
 			$perm->permission = $p;
 			$perm->module = $module_id;
 			$perm_ids[] = $perm->create();
