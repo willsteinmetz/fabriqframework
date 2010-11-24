@@ -276,16 +276,16 @@ class Model implements ArrayAccess, Iterator, Countable {
 		if (get_magic_quotes_gpc()) {
 			foreach ($this->attributes as $attribute) {
 				if ($this->data[$index]->$attribute != null) {
-					$this->data[$index]->$attribute = stripslashes($this->data[0]->$attribute);
+					$this->data[$index]->$attribute = stripslashes($this->data[$index]->$attribute);
 				}
 			}
 		}
 		$data = array();
 		foreach ($this->attributes as $attribute) {
 			if ($this->data[$index]->$attribute !== null) {
-				array_push($data, $this->data[$index]->$attribute);
+				$data[] = $this->data[$index]->$attribute;
 			} else {
-				array_push($data, '');
+				$data[] = '';
 			}
 		}
 		$values = array_merge($data, array($this->data[$index]->created, $this->data[$index]->updated, $this->data[$index]->id));

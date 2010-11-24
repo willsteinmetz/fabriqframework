@@ -12,8 +12,9 @@ class FabriqModule extends Controller {
 	public static $mname;
 	
 	function __construct() {
-		$module = str_replace('_module', '', get_class($this));
-		spl_autoload_register($module . '::autoload');
+		spl_autoload_register(get_class($this) . '::autoload');
+		$this->name = str_replace('_module', '', get_class($this));
+		self::$mname = $this->name;
 	}
 	
 	/**
