@@ -276,7 +276,7 @@ class Model implements ArrayAccess, Iterator, Countable {
 		if (get_magic_quotes_gpc()) {
 			foreach ($this->attributes as $attribute) {
 				if ($this->data[$index]->$attribute != null) {
-					$this->data[$index]->$attribute = stripslashes($this->data[0]->$attribute);
+					$this->data[$index]->$attribute = stripslashes($this->data[$index]->$attribute);
 				}
 			}
 		}
