@@ -129,4 +129,21 @@ class DatabasepgSQL implements Database {
 		}
 		return FALSE;
 	}
+	
+	/**
+	 * Returns a string of placeholders for prepared statements
+	 * @param int $num
+	 * @return string
+	 */
+	public function placeholders($num) {
+		$ph = '';
+		for ($i = 1; $i <= $num; $i++) {
+			$ph .= '$' . $i;
+			if ($i < $num) {
+				$ph .= ', ';
+			}
+		}
+		
+		return $ph;
+	}
 }

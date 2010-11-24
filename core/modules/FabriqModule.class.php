@@ -12,7 +12,8 @@ class FabriqModule extends Controller {
 	public static $mname;
 	
 	function __construct() {
-		spl_autoload_register(__CLASS__ . '::autoload');
+		$module = str_replace('_module', '', get_class($this));
+		spl_autoload_register($module . '::autoload');
 	}
 	
 	/**
@@ -21,7 +22,8 @@ class FabriqModule extends Controller {
 	 */
 	public static function autoload($class) {
 		$class = str_replace("_mm", '', $class);
-		$file = "modules/" . self::$mname . "/models/{$class}.model.php";
+		$module = str_replace('_module', '', self::$mname);
+		$file = "modules/{$module}/models/{$class}.model.php";
 		if (file_exists($file)) {
 			require_once($file);
 		}
