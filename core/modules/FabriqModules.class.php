@@ -12,6 +12,8 @@ abstract class FabriqModules {
 	private static $body = '';
 	private static $module_vars = array();
 	private static $render_positions = array();
+	private static $cssqueue = array();
+	private static $jsqueue = array();
 	
 	/**
 	 * Calls the install function to install a module for use in the
@@ -228,6 +230,45 @@ abstract class FabriqModules {
 		extract(self::$module_vars[$module]);
 		require_once("modules/{$module}/views/{$action}.view.php");
 		return ob_get_clean();
+	}
+	
+	/**
+	 * Add a module stylesheet to the CSS queue
+	 * @param string $module
+	 * @param string $stylesheet
+	 * @param string $media
+	 * @param string $path
+	 * @param string $ext;
+	 */
+	public static function add_css($module, $stylesheet, $media = 'screen', $path = '', $ext = '.css') {
+		self::$cssqueue[] = array('css' => $stylesheet, 'media' => $media, 'path' => "modules/{$module}/stylesheets/{$path}", 'ext' => $ext);
+	}
+	
+	/**
+	 * Public getter for $cssqueue
+	 * @return array
+	 */
+	public static function cssqueue() {
+		return self::$cssqueue;
+	}
+	
+	/**
+	 * Add a module JavaScript to the JS queue
+	 * @param string $module
+	 * @param string $javascript
+	 * @param string $path
+	 * @param string $ext
+	 */
+	public static function add_js($module, $javascript, $path = '', $ext = '.js') {
+		self::$jsqueue[] = array('js' => $javascript, 'path' => "modules/{$module}/javascripts/{$path}", 'ext' => $ext);
+	}
+	
+	/**
+	 * Public getter for $jsqueue
+	 * @return array
+	 */
+	public static function jsqueue() {
+		return self::$jsqueue;
 	}
 }
 	

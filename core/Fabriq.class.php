@@ -29,6 +29,7 @@ abstract class Fabriq {
 	private static $title;
 	private static $render = 'layout';
 	private static $layout = 'application';
+	private static $modulesActive = false;
 	
 	/**
 	 * Adds a stylesheet to the CSS queue for stylesheet includes
@@ -45,6 +46,9 @@ abstract class Fabriq {
 	 * @return array
 	 */
 	public static function cssqueue() {
+		if (self::$modulesActive) {
+			self::$cssqueue = array_merge(self::$cssqueue, FabriqModules::cssqueue());
+		}
 		return self::$cssqueue;
 	}
 	
@@ -63,6 +67,9 @@ abstract class Fabriq {
 	 * @return array
 	 */
 	public static function jsqueue() {
+		if (self::$modulesActive) {
+			self::$jsqueue = array_merge(self::$jsqueue, FabriqModules::jsqueue());
+		}
 		return self::$jsqueue;
 	}
 	
@@ -193,6 +200,7 @@ abstract class Fabriq {
 		require_once('core/modules/FabriqModules.class.php');
 		require_once('core/modules/FabriqModule.class.php');
 		require_once('core/modules/ModuleModel.class.php');
+		self::$modulesActive = true;
 	}
 	
 	/**

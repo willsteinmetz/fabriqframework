@@ -27,6 +27,12 @@ Options		-Indexes
 	RewriteCond %{REQUEST_FILENAME} !-d
 	RewriteCond %{REQUEST_URI} (.*)(libs/)(.*)$
 	RewriteRule ^(.*)(libs/)(.*)$ $2$3
+	
+	# Rewrite rule to make sure that scripts and stylesheets located in modules are served properly
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteCond %{REQUEST_URI} (.*)(modules/)(.*)$
+	RewriteRule ^(.*)(modules/)(.*)$ $2$3
 
 	# Rewrite for clean URLs
 	RewriteCond %{REQUEST_FILENAME} !-f
