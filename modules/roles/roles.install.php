@@ -22,13 +22,23 @@ class roles_install {
 					`created` DATETIME NOT NULL,
 					`updated` DATETIME NOT NULL,
 					PRIMARY KEY (`id`)
-				);";
+				) ENGINE=INNODB;";
+				$db->query($sql);
+				$sql = "CREATE TABLE IF NOT EXISTS `fabmod_roles_moduleperms` (
+					`id` INT(11) NOT NULL AUTO_INCREMENT,
+					`permission` INT(11) NOT NULL,
+					`role` INT(11) NOT NULL,
+					`created` DATETIME NOT NULL,
+					`updated` DATETIME NOT NULL,
+					PRIMARY KEY (`id`),
+					CONSTRAINT `fk_moduleperms_permission` FOREIGN KEY (`permission`) REFERENCES fabmods_perms(id) ON DELETE CASCADE,
+					CONSTRAINT `fk_moduleperms_role` FOREIGN KEY (`role`) REFERENCES fabmod_roles_roles(id) ON DELETE CASCADE
+				) ENGINE=INNODB;";
 			break;
 			case 'pgSQL':
 				
 			break;
 		}
-		$db->query($sql);
 		
 		// create base roles
 		$role = new Roles_mm();

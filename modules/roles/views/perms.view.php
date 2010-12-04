@@ -1,4 +1,9 @@
 <h1>Module permissions</h1>
+<?php
+if (Messaging::has_messages('successes')) {
+	Messaging::display_messages('successes');
+}
+?>
 <table>
 	<thead>
 		<tr>
@@ -19,7 +24,7 @@
 		<tr>
 			<td style="width: 300px;"><?php echo $perms[$perm]->permission; ?></td>
 			<?php foreach($roles as $role): ?>
-			<td style="width: 85px; text-align: center;"><input type="checkbox" name="permission[<?php echo $perms[$perm]->id; ?>][<?php echo $role->id; ?>]"<?php if ($permissions[$perms[$perm]->id][$role->id]) { echo ' checked="checked"'; } ?> title="<?php echo $role->role; ?>" value="1"<?php if ($role->enabled == 0) { echo ' disabled="disabled"'; } ?> /></td>
+			<td style="width: 85px; text-align: center;"><input type="checkbox" name="permission[<?php echo $perms[$perm]->id; ?>][<?php echo $role->id; ?>]"<?php if ($permissions[$perms[$perm]->id][$role->id]) { echo ' checked="checked"'; } ?> title="<?php echo $perms[$perm]->permission . ' - ' . $role->role; ?>" value="1"<?php if ($role->enabled == 0) { echo ' disabled="disabled"'; } ?> /></td>
 			<?php endforeach; ?>
 		</tr>
 		<?php endforeach;?>
