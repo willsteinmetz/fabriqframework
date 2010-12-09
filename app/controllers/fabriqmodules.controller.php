@@ -14,5 +14,31 @@ class fabriqmodules_controller extends Controller {
 	function index() {
 		
 	}
+	
+	public function manage() {
+		global $_FAPP;
+		// @TODO require role
+		Fabriq::title('Admin | Manage modules');
+		if (!$_FAPP['templating']) {
+			global $modules;
+		}
+		$modules = new Modules();
+		$modules->getAll();
+		if ($_FAPP['templating']) {
+			FabriqTemplates::set_var('modules', $modules);
+		}
+	}
+	
+	public function enable() {
+		
+	}
+	
+	public function disable() {
+		
+	}
+	
+	public function configure() {
+		
+	}
 }
 		
