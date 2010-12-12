@@ -18,7 +18,9 @@
 			<td style="width: 100px; padding: 5px; text-align: center;">
 				<?php echo $module->versioninstalled; ?>
 			</td>
-			<td style="width: 100px; padding: 5px; text-align: center;"><button<?php if (in_array($module->module, $core)) { echo " disabled=\"disabled\" title=\"This is a core module. It cannot be disabled.\""; } ?>><?php echo ($module->enabled == 1) ? 'disable' : 'enable'; ?></button></td>
+			<td style="width: 100px; padding: 5px; text-align: center;">
+				<button id="enable-button-<?php echo $module->id; ?>"<?php if (in_array($module->module, $core)) { echo " disabled=\"disabled\" title=\"This is a core module. It cannot be disabled.\""; } ?> onclick="FabriqModules.hasConfiguration(<?php echo $module->id; ?>);"><?php echo ($module->enabled == 1) ? 'disable' : 'enable'; ?></button>
+			</td>
 		</tr>
 		<tr id="module-config-<?php echo $module->id; ?>" style="display: none;">
 			<td colspan="3"></td>

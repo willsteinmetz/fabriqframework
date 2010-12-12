@@ -19,6 +19,7 @@ class fabriqmodules_controller extends Controller {
 		global $_FAPP;
 		// @TODO require role
 		Fabriq::title('Admin | Manage modules');
+		Fabriq::page_js_on();
 		if (!$_FAPP['templating']) {
 			global $modules;
 		}
@@ -49,8 +50,38 @@ class fabriqmodules_controller extends Controller {
 		
 	}
 	
-	public function configure() {
+	public function hasConfiguration() {
+		Fabriq::render('view');
+		global $_FAPP;
+		if (!$_FAPP['templating']) {
+			global $module;
+			global $numConfigs;
+		}
 		
+		global $db;
+		$sql = "SELECT COUNT(*) AS num FROM fabmods_module_configs WHERE module = " . (($db->type == 'MySQL') ? '?' : '$1');
+		$data = $db->prepare_select($sql, array('num'), PathMap::arg(2));
+		$numConfigs = $data[0]['num'];
+		
+		if ($_FAPP['templating']) {
+			FabriqTemplates::set_var('module', $module);
+			FabriqTemplates::set_var('numConfigs', $numConfigs);
+		}
+	}
+	
+	public function configure() {
+		Fabriq::render('view');
+		global $_FAPP;
+		if (!$_FAPP['templating']) {
+			global $module;
+		}
+		$module = new Modules(PathMap::arg(2));
+		$installer = $module->module . '_install';
+		$config = new $installer();
+		$config->configure();
+		if ($_FAPP['templating']) {
+			FabriqTemplates::set_var('module', $module);
+		}
 	}
 }
 		
