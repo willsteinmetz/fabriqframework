@@ -12,9 +12,13 @@ function fabriq_default_autoload($class) {
 	// autoload appropriate database class
 	if (strpos($class, 'Database') !== FALSE) {
 		require_once("core/{$class}.class.php");
-	// autoload model
+	// include helper file
+	} else if (strpos($class, '_helper') !== FALSE) {
+		require_once("app/helpers/" . str_replace('_helper', '', $class) . ".helper.php");
+	// initialize module core
 	} else if (trim($class) == 'FabriqModules') {
 		Fabriq::init_module_core();
+	// autoload model
 	} else {
 		$model = "app/models/{$class}.model.php";
 		if (file_exists($model)) {
@@ -200,6 +204,7 @@ abstract class Fabriq {
 		require_once('core/modules/FabriqModules.class.php');
 		require_once('core/modules/FabriqModule.class.php');
 		require_once('core/modules/ModuleModel.class.php');
+		require_once('core/modules/ModuleConfigs.class.php');
 		self::$modulesActive = true;
 	}
 	

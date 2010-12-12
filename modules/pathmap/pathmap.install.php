@@ -43,23 +43,7 @@ class pathmap_install {
 	}
 	
 	public function uninstall() {
-		global $db;
-		$module = new Modules();
-		$module->getModuleByName('pathmap');
-		
-		FabriqModules::remove_perms($module->id);
-		
-		switch($db->type) {
-			case 'MySQL':
-				$sql = "DROP TABLE `fabmod_pathmap_paths";
-			break;
-			case 'pgSQL':
-				
-			break;
-		}
-		$db->query($sql);
-		
-		$module->destroy();
+		// core modules cannot be uninstalled
 	}
 }
 	

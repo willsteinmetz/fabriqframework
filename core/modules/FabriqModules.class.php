@@ -38,9 +38,37 @@ abstract class FabriqModules {
 	 */
 	public static function register_module($module) {
 		$mod = new Modules();
+		$file = "modules/{$module}/{$module}.info.json";
+		if (!file_exists($file)) {
+			throw new Exception("Module {$module}'s information file does not exist");
+		}
+		ob_start();
+		readfile($file);
+		$info = ob_get_clean();
+		$info = json_decode($info, true);
 		$mod->module = $module;
 		$mod->enabled = 0;
-		return $mod->create();
+		$mod->description = $info['description'];
+		$mod->versioninstalled = $info['version'];
+		if (isset($info['dependsOn'])) {
+			$mod->dependson = implode(',', $info['dependsOn']);
+		}
+		$mod->id = $mod->create();
+		
+		// register configs if available
+		if (isset($info['configs'])) {
+			foreach ($info['configs'] as $con) {
+				$config = new ModuleConfigs();
+				$config->module = $mod->id;
+				$config->var = $con;
+				if (isset($info['configDefaults']) && array_key_exists($con, $info['configDefaults'])) {
+					$config->val = $info['configDefaults'][$con];
+				}
+				$config->create();
+			}
+		}
+		
+		return $mod->id;
 	}
 	
 	/**
@@ -50,7 +78,7 @@ abstract class FabriqModules {
 	 * @return array
 	 */
 	public static function register_perms($module_id, $perms) {
-		$mod = new Module($module_id);
+		$mod = new Modules($module_id);
 		if (($mod->id == null) || ($mod->id == '')) {
 			throw new Exception('Module does not exist');
 		}

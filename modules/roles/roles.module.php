@@ -51,7 +51,7 @@ class roles_module extends FabriqModule {
 		$perms = new Perms();
 		$perms->getAll();
 		$modules = new Modules();
-		$modules->getAll();
+		$modules->getEnabled();
 		$roles = new Roles_mm();
 		$roles->getRoles();
 		$modulePerms = new ModulePerms_mm();

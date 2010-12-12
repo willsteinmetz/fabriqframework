@@ -4,6 +4,10 @@ if (Messaging::has_messages('successes')) {
 	Messaging::display_messages('successes');
 }
 ?>
+<form method="post" action="<?php PathMap::build_path('fabriqadmin', 'roles', 'persm'); ?>">
+<?php foreach ($modules as $module): ?>
+<h3><?php echo $module->module; ?></h3>
+	<?php if (isset($perms->modules[$module->id])): ?>
 <table>
 	<thead>
 		<tr>
@@ -13,12 +17,6 @@ if (Messaging::has_messages('successes')) {
 			<?php endforeach; ?>
 		</tr>
 	</thead>
-</table>
-<form method="post" action="<?php PathMap::build_path('fabriqadmin', 'roles', 'persm'); ?>">
-<?php foreach ($modules as $module): ?>
-<h3><?php echo $module->module; ?></h3>
-	<?php if (isset($perms->modules[$module->id])): ?>
-<table>
 	<tbody>
 		<?php foreach ($perms->modules[$module->id] as $perm): ?>
 		<tr>
@@ -30,6 +28,8 @@ if (Messaging::has_messages('successes')) {
 		<?php endforeach;?>
 	</tbody>
 </table>
+	<?php else: ?>
+	<p>There are no permissions to set for this module.</p>
 	<?php endif; ?>
 <?php endforeach; ?>
 <p><input type="submit" name="submit" id="submit" value="Save changes" /></p>

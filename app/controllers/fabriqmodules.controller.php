@@ -24,6 +24,18 @@ class fabriqmodules_controller extends Controller {
 		}
 		$modules = new Modules();
 		$modules->getAll();
+		
+		// get and install any new modules
+		$available = fabriqmodules_helper::scan_modules();
+		$toInstall = fabriqmodules_helper::to_install($modules, $available);
+		foreach ($toInstall as $install) {
+			FabriqModules::install($install);
+		}
+		
+		// update modules collection
+		$modules = new Modules();
+		$modules->getAll();
+		
 		if ($_FAPP['templating']) {
 			FabriqTemplates::set_var('modules', $modules);
 		}

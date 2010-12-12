@@ -34,6 +34,7 @@ class roles_install {
 					CONSTRAINT `fk_moduleperms_permission` FOREIGN KEY (`permission`) REFERENCES fabmods_perms(id) ON DELETE CASCADE,
 					CONSTRAINT `fk_moduleperms_role` FOREIGN KEY (`role`) REFERENCES fabmod_roles_roles(id) ON DELETE CASCADE
 				) ENGINE=INNODB;";
+				$db->query($sql);
 			break;
 			case 'pgSQL':
 				
@@ -62,7 +63,7 @@ class roles_install {
 	}
 	
 	public function uninstall() {
-		
+		// core modules cannot be uninstalled
 	}
 }
 	
