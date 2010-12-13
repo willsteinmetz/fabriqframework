@@ -22,8 +22,8 @@
 				<button id="enable-button-<?php echo $module->id; ?>"<?php if (in_array($module->module, $core)) { echo " disabled=\"disabled\" title=\"This is a core module. It cannot be disabled.\""; } ?> onclick="FabriqModules.hasConfiguration(<?php echo $module->id; ?>);"><?php echo ($module->enabled == 1) ? 'disable' : 'enable'; ?></button>
 			</td>
 		</tr>
-		<tr id="module-config-<?php echo $module->id; ?>" style="display: none;">
-			<td colspan="3"></td>
+		<tr style="display: none;">
+			<td id="module-config-<?php echo $module->id; ?>" colspan="3"></td>
 		</tr>
 <?php endforeach; ?>
 	</tbody>

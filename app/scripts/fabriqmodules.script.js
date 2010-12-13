@@ -20,12 +20,17 @@ FabriqModules = {
 			url: Fabriq.build_path('fabriqmodules', 'configure', module),
 			dataType: 'html',
 			success: function(data, status) {
-				$('#module-config-' + module).html(data).show();
+				$('#module-config-' + module).html(data);
+				$('#module-config-' + module).parent().show()
 			}
 		});
 	},
 	
 	enable: function(module) {
+		
+	},
+	
+	disable: function(module) {
 		
 	}
 }
