@@ -20,7 +20,7 @@ class Paths_mm extends ModuleModel {
 		global $db;
 		
 		// check for specific path
-		$sql = "SELECT * FROM {$this->db_table} WHERE path=" . (($db->type == 'MySQL') ? '?' : '$1');
+		$sql = "SELECT * FROM {$this->db_table} WHERE path=?";
 		$this->fill($db->prepare_select($sql, $this->fields(), $path));
 		
 		if ($this->count() > 0) {
@@ -44,7 +44,7 @@ class Paths_mm extends ModuleModel {
 		
 		$likes = '';
 		for ($i = 0; $i < count($paths); $i++) {
-			$likes .= "path LIKE " . (($db->type == 'MySQL') ? '?' : '$' . ($i + 1)) . ' ';
+			$likes .= "path LIKE ? ";
 			if ($i < (count($paths) - 1)) {
 				$likes .= 'OR ';
 			}
@@ -57,11 +57,7 @@ class Paths_mm extends ModuleModel {
 	public function get_by_details($controller, $action, $extra) {
 		global $db;
 		
-		if ($db->type == 'MySQL') {
-			$sql = "SELECT * FROM {$this->db_table} WHERE controller = ? AND action = ? AND extra = ?";
-		} else {
-			$sql = "SELECT * FROM {$this->db_table} WHERE controller = \$1 AND action = \$2 AND extra = \$3";
-		}
+		$sql = "SELECT * FROM {$this->db_table} WHERE controller = ? AND action = ? AND extra = ?";
 		$this->fill($db->prepare_select($sql, $this->fields(), array($controller, $action, $extra)));
 	}
 }

@@ -7,7 +7,7 @@
  * Licensed under the BSD license.
  * http://fabriqframework.com/license
  */
-class DatabaseMySQL implements Database {
+class Database {
 	// public variables
 	public $db;
 	public $last;
@@ -18,8 +18,6 @@ class DatabaseMySQL implements Database {
 	public $total_queries = 0;
 	private $errorNo;
 	private $errorStr;
-	public $type = 'MySQL';
-	public $delim = '`';
 	
 	// private variables
 	

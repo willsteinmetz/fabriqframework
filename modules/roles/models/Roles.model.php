@@ -24,7 +24,7 @@ class Roles_mm extends ModuleModel {
 	public function getRole($role) {
 		global $db;
 		
-		$sql = "SELECT * FROM {$this->db_table} WHERE role=" . (($db->type == 'MySQL') ? '?' : '$1');
+		$sql = "SELECT * FROM {$this->db_table} WHERE role=?";
 		$this->fill($db->prepare_select($sql, $this->fields(), strtolower($role)));
 	}
 	
@@ -37,7 +37,7 @@ class Roles_mm extends ModuleModel {
 			$role = strtolower(trim($role));
 		}
 		
-		$sql = "SELECT * FROM {$this->db_table} WHERE role IN (" . (($db->type == 'MySQL') ? $db->qmarks : $db->placeholders) . ")";
+		$sql = "SELECT * FROM {$this->db_table} WHERE role IN (" . $db->qmarks . ")";
 		$this->fill($db->prepare_select($sql, $this->fields(), $roles));
 	}
 }	

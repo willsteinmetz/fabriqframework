@@ -13,7 +13,7 @@ class Perms extends Model {
 	public function getModulePerms($module_id) {
 		global $db;
 		
-		$sql = "SELECT * FROM {$this->db_table} WHERE module=" . (($db->type == 'MySQL') ? '?' : '$1');
+		$sql = "SELECT * FROM {$this->db_table} WHERE module=?";
 		$this->fill($db->prepare_select($sql, $this->fields(), $module_id));
 	}
 	

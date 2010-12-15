@@ -20,25 +20,17 @@ class pathmap_install {
 		$perm_ids = FabriqModules::register_perms($module, $perms);
 		
 		global $db;
-		
-		switch ($db->type) {
-			case 'MySQL':
-				$sql = "CREATE TABLE `fabmod_pathmap_paths` (
-					`id` INT(11) NOT NULL,
-					`path` VARCHAR(100) NOT NULL,
-					`modpage` ENUM('module', 'page') NOT NULL DEFAULT 'module',
-					`controller` VARCHAR(100) NOT NULL,
-					`action` VARCHAR(100) NOT NULL,
-					`extra` VARCHAR(100) NULL,
-					`wildcard` INT(11) NULL,
-					`created` DATETIME NOT NULL,
-					`updated` DATETIME NOT NULL
-				);";
-			break;
-			case 'pgSQL':
-				
-			break;
-		}
+		$sql = "CREATE TABLE `fabmod_pathmap_paths` (
+			`id` INT(11) NOT NULL,
+			`path` VARCHAR(100) NOT NULL,
+			`modpage` ENUM('module', 'page') NOT NULL DEFAULT 'module',
+			`controller` VARCHAR(100) NOT NULL,
+			`action` VARCHAR(100) NOT NULL,
+			`extra` VARCHAR(100) NULL,
+			`wildcard` INT(11) NULL,
+			`created` DATETIME NOT NULL,
+			`updated` DATETIME NOT NULL
+		);";
 		$db->query($sql);
 	}
 	

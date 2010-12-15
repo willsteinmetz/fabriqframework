@@ -116,7 +116,7 @@ abstract class FabriqModules {
 	public static function remove_perms($module_id) {
 		global $db;
 		
-		$sql = sprintf("DELETE FROM %s WHERE %s%s%s = %s", 'fabmods_perms', $db->delim, 'module', $db->delim, (($db->type == 'MySQL') ? '?' : '$1'));
+		$sql = "DELETE FROM fabmods_perms WHERE `module` = ?";
 		$db->prepare_cud($sql, array($module_id));
 	}
 	
@@ -161,7 +161,7 @@ abstract class FabriqModules {
 	public static function enabled($module) {
 		global $db;
 		
-		$sql = "SELECT enabled FROM fabmods_modules WHERE module = " . (($db->type == 'MySQL') ? '?' : '$1');
+		$sql = "SELECT enabled FROM fabmods_modules WHERE module = ?";
 		$data = $db->prepare_select($sql, array('enabled'), array($module));
 		if (count($data) == 0) {
 			return FALSE;

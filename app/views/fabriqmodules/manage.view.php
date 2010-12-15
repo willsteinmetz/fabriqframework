@@ -11,7 +11,7 @@
 	<tbody>
 <?php foreach ($modules as $module): ?>
 		<tr id="module-<?php echo $module->id; ?>">
-			<td style="width: 680px; padding: 5px;">
+			<td style="width: 670px; padding: 5px;">
 				<strong><?php echo $module->module; ?></strong><?php if (in_array($module->module, $core)) { echo " (core module - cannot be disabled)"; } ?>
 				<div style="padding: 5px 5px 5px 25px; font-size: 10pt;"><?php echo $module->description; ?></div>
 			</td>
@@ -23,7 +23,7 @@
 			</td>
 		</tr>
 		<tr style="display: none;">
-			<td id="module-config-<?php echo $module->id; ?>" colspan="3"></td>
+			<td id="module-config-<?php echo $module->id; ?>" class="module-config" colspan="3"></td>
 		</tr>
 <?php endforeach; ?>
 	</tbody>

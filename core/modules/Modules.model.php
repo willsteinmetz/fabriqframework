@@ -11,14 +11,14 @@ class Modules extends Model {
 	public function getModuleByName($module) {
 		global $db;
 		
-		$sql = "SELECT * FROM fabmods_modules WHERE module=" . (($db->type == 'MySQL') ? '?' : '$1');
+		$sql = "SELECT * FROM fabmods_modules WHERE module=?";
 		$this->fill($db->prepare_select($sql, $this->fields(), $module));
 	}
 	
 	public function getEnabled() {
 		global $db;
 		
-		$sql = "SELECT * FROM {$this->db_table} WHERE enabled = " . (($db->type == 'MySQL') ? '?' : '$1') . " ORDER BY module";
+		$sql = "SELECT * FROM {$this->db_table} WHERE enabled = ? ORDER BY module";
 		$this->fill($db->prepare_select($sql, $this->fields(), 1));
 	}
 	
@@ -32,14 +32,14 @@ class Modules extends Model {
 	public function enable() {
 		global $db;
 		
-		$sql = "UPDATE {$this->db_table} SET enabled = " . (($db->type == 'MySQL') ? '?' : '$1') . " WHERE {$this->id_name} = " . (($db->type == 'MySQL') ? '?' : '$2');
+		$sql = "UPDATE {$this->db_table} SET enabled = ? WHERE {$this->id_name} = ?";
 		$db->prepare_cud($sql, array(1, $this->id));
 	}
 	
 	public function disable() {
 		global $db;
 		
-		$sql = "UPDATE {$this->db_table} SET enabled = " . (($db->type == 'MySQL') ? '?' : '$1') . " WHERE {$this->id_name} = " . (($db->type == 'MySQL') ? '?' : '$2');
+		$sql = "UPDATE {$this->db_table} SET enabled = ? WHERE {$this->id_name} = ?";
 		$db->prepare_cud($sql, array(0, $this->id));
 	}
 	

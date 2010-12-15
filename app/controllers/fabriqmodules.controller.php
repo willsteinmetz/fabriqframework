@@ -59,7 +59,7 @@ class fabriqmodules_controller extends Controller {
 		}
 		
 		global $db;
-		$sql = "SELECT COUNT(*) AS num FROM fabmods_module_configs WHERE module = " . (($db->type == 'MySQL') ? '?' : '$1');
+		$sql = "SELECT COUNT(*) AS num FROM fabmods_module_configs WHERE module = ?";
 		$data = $db->prepare_select($sql, array('num'), PathMap::arg(2));
 		$numConfigs = $data[0]['num'];
 		

@@ -94,9 +94,6 @@ switch ($step) {
 				if (strlen(trim($_POST['dbserver'])) == 0) {
 					array_push($errors, 'You must enter a database server');
 				}
-				if (trim($_POST['dbtype']) == '') {
-					array_push($errors, 'You must select a database type');
-				}
 				
 				$submitted = TRUE;
 				if (count($errors) == 0) {
@@ -121,8 +118,7 @@ switch ($step) {
 					fwrite($fh, "	'user' => '{$_POST['dbuser']}',\n");
 					fwrite($fh, "	'pwd' => '{$_POST['dbpwd']}',\n");
 					fwrite($fh, "	'db' => '{$_POST['dbname']}',\n");
-					fwrite($fh, "	'server' => '{$_POST['dbserver']}',\n");
-					fwrite($fh, "	'type' => '{$_POST['dbtype']}'\n");
+					fwrite($fh, "	'server' => '{$_POST['dbserver']}'\n");
 					fwrite($fh, ");\n");
 					fclose($fh);
 					
@@ -267,11 +263,6 @@ if (count($errors) > 0) {
 		</fieldset>
 		<fieldset>
 			<legend>Database information</legend>
-			<label for="dbtype">Database type <span class="required-field">*</span>: </label><select name="dbtype" id="db-type" tabindex="8">
-				<option>-- Select one --</option>
-				<option value="MySQL">MySQL</option>
-				<option value="pgSQL">PostgreSQL</option>
-			</select><br />
 			<label for="dbname">Database name <span class="required-field">*</span>: </label><input type="text" id="db-name" name="dbname" size="50" tabindex="9"<?php if ($submitted) { echo ' value="' . $_POST['dbname'] . '"'; } ?> /><br />
 			<div class="form-item-description">This database must already exist</div>
 			<label for="dbuser">Database user <span class="required-field">*</span>: </label><input type="text" id="db-user" name="dbuser" size="50" tabindex="10"<?php if ($submitted) { echo ' value="' . $_POST['dbuser'] . '"'; } ?> /><br />

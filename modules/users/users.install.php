@@ -13,26 +13,18 @@ class users_install {
 		$perm_ids = FabriqModules::register_perms($module, $perms);
 		
 		global $db;
-		
-		switch ($db->type) {
-			case 'MySQL':
-				$sql = "CREATE TABLE IF NOT EXISTS `fabmod_users_users` (
-					`id` INT(11) NOT NULL AUTO_INCREMENT,
-					`display` VARCHAR(24) NOT NULL,
-					`email` VARCHAR(100) NOT NULL,
-					`encpwd` VARCHAR(100) NOT NULL,
-					`status` INT(4) NOT NULL DEFAULT 0,
-					`banned` TINYINT(1) NOT NULL DEFAULT 0,
-					`created` DATETIME NOT NULL,
-					`updated` DATETIME NOT NULL,
-					PRIMARY KEY (`id`)
-				) ENGINE=INNODB;";
-				$db->query($sql);
-			break;
-			case 'pgSQL':
-				
-			break;
-		}
+		$sql = "CREATE TABLE IF NOT EXISTS `fabmod_users_users` (
+			`id` INT(11) NOT NULL AUTO_INCREMENT,
+			`display` VARCHAR(24) NOT NULL,
+			`email` VARCHAR(100) NOT NULL,
+			`encpwd` VARCHAR(100) NOT NULL,
+			`status` INT(4) NOT NULL DEFAULT 0,
+			`banned` TINYINT(1) NOT NULL DEFAULT 0,
+			`created` DATETIME NOT NULL,
+			`updated` DATETIME NOT NULL,
+			PRIMARY KEY (`id`)
+		) ENGINE=INNODB;";
+		$db->query($sql);
 		
 		// map paths
 		$pathmap = &FabriqModules::module('pathmap');

@@ -21,7 +21,10 @@ FabriqModules = {
 			dataType: 'html',
 			success: function(data, status) {
 				$('#module-config-' + module).html(data);
-				$('#module-config-' + module).parent().show()
+				$('#module-config-' + module).parent().show();
+				if ($('#ajax-callback').length > 0) {
+					eval($('#ajax-callback')[0]);
+				}
 			}
 		});
 	},

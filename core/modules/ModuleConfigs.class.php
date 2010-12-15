@@ -12,9 +12,9 @@ class ModuleConfigs extends Model {
 		global $db;
 		
 		if (is_numeric($module)) {
-			$sql = "SELECT * FROM {$this->db_table} WHERE module = " . (($db->type == 'MySQL') ? '?' : '$1') . " ORDER BY var";
+			$sql = "SELECT * FROM {$this->db_table} WHERE module = ? ORDER BY var";
 		} else {
-			$sql = "SELECT * FROM {$this->db_table} WHERE module = (SELECT id FROM fabmods_modules WHERE module = " . (($db->type == 'MySQL') ? '?' : '$1') . ") ORDER BY var";
+			$sql = "SELECT * FROM {$this->db_table} WHERE module = (SELECT id FROM fabmods_modules WHERE module = ?) ORDER BY var";
 		}
 		$this->fill($db->prepare_select($sql, $this->fields(), $module));
 	}

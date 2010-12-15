@@ -9,11 +9,8 @@
  */
 
 function fabriq_default_autoload($class) {
-	// autoload appropriate database class
-	if (strpos($class, 'Database') !== FALSE) {
-		require_once("core/{$class}.class.php");
 	// include helper file
-	} else if (strpos($class, '_helper') !== FALSE) {
+	if (strpos($class, '_helper') !== FALSE) {
 		require_once("app/helpers/" . str_replace('_helper', '', $class) . ".helper.php");
 	// include module install file
 	} else if (strpos($class, '_install') !== FALSE) {
