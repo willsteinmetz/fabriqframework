@@ -226,12 +226,16 @@ abstract class FabriqModules {
 	 * @param string $action
 	 */
 	public static function render($module, $action) {
-		if (!file_exists("modules/{$module}/views/{$action}.view.php")) {
-			throw new Exception("View for {$module}'s {$action} action does not exist");
+		$file = "app/views/modules/{$module}/views/{$action}.view.php";
+		if (!file_exists($file)) {
+			$file = "modules/{$module}/views/{$action}.view.php";
+			if (!file_exists($file)) {
+				throw new Exception("View for {$module}'s {$action} action does not exist");
+			}
 		}
 		ob_start();
 		extract(self::$module_vars[$module]);
-		require_once("modules/{$module}/views/{$action}.view.php");
+		require_once($file);
 		self::$body .= ob_get_clean();
 	}
 	
@@ -250,13 +254,17 @@ abstract class FabriqModules {
 	 * @param string $action
 	 */
 	public static function render_now($module, $action) {
-		if (!file_exists("modules/{$module}/views/{$action}.view.php")) {
-			throw new Exception("View for {$module}'s {$action} action does not exist");
+		$file = "app/views/modules/{$module}/views/{$action}.view.php";
+		if (!file_exists($file)) {
+			$file = "modules/{$module}/views/{$action}.view.php";
+			if (!file_exists($file)) {
+				throw new Exception("View for {$module}'s {$action} action does not exist");
+			}
 		}
 		self::$render_positions[] = $module;
 		ob_start();
 		extract(self::$module_vars[$module]);
-		require_once("modules/{$module}/views/{$action}.view.php");
+		require_once($file);
 		return ob_get_clean();
 	}
 	

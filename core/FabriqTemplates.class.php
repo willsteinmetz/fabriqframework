@@ -74,7 +74,7 @@ abstract class FabriqTemplates {
 		ob_start();
 		extract(self::$tplvars);
 		if (Fabriq::render() == 'layout') {
-			$tpl = "app/views/layouts/" . self::$template . ".tpl.php";
+			$tpl = "app/templates/" . self::$template . ".tpl.php";
 			if (!file_exists($tpl)) {
 				throw new Exception('Template ' . self::$template . ' could not be loaded');
 			}
