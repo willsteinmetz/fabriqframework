@@ -25,6 +25,17 @@ class users_install {
 			PRIMARY KEY (`id`)
 		) ENGINE=INNODB;";
 		$db->query($sql);
+		$sql = "CREATE TABLE IF NOT EXISTS `fabmod_users_roles` (
+			`id` INT(11) NOT NULL AUTO_INCREMENT,
+			`user` INT(11) NOT NULL,
+			`role` INT(11) NOT NULL,
+			`created` DATETIME NOT NULL,
+			`updated` DATETIME NOT NULL,
+			PRIMARY KEY (`id`),
+			CONSTRAINT `fk_users_user` FOREIGN KEY (`user`) REFERENCES `fabmod_users_users`(`id`) ON DELETE CASCADE,
+			CONSTRAINT `fk_users_role` FOREIGN KEY (`role`) REFERENCES `fabmod_roles_roles`(`id`) ON DELETE CASCADE
+		) ENGINE=INNODB;";
+		$db->query($sql);
 		
 		// map paths
 		$pathmap = &FabriqModules::module('pathmap');
@@ -32,7 +43,7 @@ class users_install {
 		$pathmap->register_path('users/logout', 'users', 'logout', 'module');
 		$pathmap->register_path('users/forgotpassword', 'users', 'forgotpassword', 'module');
 		$pathmap->register_path('users/create', 'users', 'create', 'module');
-		$pathmap->register_path('users/update', 'users', 'update', 'module');
+		$pathmap->register_path('users/update/%', 'users', 'update', 'module', null, 2);
 		$pathmap->register_path('users/enable', 'users', 'enable', 'module');
 		$pathmap->register_path('users/ban', 'users', 'ban', 'module');
 		$pathmap->register_path('users/register', 'users', 'register', 'module');

@@ -21,16 +21,23 @@ class pathmap_module extends FabriqModule {
 		}
 		switch ($path->modpage) {
 			case 'module':
-				PathMap::controller('fabriqmodules');
-				PathMap::render_controller('fabriqmodules');
-				PathMap::arg(0, 'fabriqmodules');
-				PathMap::action('index');
-				PathMap::render_action('index');
-				PathMap::arg(1, 'index');
-				$mod = &FabriqModules::module($path->controller);
-				$extra = explode('/', $path->extra);
-				call_user_func_array(array($mod, $path->action), $extra);
-				FabriqModules::render($path->controller, $path->action);
+				if (FabriqModules::isEnabled($path->controller)) {
+					PathMap::controller('fabriqmodules');
+					PathMap::render_controller('fabriqmodules');
+					PathMap::arg(0, 'fabriqmodules');
+					PathMap::action('index');
+					PathMap::render_action('index');
+					PathMap::arg(1, 'index');
+					$mod = &FabriqModules::module($path->controller);
+					$extra = explode('/', $path->extra);
+					call_user_func_array(array($mod, $path->action), $extra);
+					FabriqModules::render($path->controller, $path->action);
+				} else {
+					PathMap::controller('errors');
+					PathMap::render_controller('errors');
+					PathMap::action('fourohfour');
+					PathMap::render_action('fourohfour');
+				}
 			break;
 			case 'page': default:
 				PathMap::controller($path->controller);

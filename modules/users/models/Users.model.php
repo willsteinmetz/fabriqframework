@@ -7,5 +7,12 @@ class Users_mm extends ModuleModel {
 			$this->find($id);
 		}
 	}
+	
+	function getByDisplayEmail($user) {
+		global $db;
+		
+		$query = "SELECT * FROM {$this->db_table} WHERE display = ? OR email = ?";
+		$this->fill($db->prepare_select($query, $this->fields(), array($user, $user)));
+	}
 }
 	

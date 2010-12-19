@@ -1,6 +1,10 @@
 <script language="JavaScript" id="ajax-callback">
 if (typeof(UsersConfigure) == 'undefined') {
-	$.getScript(Fabriq.base_path() + 'modules/users/javascripts/users-configure.js', function() {});
+	$.getScript(Fabriq.base_path() + 'modules/users/javascripts/users-configure.js', function() {
+		UsersConfigure.init();
+	});
+} else {
+	UsersConfigure.init();
 }
 </script>
 <div style="padding: 2px;">
@@ -71,6 +75,11 @@ if (typeof(UsersConfigure) == 'undefined') {
 		</label>
 	</div>
 	<div style="padding: 2px;">
-		<button id="usersSaveConfig" name="usersSaveConfig" onclick="UsersConfigure.saveConfiguration();">Save settings</button>
+		<label for="customIsLoggedInAction">
+			Is logged in: <input type="text" size="50" maxlength="50" name="customIsLoggedInAction" id="customIsLoggedInAction" />
+		</label>
 	</div>
 </fieldset>
+<div style="padding: 2px;">
+	<button id="usersSaveConfig" name="usersSaveConfig" onclick="UsersConfigure.saveConfiguration();">Save settings</button>
+</div>

@@ -19,7 +19,3 @@ UsersConfigure = {
 		
 	}
 };
-
-$(function() {
-	UsersConfigure.init();
-});

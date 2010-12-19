@@ -102,4 +102,18 @@ class roles_module extends FabriqModule {
 		FabriqModules::set_var($this->name, 'roles', $roles);
 		FabriqModules::set_var($this->name, 'permissions', $permissions);
 	}
+
+	public function hasRole($role) {
+		if (isset($_SESSION['FABMOD_USERS_roles'])) {
+			$roles = unserialize($_SESSION['FABMOD_USERS_roles']);
+			if (count($roles) > 0) {
+				if (in_array($role, $roles)) {
+					return TRUE;
+				}
+				return FALSE;
+			}
+			return FALSE;
+		}
+		return FALSE;
+	}
 }	
