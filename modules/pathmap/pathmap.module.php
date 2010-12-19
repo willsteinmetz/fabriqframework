@@ -21,7 +21,7 @@ class pathmap_module extends FabriqModule {
 		}
 		switch ($path->modpage) {
 			case 'module':
-				if (FabriqModules::isEnabled($path->controller)) {
+				if (FabriqModules::enabled($path->controller)) {
 					PathMap::controller('fabriqmodules');
 					PathMap::render_controller('fabriqmodules');
 					PathMap::arg(0, 'fabriqmodules');

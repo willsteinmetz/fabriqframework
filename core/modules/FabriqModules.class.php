@@ -306,22 +306,5 @@ abstract class FabriqModules {
 	public static function jsqueue() {
 		return self::$jsqueue;
 	}
-	
-	/**
-	 * Returns whether or not the given module is enabled
-	 * @param string $module
-	 * @return bool
-	 */
-	public static function isEnabled($module) {
-		global $db;
-		
-		$query = "SELECT enabled FROM fabmods_modules WHERE module = ?";
-		$data = $db->prepare_select($query, array('enabled'), $module);
-		
-		if ($data[0]['enabled'] == 1) {
-			return TRUE;
-		}
-		return FALSE;
-	}
 }
 	

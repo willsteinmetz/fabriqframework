@@ -1,7 +1,13 @@
 <?php
 
-class users_module extends Modules {
+class users_module extends FabriqModule {
 	public function login() {
+		if ($this->isLoggedIn()) {
+			global $_FAPP;
+			header('Location:' . PathMap::build_path($_FAPP['cdefault'], $_FAPP['adefault']));
+			exit();
+		}
+		
 		Fabriq::title('Log in');
 		
 		$configs = new ModuleConfigs();
@@ -19,7 +25,7 @@ class users_module extends Modules {
 					if ($user->count() == 1) {
 						if ($user->banned == 0) {
 							if (crypt($_POST['pwd'], $user->id . substr($user->display, 0, 5)) == $user->encpwd) {
-								$_SESSION['FABMOD_USERS_displayname'] = $user->displayname;
+								$_SESSION['FABMOD_USERS_displayname'] = $user->display;
 								$_SESSION['FABMOD_USERS_email'] = $user->email;
 								$_SESSION['FABMOD_USERS_userid'] = $user->id;
 								$roles = new UserRoles_mm();
@@ -30,6 +36,15 @@ class users_module extends Modules {
 									$r[] = $role->roleName;
 								}
 								$_SESSION['FABMOD_USERS_roles'] = serialize($r);
+								if (isset($_POST['return_to'])) {
+									$path = explode('/', $_POST['return_to']);
+									header('Location:' . call_user_func_array('PathMap::build_path', $path));
+									exit();
+								} else {
+									global $_FAPP;
+									header('Location:' . PathMap::build_path($_FAPP['cdefault'], $_FAPP['adefault']));
+									exit();
+								}
 							} else {
 								Messaging::message('Display name/e-mail address or password incorrect');
 							}
@@ -42,6 +57,7 @@ class users_module extends Modules {
 				} else {
 					Messaging::message('You must provide a display name or e-mail address');
 				}
+				FabriqModules::set_var('users', 'submitted', true);
 			}
 		}
 	}
@@ -59,6 +75,7 @@ class users_module extends Modules {
 			unset($_SESSION['FABMOD_USERS_userid']);
 			unset($_SESSION['FABMOD_USERS_roles']);
 			header("Location: " . PathMap::build_path('users', 'login'));
+			exit();
 		}
 	}
 	
