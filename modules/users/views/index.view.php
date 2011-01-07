@@ -1,4 +1,7 @@
 <h1>Manage users</h1>
+
+<div class="message" style="display: none;" id="message-box"></div>
+
 <table cellpadding="0" cellspacing="0" style="width: 100%;">
 	<thead>
 		<tr>
@@ -18,11 +21,17 @@
 			<td><?php echo ($user->banned == 1) ? 'banned' : 'enabled'; ?></td>
 			<td>
 				<button class="edit-button" id="edit-button-<?php echo $user->id; ?>">Edit</button> 
-				<?php if ($user->banned == 1): ?>
-				<button class="enable-button" id="enable-button-<?php echo $user->id; ?>" onclick="UsersIndex.enable(<?php echo $user->id; ?>);">Enable</button>
-				<?php else: ?>
-				<button class="ban-button" id="ban-button-<?php echo $user->id; ?>" onclick="UsersIndex.ban(<?php echo $user->id; ?>);">Ban</button>
-				<?php endif; ?>
+<?php
+if ($user->id != $_SESSION['FABMOD_USERS_userid']):
+	if ($user->banned == 1):
+?>
+					<button class="enable-button" id="enable-button-<?php echo $user->id; ?>" onclick="UsersIndex.enable(<?php echo $user->id; ?>);">Enable</button>
+	<?php else: ?>
+					<button class="ban-button" id="ban-button-<?php echo $user->id; ?>" onclick="UsersIndex.ban(<?php echo $user->id; ?>);">Ban</button>
+<?php
+	endif;
+endif;
+?>
 			</td>
 		</tr>
 		<tr id="user-configure-<?php echo $user->id; ?>" style="display: none;" class="user-configure">

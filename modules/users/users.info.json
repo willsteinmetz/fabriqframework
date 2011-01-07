@@ -2,7 +2,7 @@
 	"module": "users",
 	"version": "1.0",
 	"author": "Will Steinmetz",
-	"description": "Manages users including creation, updating, banning, enabling, logging in, and logging out of users. By default, the module uses its own users database table, but can be configured to work with an existing users table.",
+	"description": "Manages users including creation, updating, banning, enabling, logging in, and logging out of users.",
 	"dependsOn": [
 		"pathmap",
 		"roles"

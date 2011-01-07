@@ -31,7 +31,9 @@ class pathmap_module extends FabriqModule {
 					$mod = &FabriqModules::module($path->controller);
 					$extra = explode('/', $path->extra);
 					call_user_func_array(array($mod, $path->action), $extra);
-					FabriqModules::render($path->controller, $path->action);
+					if (Fabriq::render() != 'none') {
+						FabriqModules::render($path->controller, $path->action);
+					}
 				} else {
 					PathMap::controller('errors');
 					PathMap::render_controller('errors');
