@@ -1,4 +1,4 @@
-<?php $core = array(/*'users', */'roles', 'pathmap'); ?>
+<?php $core = array('users', 'roles', 'pathmap'); ?>
 <h1>Manage Modules</h1>
 <table border="0" cellspacing="0" cellpadding="0" style="width: 900px; margin-left: auto; margin-right: auto;" id="manage-modules">
 	<thead>

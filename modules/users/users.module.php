@@ -1,6 +1,20 @@
 <?php
 
 class users_module extends FabriqModule {
+	public function index() {
+		$page = (PathMap::arg(2)) ? PathMap::arg(2) : 1;
+		$users = new Users_mm();
+		$users->getList($page);
+		
+		for ($i = 0; $i < $users->count(); $i++) {
+			$users[$i]->encpwd = NULL;
+		}
+		
+		Fabriq::title('Manage users');
+		FabriqModules::add_js('users', 'users-index');
+		FabriqModules::set_var('users', 'users', $users);
+	}
+	
 	public function login() {
 		if ($this->isLoggedIn()) {
 			global $_FAPP;
@@ -88,11 +102,47 @@ class users_module extends FabriqModule {
 	}
 	
 	public function enable() {
+		$configs = new ModuleConfigs();
+		$configs->getForModule('users');
 		
+		if ($configs[$configs->configs['useCustom']]->val == 1) {
+			$controller = new $configs[$configs->configs['customController']]->val();
+			call_user_func(array($controller, $configs[$configs->configs['customEnableAction']]->val));
+		} else {
+			$user = new Users_mm($_POST['user']);
+			$user->enable();
+			Fabriq::render('none');
+			$status = new stdClass();
+			if ($user->banned == 0) {
+				$status->success = true;
+			} else {
+				$status->success = false;
+			}
+			header('Content-type:application/json');
+			echo json_encode($status);
+		}
 	}
 	
 	public function ban() {
+		$configs = new ModuleConfigs();
+		$configs->getForModule('users');
 		
+		if ($configs[$configs->configs['useCustom']]->val == 1) {
+			$controller = new $configs[$configs->configs['customController']]->val();
+			call_user_func(array($controller, $configs[$configs->configs['customBanAction']]->val));
+		} else {
+			$user = new Users_mm($_POST['user']);
+			$user->ban();
+			Fabriq::render('none');
+			$status = new stdClass();
+			if ($user->banned == 1) {
+				$status->success = true;
+			} else {
+				$status->success = false;
+			}
+			header('Content-type:application/json');
+			echo json_encode($status);
+		}
 	}
 	
 	public function forgotpassword() {

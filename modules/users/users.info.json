@@ -6,23 +6,5 @@
 	"dependsOn": [
 		"pathmap",
 		"roles"
-	],
-	"configs": [
-		"useCustom",
-		"customTable",
-		"customIdField",
-		"customDisplayField",
-		"customController",
-		"customLoginAction",
-		"customLogoutAction",
-		"customCreateAction",
-		"customUpdateAction",
-		"customBanAction",
-		"customEnableAction",
-		"customForgotPasswordAction",
-		"customRegisterAction"
-	],
-	"configDefaults": {
-		"useCustom": false
-	}
+	]
 }

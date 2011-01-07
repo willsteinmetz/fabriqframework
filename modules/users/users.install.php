@@ -39,6 +39,8 @@ class users_install {
 		
 		// map paths
 		$pathmap = &FabriqModules::module('pathmap');
+		$pathmap->register_path('users/index', 'users', 'index', 'module');
+		$pathmap->register_path('users/index/%', 'users', 'index', 'module', null, 2);
 		$pathmap->register_path('users/login', 'users', 'login', 'module');
 		$pathmap->register_path('users/login/%', 'users', 'login', 'module', null, 2);
 		$pathmap->register_path('users/logout', 'users', 'logout', 'module');
