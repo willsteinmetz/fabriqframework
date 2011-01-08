@@ -36,21 +36,22 @@ class Paths_mm extends ModuleModel {
 			for ($j = 0; $j < $i; $j++) {
 				$p .= $path[$j] . '/';
 			}
-			$paths[] = $p . '%';
+			$paths[] = $p . '!#';
 		}
 		
 		array_shift($paths);
 		$paths = array_reverse($paths);
-		
-		$likes = '';
+
+		$q = '';
 		for ($i = 0; $i < count($paths); $i++) {
-			$likes .= "path LIKE ? ";
+			$q .= '?';
 			if ($i < (count($paths) - 1)) {
-				$likes .= 'OR ';
+				$q .= ', ';
 			}
 		}
 		
-		$sql = "SELECT * FROM {$this->db_table} WHERE {$likes} LIMIT 1";
+		$sql = "SELECT * FROM {$this->db_table} WHERE path IN ({$q}) LIMIT 1";
+		echo($sql);
 		$this->fill($db->prepare_select($sql, $this->fields(), $paths));
 	}
 	

@@ -92,4 +92,10 @@ $(function() {
 				.html('');
 		});
 	});
+	var jQueryVersion = $().jquery;
+	jQueryVersion = Number(jQueryVersion.substring(0, jQueryVersion.indexOf('.', (jQueryVersion.indexOf('.') + 1))));
+	// load jQuery templates if jQuery < 1.5
+	if (jQueryVersion < 1.5) {
+		
+	}
 });
