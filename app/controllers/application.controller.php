@@ -7,5 +7,4 @@
  * Licensed under the BSD license.
  * http://fabriqframework.com/license
  */
-Fabriq::add_js('fabriq', 'core/');
-Fabriq::add_css('fabriq.base');
+

@@ -65,6 +65,8 @@ if (!isset($_FAPP['templating'])) {
 
 // include the controller, action, and helper files
 FabriqLibs::js_lib('jquery-1.4.4.min', 'jquery');
+Fabriq::add_js('fabriq', 'core/');
+Fabriq::add_css('fabriq.base');
 require_once('app/controllers/application.controller.php');
 if (!file_exists("app/controllers/" . PathMap::controller() . ".controller.php")) {
 	PathMap::controller('errors');

@@ -186,6 +186,13 @@ abstract class Fabriq {
 	}
 	
 	/**
+	 * include fabriq ui functionality
+	 */
+	public static function fabriq_ui_on() {
+		Fabriq::add_js('fabriq.ui', 'core/');
+	}
+	
+	/**
 	 * Determines whether or not the configuration file has been
 	 * created yet
 	 */
