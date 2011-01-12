@@ -190,6 +190,7 @@ abstract class Fabriq {
 	 */
 	public static function fabriq_ui_on() {
 		Fabriq::add_js('fabriq.ui', 'core/');
+		Fabriq::add_css('fabriq.ui', 'screen', 'core/');
 	}
 	
 	/**

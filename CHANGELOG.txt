@@ -7,6 +7,13 @@ Version 1.3
   - Updated database prepare function to check that inputs are in an array and if a single input, to put it into
     an array
   - Added placeholder creators for database classes
+  - Removed PostgreSQL support for the time being because it was a poor implementation
+  - Started the Fabriq UI JavaScript and CSS framework components
+  - Moved fabriq.base.css to the core directory
+  - Cleaned up structure of the index.php file to reduce the amount of code
+  - jQuery is now required for the Framework and the include was moved to index.php
+  - Moved the includes for fabriq.js and fabriq.base.css to the index.php
+  - Added PIE to the libs directory
 
 Version 1.2
   - Fixed bugs in Model::find()

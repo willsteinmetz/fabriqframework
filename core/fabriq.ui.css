@@ -1,0 +1,38 @@
+/**
+ * @file fabriq.ui.css
+ * @author Will Steinmetz
+ * Fabriq UI styles
+ */
+
+/*****
+ * Overlay
+ ****/
+.fabriq-ui-overlay {
+	background-color: rgba(0, 0, 0, 0.75);
+	-pie-background: rgba(0, 0, 0, 0.75);
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 900;
+	behavior: url('../libs/css/pie/PIE.php');
+}
+
+.fabriq-ui-overlay-content {
+	position: fixed;
+	top: 50px;
+	left: 50px;
+	background-color: #fff;
+	padding: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	behavior: url('../libs/css/pie/PIE.php');
+}
+
+.fabriq-ui-overlay-title {
+	position: fixed;
+	top: 10px;
+	left: 55px;
+	color: #fff;
+	font-size: 30px;
+}
