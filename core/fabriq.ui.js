@@ -24,7 +24,7 @@ Fabriq.UI = {
 			Fabriq.UI.Overlay.title = jQuery('<div />')
 				.addClass('fabriq-ui-overlay-title')
 				.appendTo(Fabriq.UI.Overlay.overlay);
-			Fabriq.UI.Overlay.hide();
+			Fabriq.UI.Overlay.overlay.hide();
 			Fabriq.UI.Overlay.sizeOverlay();
 			jQuery(window).resize(Fabriq.UI.Overlay.sizeOverlay);
 		},
@@ -33,14 +33,14 @@ Fabriq.UI = {
 		 * Show the overlay element
 		 */
 		show: function() {
-			Fabriq.UI.Overlay.overlay.show();
+			Fabriq.UI.Overlay.overlay.fadeIn('fast');
 		},
 		
 		/**
 		 * Hide the overlay element
 		 */
 		hide: function() {
-			Fabriq.UI.Overlay.overlay.hide();
+			Fabriq.UI.Overlay.overlay.fadeOut('fast');
 		},
 		
 		/**
@@ -51,11 +51,19 @@ Fabriq.UI = {
 		},
 		
 		/**
-		 * Set the content of the overlay element
+		 * Adds content to the overlay element
 		 * @param mixed content
 		 */
 		addContent: function(content) {
 			Fabriq.UI.Overlay.content.append(content);
+		},
+		
+		/**
+		 * Change the content of the overlay
+		 * @param mixed content
+		 */
+		setContent: function(content) {
+			Fabriq.UI.Overlay.content.html(content);
 		},
 		
 		/**
@@ -80,8 +88,8 @@ Fabriq.UI = {
 		 * @param mixed content
 		 */
 		open: function(title, content) {
-			Fabriq.UI.Overlay.title(title);
-			Fabriq.UI.Overlay.content(content);
+			Fabriq.UI.Overlay.setTitle(title);
+			Fabriq.UI.Overlay.setContent(content);
 			Fabriq.UI.Overlay.show();
 		},
 		
@@ -89,9 +97,9 @@ Fabriq.UI = {
 		 * Close the overlay element and remove the title and content
 		 */
 		close: function() {
-			Fabriq.UI.Overlay.emptyContent();
-			Fabriq.UI.Overlay.title('');
 			Fabriq.UI.Overlay.hide();
+			Fabriq.UI.Overlay.emptyContent();
+			Fabriq.UI.Overlay.setTitle('');
 		},
 		
 		/**

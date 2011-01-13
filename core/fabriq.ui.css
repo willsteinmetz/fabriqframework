@@ -4,9 +4,9 @@
  * Fabriq UI styles
  */
 
-/*****
+/**************
  * Overlay
- ****/
+ **************/
 .fabriq-ui-overlay {
 	background-color: rgba(0, 0, 0, 0.75);
 	-pie-background: rgba(0, 0, 0, 0.75);
