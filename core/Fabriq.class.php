@@ -3,7 +3,7 @@
  * @files This file contains functions used throughout Fabriq applications - DO NOT EDIT
  * @author Will Steinmetz
  * 
- * Copyright (c)2010, Ralivue.com
+ * Copyright (c)2011, Ralivue.com
  * Licensed under the BSD license.
  * http://fabriqframework.com/license
  */

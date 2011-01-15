@@ -5,7 +5,7 @@
  * This controller is used whenever a page's content is rendered
  * completely by one or more modules
  * 
- * Copyright (c)2010, Ralivue.com
+ * Copyright (c)2011, Ralivue.com
  * Licensed under the BSD license.
  * http://fabriqframework.com/license
  */
@@ -27,8 +27,8 @@ class fabriqmodules_controller extends Controller {
 		$modules->getAll();
 		
 		// get and install any new modules
-		$available = fabriqmodules_helper::scan_modules();
-		$toInstall = fabriqmodules_helper::to_install($modules, $available);
+		$available = $this->scan_modules();
+		$toInstall = $this->to_install($modules, $available);
 		foreach ($toInstall as $install) {
 			FabriqModules::install($install);
 		}
@@ -82,6 +82,33 @@ class fabriqmodules_controller extends Controller {
 		if ($_FAPP['templating']) {
 			FabriqTemplates::set_var('module', $module);
 		}
+	}
+
+	private function scan_modules() {
+		$modules = array();
+		if ($handle = opendir('modules')) {
+			while (false !== ($file = readdir($handle))) {
+				if (strpos($file, '.') === FALSE) {
+					$modules[] = $file;
+				}
+			}
+			closedir($handle);
+		} else {
+			throw new Exception('Modules directory could not be found/read');
+		}
+		return $modules;
+	}
+	
+	private function to_install($installed, $available) {
+		$toInstall = array();
+		
+		foreach ($available as $mod) {
+			if (!$installed->installed($mod)) {
+				$toInstall[] = $mod;
+			}
+		}
+		
+		return $toInstall;
 	}
 }
 		

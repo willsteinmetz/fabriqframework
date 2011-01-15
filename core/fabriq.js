@@ -2,7 +2,7 @@
  * @file - DO NOT EDIT
  * Fabriq javascript functionality
  * 
- * Copyright (c)2010, Ralivue.com
+ * Copyright (c)2011, Ralivue.com
  * Licensed under the BSD license.
  * http://fabriqframework.com/license
  */

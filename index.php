@@ -4,7 +4,7 @@
  * The index.php file includes the core required files for running a Fabriq based app:
  * @author Will Steinmetz
  * 
- * Copyright (c)2010, Ralivue.com
+ * Copyright (c)2011, Ralivue.com
  * Licensed under the BSD license.
  * http://fabriqframework.com/license
  */
@@ -35,8 +35,12 @@ require_once('app/PathMap.class.php');
 require_once('core/Messaging.class.php');
 require_once('core/FabriqLibs.class.php');
 
-// include the application helper file
-require_once('app/helpers/application.helper.php');
+// DEPRECATED
+// include the application helper file if available
+// @TODO remove for 2.0 release candidate
+if (file_exists('app/helpers/application.helper.php')) {
+	require_once('app/helpers/application.helper.php');
+}
 
 // determine whether or not to load module files on init
 if (isset($_FAPP['loadmodulecode']) && $_FAPP['loadmodulecode'])  {

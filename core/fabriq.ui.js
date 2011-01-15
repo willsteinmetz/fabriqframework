@@ -1,7 +1,11 @@
 /**
- * @file fabriqui.js
+ * @file fabriqui.js - DO NOT EDIT
  * @author Will Steinmetz
  * This file contains the Fabriq UI code
+ * 
+ * Copyright (c)2011, Ralivue.com
+ * Licensed under the BSD license.
+ * http://fabriqframework.com/license
  */
 
 Fabriq.UI = {
@@ -32,15 +36,23 @@ Fabriq.UI = {
 		/**
 		 * Show the overlay element
 		 */
-		show: function() {
-			Fabriq.UI.Overlay.overlay.fadeIn('fast');
+		show: function(callback) {
+			if (callback) {
+				Fabriq.UI.Overlay.overlay.fadeIn('fast', callback);
+			} else {
+				Fabriq.UI.Overlay.overlay.fadeIn('fast');
+			}
 		},
 		
 		/**
 		 * Hide the overlay element
 		 */
-		hide: function() {
-			Fabriq.UI.Overlay.overlay.fadeOut('fast');
+		hide: function(callback) {
+			if (callback) {
+				Fabriq.UI.Overlay.overlay.fadeOut('fast', callback);
+			} else {
+				Fabriq.UI.Overlay.overlay.fadeOut('fast');
+			}
 		},
 		
 		/**
@@ -97,9 +109,10 @@ Fabriq.UI = {
 		 * Close the overlay element and remove the title and content
 		 */
 		close: function() {
-			Fabriq.UI.Overlay.hide();
-			Fabriq.UI.Overlay.emptyContent();
-			Fabriq.UI.Overlay.setTitle('');
+			Fabriq.UI.Overlay.hide(function(event) {
+				Fabriq.UI.Overlay.emptyContent();
+				Fabriq.UI.Overlay.setTitle('');
+			});
 		},
 		
 		/**
