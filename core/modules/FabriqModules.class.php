@@ -14,6 +14,7 @@ abstract class FabriqModules {
 	private static $render_positions = array();
 	private static $cssqueue = array();
 	private static $jsqueue = array();
+	private static $hasPermission = true;
 	
 	/**
 	 * Calls the install function to install a module for use in the
@@ -305,6 +306,34 @@ abstract class FabriqModules {
 	 */
 	public static function jsqueue() {
 		return self::$jsqueue;
+	}
+	
+	/**
+	 * Public getter and setter for hasPermission
+	 * @param boolean $hasPerm
+	 * @return boolean
+	 */
+	public static function has_permission($hasPerm = -1) {
+		if ($hasPerm == -1) {
+			return self::$hasPermission;
+		} else {
+			self::$hasPermission = $hasPerm;
+		}
+	}
+	
+	/**
+	 * Creates a new instance of a module model
+	 * @param string $module
+	 * @param string $model
+	 * @return object
+	 */
+	public static function new_model($module, $model) {
+		$class = "{$module}_{$model}";
+		if (!class_exists($class)) {
+			require_once("modules/{$module}/models/{$model}.model.php");
+		}
+		eval("\$item = new {$class}();");
+		return $item;
 	}
 }
 	

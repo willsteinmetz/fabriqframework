@@ -17,6 +17,7 @@ Version 1.3
   - /app/helpers is now deprecated. Move all functions from custom helper files into their controllers as private
     functions and update references. This functionality will remain until the first release candidate for the
     official 2.0 version
+  - Fixed bug in Database::qmarks()
 
 Version 1.2
   - Fixed bugs in Model::find()

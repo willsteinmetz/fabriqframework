@@ -249,7 +249,7 @@ class Database {
 		$qmarks = '';
 		for ($i = 0; $i < $num; $i++) {
 			$qmarks .= '?';
-			if ($i == ($num - 1)) {
+			if ($i != ($num - 1)) {
 				$qmarks .= ', ';
 			}
 		}
