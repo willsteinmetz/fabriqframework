@@ -64,6 +64,8 @@ abstract class FabriqModules {
 				$config->var = $con;
 				if (isset($info['configDefaults']) && array_key_exists($con, $info['configDefaults'])) {
 					$config->val = $info['configDefaults'][$con];
+				} else {
+					$config->val = '';
 				}
 				$config->create();
 			}
