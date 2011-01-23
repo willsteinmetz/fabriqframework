@@ -6,12 +6,13 @@
 			<th>Module</th>
 			<th>Version</th>
 			<th>Enabled</th>
+			<th>Configuration</th>
 		</tr>
 	</thead>
 	<tbody>
 <?php foreach ($modules as $module): ?>
 		<tr id="module-<?php echo $module->id; ?>">
-			<td style="width: 670px; padding: 5px;">
+			<td style="width: 570px; padding: 5px;">
 				<strong><?php echo $module->module; ?></strong><?php if (in_array($module->module, $core)) { echo " (core module - cannot be disabled)"; } ?>
 				<div style="padding: 5px 5px 5px 25px; font-size: 10pt;"><?php echo $module->description; ?></div>
 			</td>
@@ -19,11 +20,15 @@
 				<?php echo $module->versioninstalled; ?>
 			</td>
 			<td style="width: 100px; padding: 5px; text-align: center;">
-				<button id="enable-button-<?php echo $module->id; ?>"<?php if (in_array($module->module, $core)) { echo " disabled=\"disabled\" title=\"This is a core module. It cannot be disabled.\""; } ?> onclick="FabriqModules.hasConfiguration(<?php echo $module->id; ?>);"><?php echo ($module->enabled == 1) ? 'disable' : 'enable'; ?></button>
+				<button type="button" id="enable-button-<?php echo $module->id; ?>"<?php if (in_array($module->module, $core)) { echo " disabled=\"disabled\" title=\"This is a core module. It cannot be disabled.\""; } ?> onclick="FabriqModules.hasConfiguration(<?php echo $module->id; ?>);"><?php echo ($module->enabled == 1) ? 'disable' : 'enable'; ?></button>
 			</td>
-		</tr>
-		<tr style="display: none;">
-			<td id="module-config-<?php echo $module->id; ?>" class="module-config" colspan="3"></td>
+			<td style="width: 100px; padding 5px; text-align: center;">
+			<?php if ($module->hasconfigs == 1): ?>
+				<button type="button" id="config-button-<?php echo $module->id; ?>" onclick="FabriqModules.configurationForm(<?php echo $module->id; ?>);">configure</button>
+			<?php else: ?>
+				&nbsp;
+			<?php endif; ?>
+			</td>
 		</tr>
 <?php endforeach; ?>
 	</tbody>

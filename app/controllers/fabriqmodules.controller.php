@@ -20,6 +20,7 @@ class fabriqmodules_controller extends Controller {
 		// @TODO require role
 		Fabriq::title('Admin | Manage modules');
 		Fabriq::page_js_on();
+		Fabriq::fabriq_ui_on();
 		if (!$_FAPP['templating']) {
 			global $modules;
 		}
@@ -76,9 +77,13 @@ class fabriqmodules_controller extends Controller {
 			global $module;
 		}
 		$module = new Modules(PathMap::arg(2));
-		$installer = $module->module . '_install';
-		$config = new $installer();
-		$config->configure();
+		$install_file = "modules/{$module->module}/{$module->module}.install.php";
+		if (!file_exists($install_file)) {
+			throw new Exception("Module {$module->module} install file could not be found");
+		}
+		require_once($install_file);
+		eval("\$installer = new {$module->module}_install();");
+		$installer->configure();
 		if ($_FAPP['templating']) {
 			FabriqTemplates::set_var('module', $module);
 		}
