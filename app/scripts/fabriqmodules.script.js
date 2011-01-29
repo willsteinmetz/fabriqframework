@@ -34,22 +34,26 @@ FabriqModules = {
 			url: Fabriq.build_path('fabriqmodules', 'enable', module),
 			dataType: 'json',
 			success: function(data, status) {
-				if (data.success) {
-					jQuery('#enable-button-' + module)
-						.text('disable')
-						.unbind('click')
-						.click(function(event) {
-							FabriqModules.disable(module);
-						});
-					jQuery('#message-box')
-						.addClass('successes')
-						.html('Module enabled')
-						.fadeIn();
+				if (data.notLoggedIn) {
+					window.location = window.location;
 				} else {
-					jQuery('#message-box')
-						.addClass('errors')
-						.html('Module could not be enabled')
-						.fadeIn();
+					if (data.success) {
+						jQuery('#enable-button-' + module)
+							.text('disable')
+							.unbind('click')
+							.click(function(event) {
+								FabriqModules.disable(module);
+							});
+						jQuery('#message-box')
+							.addClass('successes')
+							.html('Module enabled')
+							.fadeIn();
+					} else {
+						jQuery('#message-box')
+							.addClass('errors')
+							.html('Module could not be enabled')
+							.fadeIn();
+					}
 				}
 			}
 		});
@@ -61,22 +65,26 @@ FabriqModules = {
 			url: Fabriq.build_path('fabriqmodules', 'disable', module),
 			dataType: 'json',
 			success: function(data, status) {
-				if (data.success) {
-					jQuery('#enable-button-' + module)
-						.text('enable')
-						.unbind('click')
-						.click(function(event) {
-							FabriqModules.enable(module);
-						});
-					jQuery('#message-box')
-						.addClass('successes')
-						.html('Module disabled')
-						.fadeIn();
+				if (data.notLoggedIn) {
+					window.location = window.location;
 				} else {
-					jQuery('#message-box')
-						.addClass('errors')
-						.html('Module could not be disabled')
-						.fadeIn();
+					if (data.success) {
+						jQuery('#enable-button-' + module)
+							.text('enable')
+							.unbind('click')
+							.click(function(event) {
+								FabriqModules.enable(module);
+							});
+						jQuery('#message-box')
+							.addClass('successes')
+							.html('Module disabled')
+							.fadeIn();
+					} else {
+						jQuery('#message-box')
+							.addClass('errors')
+							.html('Module could not be disabled')
+							.fadeIn();
+					}
 				}
 			}
 		});

@@ -16,54 +16,68 @@ class fabriqmodules_controller extends Controller {
 	}
 	
 	public function manage() {
-		global $_FAPP;
-		// @TODO require role
-		Fabriq::title('Admin | Manage modules');
-		Fabriq::page_js_on();
-		Fabriq::fabriq_ui_on();
-		if (!$_FAPP['templating']) {
-			global $modules;
-		}
-		$modules = new Modules();
-		$modules->getAll();
-		
-		// get and install any new modules
-		$available = $this->scan_modules();
-		$toInstall = $this->to_install($modules, $available);
-		foreach ($toInstall as $install) {
-			FabriqModules::install($install);
-		}
-		
-		// update modules collection
-		$modules = new Modules();
-		$modules->getAll();
-		
-		if ($_FAPP['templating']) {
-			FabriqTemplates::set_var('modules', $modules);
+		if (FabriqModules::module('roles')->hasRole('administrator')) {
+			global $_FAPP;
+			// @TODO require role
+			Fabriq::title('Admin | Manage modules');
+			Fabriq::page_js_on();
+			Fabriq::fabriq_ui_on();
+			if (!$_FAPP['templating']) {
+				global $modules;
+			}
+			$modules = new Modules();
+			$modules->getAll();
+			
+			// get and install any new modules
+			$available = $this->scan_modules();
+			$toInstall = $this->to_install($modules, $available);
+			foreach ($toInstall as $install) {
+				FabriqModules::install($install);
+			}
+			
+			// update modules collection
+			$modules = new Modules();
+			$modules->getAll();
+			
+			if ($_FAPP['templating']) {
+				FabriqTemplates::set_var('modules', $modules);
+			}
 		}
 	}
 	
 	public function enable() {
 		Fabriq::render('none');
-		$module = new Modules(PathMap::arg(2));
-		if ($module->module != '') {
-			$module->enabled = 1;
-			$module->update();
-			echo json_encode(array('success' => true));
+		header('Content-type:application/json');
+		
+		if (FabriqModules::module('roles')->hasRole('administrator')) {
+			$module = new Modules(PathMap::arg(2));
+			if ($module->module != '') {
+				$module->enabled = 1;
+				$module->update();
+				echo json_encode(array('success' => true));
+			} else {
+				echo json_encode(array('success' => false));
+			}
 		} else {
-			echo json_encode(array('success' => false));
+			echo json_encode(array('success' => false, 'notLoggedIn' => true));
 		}
 	}
 	
 	public function disable() {
 		Fabriq::render('none');
-		$module = new Modules(PathMap::arg(2));
-		if ($module->module != '') {
-			$module->enabled = 0;
-			$module->update();
-			echo json_encode(array('success' => true));
+		header('Content-type:application/json');
+		
+		if (FabriqModules::module('roles')->hasRole('administrator')) {
+			$module = new Modules(PathMap::arg(2));
+			if ($module->module != '') {
+				$module->enabled = 0;
+				$module->update();
+				echo json_encode(array('success' => true));
+			} else {
+				echo json_encode(array('success' => false));
+			}
 		} else {
-			echo json_encode(array('success' => false));
+			echo json_encode(array('success' => false, 'notLoggedIn' => true));
 		}
 	}
 	
