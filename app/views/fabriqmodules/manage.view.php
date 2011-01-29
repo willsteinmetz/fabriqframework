@@ -1,5 +1,6 @@
 <?php $core = array('users', 'roles', 'pathmap'); ?>
 <h1>Manage Modules</h1>
+<div class="message" style="display: none;" id="message-box"></div>
 <table border="0" cellspacing="0" cellpadding="0" style="width: 900px; margin-left: auto; margin-right: auto;" id="manage-modules">
 	<thead>
 		<tr>
@@ -20,7 +21,7 @@
 				<?php echo $module->versioninstalled; ?>
 			</td>
 			<td style="width: 100px; padding: 5px; text-align: center;">
-				<button type="button" id="enable-button-<?php echo $module->id; ?>"<?php if (in_array($module->module, $core)) { echo " disabled=\"disabled\" title=\"This is a core module. It cannot be disabled.\""; } ?> onclick="FabriqModules.hasConfiguration(<?php echo $module->id; ?>);"><?php echo ($module->enabled == 1) ? 'disable' : 'enable'; ?></button>
+				<button type="button" id="enable-button-<?php echo $module->id; ?>"<?php if (in_array($module->module, $core)) { echo " disabled=\"disabled\" title=\"This is a core module. It cannot be disabled.\""; } ?> onclick="FabriqModules.<?php echo ($module->enabled == 1) ? 'disable' : 'enable'; ?>(<?php echo $module->id; ?>);"><?php echo ($module->enabled == 1) ? 'disable' : 'enable'; ?></button>
 			</td>
 			<td style="width: 100px; padding 5px; text-align: center;">
 			<?php if ($module->hasconfigs == 1): ?>

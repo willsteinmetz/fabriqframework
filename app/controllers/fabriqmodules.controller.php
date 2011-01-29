@@ -44,29 +44,26 @@ class fabriqmodules_controller extends Controller {
 	}
 	
 	public function enable() {
-		
+		Fabriq::render('none');
+		$module = new Modules(PathMap::arg(2));
+		if ($module->module != '') {
+			$module->enabled = 1;
+			$module->update();
+			echo json_encode(array('success' => true));
+		} else {
+			echo json_encode(array('success' => false));
+		}
 	}
 	
 	public function disable() {
-		
-	}
-	
-	public function hasConfiguration() {
-		Fabriq::render('view');
-		global $_FAPP;
-		if (!$_FAPP['templating']) {
-			global $module;
-			global $numConfigs;
-		}
-		
-		global $db;
-		$sql = "SELECT COUNT(*) AS num FROM fabmods_module_configs WHERE module = ?";
-		$data = $db->prepare_select($sql, array('num'), PathMap::arg(2));
-		$numConfigs = $data[0]['num'];
-		
-		if ($_FAPP['templating']) {
-			FabriqTemplates::set_var('module', $module);
-			FabriqTemplates::set_var('numConfigs', $numConfigs);
+		Fabriq::render('none');
+		$module = new Modules(PathMap::arg(2));
+		if ($module->module != '') {
+			$module->enabled = 0;
+			$module->update();
+			echo json_encode(array('success' => true));
+		} else {
+			echo json_encode(array('success' => false));
 		}
 	}
 	
