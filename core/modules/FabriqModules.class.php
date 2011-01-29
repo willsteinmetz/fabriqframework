@@ -49,6 +49,8 @@ abstract class FabriqModules {
 		$info = json_decode($info, true);
 		$mod->module = $module;
 		$mod->enabled = 0;
+		$mod->installed = 0;
+		$mod->hasconfigs = 0;
 		$mod->description = $info['description'];
 		$mod->versioninstalled = $info['version'];
 		if (isset($info['dependsOn'])) {
@@ -69,6 +71,8 @@ abstract class FabriqModules {
 				}
 				$config->create();
 			}
+			$mod->hasconfigs = 1;
+			$mod->update();
 		}
 		
 		return $mod->id;

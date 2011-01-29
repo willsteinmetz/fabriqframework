@@ -88,6 +88,47 @@ FabriqModules = {
 				}
 			}
 		});
+	},
+	
+	install: function(module) {
+		jQuery.ajax({
+			type: 'GET',
+			url: Fabriq.build_path('fabriqmodules', 'install', module),
+			dataType: 'json',
+			success: function(data, status) {
+				if (data.notLoggedIn) {
+					window.location = window.location;
+				} else {
+					if (data.success) {
+						jQuery('#enable-button-' + module)
+							.text('enable')
+							.unbind('click')
+							.click(function(event) {
+								FabriqModules.enable(module);
+							});
+						jQuery('#message-box')
+							.addClass('successes')
+							.html('Module has been installed')
+							.fadeIn();
+						if (parseInt(data.hasConfiguration, 10) == 1) {
+							jQuery('#module-' + module + ' td:last').append(
+								jQuery('<button />')
+									.text('configure')
+									.attr('id', 'config-button-' + module)
+									.click(function(event) {
+										FabriqModules.configurationForm(module);
+									})
+							);
+						}
+					} else {
+						jQuery('#message-box')
+							.addClass('errors')
+							.html('Module could not be installed')
+							.fadeIn();
+					}
+				}
+			}
+		});
 	}
 }
 

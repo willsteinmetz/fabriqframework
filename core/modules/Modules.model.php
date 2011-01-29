@@ -2,7 +2,7 @@
 
 class Modules extends Model {
 	function __construct($id = NULL) {
-		parent::__construct(array('module', 'enabled', 'hasconfigs', 'versioninstalled', 'description', 'dependson'), 'fabmods_modules');
+		parent::__construct(array('module', 'enabled', 'hasconfigs', 'installed', 'versioninstalled', 'description', 'dependson'), 'fabmods_modules');
 		if ($id != NULL) {
 			$this->find($id);
 		}

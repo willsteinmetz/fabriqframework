@@ -21,10 +21,10 @@
 				<?php echo $module->versioninstalled; ?>
 			</td>
 			<td style="width: 100px; padding: 5px; text-align: center;">
-				<button type="button" id="enable-button-<?php echo $module->id; ?>"<?php if (in_array($module->module, $core)) { echo " disabled=\"disabled\" title=\"This is a core module. It cannot be disabled.\""; } ?> onclick="FabriqModules.<?php echo ($module->enabled == 1) ? 'disable' : 'enable'; ?>(<?php echo $module->id; ?>);"><?php echo ($module->enabled == 1) ? 'disable' : 'enable'; ?></button>
+				<button type="button" id="enable-button-<?php echo $module->id; ?>"<?php if (in_array($module->module, $core)) { echo " disabled=\"disabled\" title=\"This is a core module. It cannot be disabled.\""; } ?> onclick="FabriqModules.<?php echo ($module->installed == 1) ? (($module->enabled == 1) ? 'disable' : 'enable') : 'install'; ?>(<?php echo $module->id; ?>);"><?php echo ($module->installed == 1) ? (($module->enabled == 1) ? 'disable' : 'enable') : 'install'; ?></button>
 			</td>
 			<td style="width: 100px; padding 5px; text-align: center;">
-			<?php if ($module->hasconfigs == 1): ?>
+			<?php if (($module->hasconfigs == 1) && ($module->installed == 1)): ?>
 				<button type="button" id="config-button-<?php echo $module->id; ?>" onclick="FabriqModules.configurationForm(<?php echo $module->id; ?>);">configure</button>
 			<?php else: ?>
 				&nbsp;

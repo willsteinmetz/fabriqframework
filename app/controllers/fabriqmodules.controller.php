@@ -30,9 +30,9 @@ class fabriqmodules_controller extends Controller {
 			
 			// get and install any new modules
 			$available = $this->scan_modules();
-			$toInstall = $this->to_install($modules, $available);
-			foreach ($toInstall as $install) {
-				FabriqModules::install($install);
+			$toRegister = $this->to_register($modules, $available);
+			foreach ($toRegister as $register) {
+				FabriqModules::register_module($register);
 			}
 			
 			// update modules collection
@@ -81,6 +81,24 @@ class fabriqmodules_controller extends Controller {
 		}
 	}
 	
+	public function install() {
+		Fabriq::render('none');
+		header('Content-type:application/json');
+		
+		if (FabriqModules::module('roles')->hasRole('administrator')) {
+			$module = new Modules(PathMap::arg(2));
+			if ($module->module != '') {
+				$module->installed = 1;
+				$module->update();
+				echo json_encode(array('success' => true, 'hasConfiguration' => $module->hasconfigs));
+			} else {
+				echo json_encode(array('success' => false));
+			}
+		} else {
+			echo json_encode(array('success' => false, 'notLoggedIn' => true));
+		}
+	}
+	
 	public function configure() {
 		Fabriq::render('view');
 		global $_FAPP;
@@ -115,7 +133,7 @@ class fabriqmodules_controller extends Controller {
 		return $modules;
 	}
 	
-	private function to_install($installed, $available) {
+	private function to_register($installed, $available) {
 		$toInstall = array();
 		
 		foreach ($available as $mod) {
