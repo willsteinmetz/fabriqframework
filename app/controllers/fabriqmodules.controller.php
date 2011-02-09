@@ -42,6 +42,11 @@ class fabriqmodules_controller extends Controller {
 			if ($_FAPP['templating']) {
 				FabriqTemplates::set_var('modules', $modules);
 			}
+		} else {
+			if (!isset($_SESSION['FABMOD_USERS_roles'])) {
+				header("Location: " . PathMap::build_path('users', 'login', 'fabriqmodules', 'manage'));
+				exit();
+			}
 		}
 	}
 	

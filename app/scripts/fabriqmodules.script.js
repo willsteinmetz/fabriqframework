@@ -44,6 +44,9 @@ FabriqModules = {
 							.click(function(event) {
 								FabriqModules.disable(module);
 							});
+						jQuery('#install-button-' + module)
+							.attr('disabled', 'disabled')
+							.attr('title', 'Module must be disabled before it can be uninstalled');
 						jQuery('#message-box')
 							.addClass('successes')
 							.html('Module enabled')
@@ -75,6 +78,9 @@ FabriqModules = {
 							.click(function(event) {
 								FabriqModules.enable(module);
 							});
+						jQuery('#install-button-' + module)
+							.attr('disabled', '')
+							.attr('title', '');
 						jQuery('#message-box')
 							.addClass('successes')
 							.html('Module disabled')
@@ -111,7 +117,7 @@ FabriqModules = {
 							.html('Module has been installed')
 							.fadeIn();
 						if (parseInt(data.hasConfiguration, 10) == 1) {
-							jQuery('#module-' + module + ' td:last').append(
+							jQuery('#module-' + module + ' td.fabriqmodules-config-col').html('').append(
 								jQuery('<button />')
 									.text('configure')
 									.attr('id', 'config-button-' + module)
