@@ -154,6 +154,14 @@ class BaseMapping {
 		
 		$mapped = false;
 		
+		if (FabriqModules::enabled('pathmap')) {
+			if (isset($_SESSION['FABMOD_USERS_forcepwdreset']) && ($_SESSION['FABMOD_USERS_forcepwdreset'] == 1)) {
+				if (!in_array('users', $q) && !in_array('changePassword', $q)) {
+					header('Location:' . call_user_func_array('BaseMapping::build_path', array_merge(array('users', 'changePassword'), $q)));
+				}
+			}
+		}
+		
 		if (count($q) > 0) {
 			if ((trim($q[0]) != '') && (file_exists("app/controllers/{$q[0]}.controller.php"))) {
 				self::controller($q[0]);
