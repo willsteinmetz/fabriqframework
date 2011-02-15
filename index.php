@@ -26,7 +26,9 @@ $installed = Fabriq::installed();
 spl_autoload_register('fabriq_default_autoload');
 
 // include core files
-require_once('config/config.inc.php');
+if ($installed) {
+	require_once('config/config.inc.php');
+}
 require_once('core/Database.class.php');
 require_once('core/Controller.class.php');
 require_once('core/Model.class.php');

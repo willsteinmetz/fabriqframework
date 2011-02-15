@@ -1,5 +1,8 @@
 body {
-  background:#efefef url(http://fabriqframework.com/images/page-bg.png) repeat top center;
+  background-color:#efefef;
+  background-image: url(http://fabriqframework.com/public/images/page-bg.png);
+  background-repeat: repeat;
+  background-position: top center;
   color:#333333;
 }
 header, nav, article, footer, address, section { display:block; }
@@ -153,3 +156,7 @@ div.blog-body p {
   padding:0;
   margin:10px 0;
 }
+.form-item-description { font-size: 10pt; padding: 0 10px; color: #666; }
+.form-item-description strong { color: #900; }
+div.clearbox { clear: both; height: 0; line-height: 0; font-size: 0; }
+.required-field { font-weight: bold; color: #900; }
