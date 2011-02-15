@@ -151,10 +151,11 @@ class BaseMapping {
 	public static function map_path() {
 		global $q;
 		global $_FAPP;
+		global $installed;
 		
 		$mapped = false;
 		
-		if (FabriqModules::enabled('pathmap')) {
+		if (FabriqModules::enabled('pathmap') && $installed) {
 			if (isset($_SESSION['FABMOD_USERS_forcepwdreset']) && ($_SESSION['FABMOD_USERS_forcepwdreset'] == 1)) {
 				if (!in_array('users', $q) && !in_array('changePassword', $q)) {
 					header('Location:' . call_user_func_array('BaseMapping::build_path', array_merge(array('users', 'changePassword'), $q)));
@@ -179,9 +180,17 @@ class BaseMapping {
 		}
 		
 		// try to map path with pathmap module if enabled and necessary
-		if (FabriqModules::enabled('pathmap') && !$mapped) {
+		if (FabriqModules::enabled('pathmap') && !$mapped && $installed) {
 			$pathmap = &FabriqModules::module('pathmap');
 			$pathmap->redirect($_GET['q']);
+		}
+		
+		// not installed, map to the install function
+		if (!$installed) {
+			PahtMap::controller('fabriqinstall');
+			PathMap::arg(0, 'fabriqinstall');
+			PathMap::action('install');
+			PathMap::arg(1, 'install');
 		}
 		
 		// resolve controller and action if not already declared

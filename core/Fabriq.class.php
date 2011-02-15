@@ -198,10 +198,10 @@ abstract class Fabriq {
 	 * created yet
 	 */
 	public static function installed() {
-		if (!file_exists('config/config.inc.php')) {
-			header("Location: install.php");
-			exit();
+		if (file_exists('config/config.inc.php')) {
+			return true;
 		}
+		return false;
 	}
 	
 	/**

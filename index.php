@@ -20,7 +20,7 @@ session_start();
 require_once('core/Fabriq.class.php');
 
 // check to make sure application has been configured
-Fabriq::installed();
+$installed = Fabriq::installed();
 
 // register default __autoload function
 spl_autoload_register('fabriq_default_autoload');
@@ -48,7 +48,13 @@ if (isset($_FAPP['loadmodulecode']) && $_FAPP['loadmodulecode'])  {
 }
 
 // initialize database
-$db = new Database($_FDB['default']);
+if ($installed) {
+	$db = new Database($_FDB['default']);
+} else {
+	$_FAPP = array();
+	$_FAPP['templating'] = true;
+	$_FAPP['templates']['default'] = 'fabriqinstall';
+}
 
 // query variable
 $q = explode('/', $_GET['q']);
@@ -168,5 +174,7 @@ if ($_FAPP['templating']) {
 }
 
 // close the database connection
-$db->close();
+if ($installed) {
+	$db->close();
+}
 ?>
