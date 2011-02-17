@@ -36,17 +36,18 @@ require_once('core/BaseMapping.class.php');
 require_once('app/PathMap.class.php');
 require_once('core/Messaging.class.php');
 require_once('core/FabriqLibs.class.php');
+require_once('core/modules/Modules.model.php');
+require_once('core/modules/Perms.model.php');
+require_once('core/modules/FabriqModules.class.php');
+require_once('core/modules/FabriqModule.class.php');
+require_once('core/modules/ModuleModel.class.php');
+require_once('core/modules/ModuleConfigs.class.php');
 
 // DEPRECATED
 // include the application helper file if available
 // @TODO remove for 2.0 release candidate
 if (file_exists('app/helpers/application.helper.php')) {
 	require_once('app/helpers/application.helper.php');
-}
-
-// determine whether or not to load module files on init
-if (isset($_FAPP['loadmodulecode']) && $_FAPP['loadmodulecode'])  {
-	Fabriq::init_module_core();
 }
 
 // initialize database
