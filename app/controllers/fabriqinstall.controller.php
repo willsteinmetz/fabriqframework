@@ -324,6 +324,11 @@ EMAIL;
 		Fabriq::title('Install complete');
 		FabriqTemplates::enable();
 		FabriqTemplates::template('fabriqinstall');
+		
+		// delete session variables
+		unset($_SESSION['FAB_INSTALL_site']);
+		unset($_SESSION['FAB_INSTALL_db']);
+		unset($_SESSION['FAB_INSTALL_mods_installed']);
 	}
 	
 	public function update() {
