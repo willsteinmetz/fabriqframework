@@ -90,13 +90,26 @@ abstract class FabriqTemplates {
 		ob_clean();
 	}
 	
-	
+	/**
+	 * Render view to a variable
+	 * @param string $controller
+	 * @param string $action
+	 * @param string $var
+	 */
 	public static function render_to_var($controller, $action, $var) {
 		ob_start();
 		extract(self::$tplvars);
 		require_once("app/views/{$controller}/{$action}.view.php");
 		$data = ob_get_clean();
 		FabriqTemplates::set_var($var, $data);
+	}
+	
+	/**
+	 * Enable templating
+	 */
+	public static function enable() {
+		global $_FAPP;
+		$_FAPP['templating'] = true;
 	}
 }
 	

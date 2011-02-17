@@ -61,6 +61,9 @@ if ($installed) {
 
 // query variable
 $q = explode('/', $_GET['q']);
+if (trim($q[0]) == '') {
+	array_shift($q);
+}
 
 // include core JavaScript libraries
 FabriqLibs::js_lib('jquery-1.4.4.min', 'jquery');

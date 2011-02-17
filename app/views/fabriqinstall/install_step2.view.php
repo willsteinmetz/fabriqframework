@@ -12,6 +12,13 @@ while ($aPath[$i] != 'fabriqinstall') {
 	$appPath .= $aPath[$i] . '/';
 	$i++;
 }
+if (isset($_SESSION['FAB_INSTALL_site']) && ($_SESSION['FAB_INSTALL_site'] != '')) {
+	$siteConfig = unserialize($_SESSION['FAB_INSTALL_site']);
+	$submitted = true;
+	foreach ($siteConfig as $key => $val) {
+		$_POST[$key] = $val;
+	}
+}
 ?>
 <form method="post" action="<?php PathMap::build_path('fabriqinstall', 'install', 2); ?>">
 	<label for="title">Page title <span class="required-field">*</span>: </label><input type="text" id="title" name="title" size="50" tabindex="1"<?php if ($submitted) { echo ' value="' . $_POST['title'] . '"'; } ?> /><br />
@@ -32,7 +39,7 @@ while ($aPath[$i] != 'fabriqinstall') {
 	<label for="url">URL <span class="required-field">*</span>: </label><input type="text" id="url" name="url" size="50" tabindex="7" <?php if ($submitted) { echo ' value="' . $_POST['url'] . '"'; } else { echo ' value="http://' . $_SERVER['HTTP_HOST'] . '"'; } ?>><br />
 	<label for="apppath">Application path <span class="required-field">*</span>: </label><input type="text" id="apppath" name="apppath" value="<?php echo ($submitted) ? $_POST['apppath'] : $appPath; ?>" tabindex="8" /><br />
 	<div class="form-item-description">The application path is the root to your application on your server. If your application is stored in the default root directory, leave the application path set to /. Otherwise, set the path to the location that your application is stored on the server. <strong>Be sure that your application path begins and ends with a /</strong>.</div>
-	<label for="templating">Enable templating </label><input type="checkbox" id="templating" name="templating" value="1" tabindex="9"<?php if (($submitted && ($_POST['templating'] == 1)) || (!$submitted)) { echo ' checked="checked"'; } ?> /><br />
+	<label for="templating">Enable templating </label><input type="checkbox" id="templating" name="templating" value="true" tabindex="9"<?php if (($submitted && ($_POST['templating'] == 1)) || (!$submitted)) { echo ' checked="checked"'; } ?> /><br />
 	<div class="form-item-description">Check this box to enable templating by default.</div>
 	
 	<p style="text-align: right;">

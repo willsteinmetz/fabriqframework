@@ -3,6 +3,14 @@
 if ($submitted && Messaging::has_messages()) {
 	Messaging::display_messages();
 }
+
+if (isset($_SESSION['FAB_INSTALL_db']) && ($_SESSION['FAB_INSTALL_db'] != '')) {
+	$dbConfig = unserialize($_SESSION['FAB_INSTALL_db']);
+	$submitted = true;
+	foreach ($dbConfig as $key => $val) {
+		$_POST[$key] = $val;
+	}
+}
 ?>
 <form method="post" action="<?php PathMap::build_path('fabriqinstall', 'install', 3); ?>">
 	<label for="db">Database name <span class="required-field">*</span>: </label><input type="text" id="db" name="db" size="50" tabindex="9"<?php if ($submitted) { echo ' value="' . $_POST['db'] . '"'; } ?> /><br />
