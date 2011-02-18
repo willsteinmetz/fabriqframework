@@ -13,6 +13,19 @@ class fabriqinstall_controller extends Controller {
 			global $_FAPP;
 			header("Location: " . PathMap::build_path($_FAPP['cdefault'], $_FAPP['adefault']));
 			exit();
+		} else if (((PathMap::action() == 'install') || (PathMap::render_action() == 'install')) && $installed && (PathMap::arg(2) >= 4)) {
+			global $db;
+			$query = "SHOW TABLES;";
+			$db->query($query);
+			$tables = array();
+			while ($row = $db->result->fetch_array()) {
+				$tables[] = $row[0];
+			}
+			if (in_array('fabmod_users_users', $tables)) {
+				global $_FAPP;
+				header("Location: " . PathMap::build_path($_FAPP['cdefault'], $_FAPP['adefault']));
+				exit();
+			}
 		}
 		Fabriq::add_css('fabriqinstall', 'screen', 'core/');
 	}
@@ -51,12 +64,6 @@ class fabriqinstall_controller extends Controller {
 			if (strlen(trim($_POST['title_sep'])) == 0) {
 				Messaging::message('You must enter a page title separator');
 			}
-			if (!preg_match('/^([a-zA-Z]{1}[a-zA-Z0-9]+)$/', $_POST['cdefault'])) {
-				Messaging::message('You must enter a default controller. The default controller can only contain alpha-numeric and underscore characters and must begin with a letter.');
-			}
-			if (!preg_match('/^([a-zA-Z]{1}[a-zA-Z0-9]+)$/', $_POST['adefault'])) {
-				Messaging::message('You must enter a default action. The default action can only contain alpha-numeric and underscore characters and must begin with a letter.');
-			}
 			if (strlen(trim($_POST['apppath'])) == 0) {
 				Messaging::message('You must enter an application path');
 			}
@@ -70,8 +77,6 @@ class fabriqinstall_controller extends Controller {
 					'title_pos' => $_POST['title_pos'],
 					'title_sep' => $_POST['title_sep'],
 					'cleanurls' => $_POST['cleanurls'],
-					'cdefault' => $_POST['cdefault'],
-					'adefault' => $_POST['adefault'],
 					'url' => $_POST['url'],
 					'apppath' => $_POST['apppath'],
 					'templating' => ($_POST['templating']) ? 'true' : 'false'
@@ -140,8 +145,8 @@ class fabriqinstall_controller extends Controller {
 				fwrite($fh, "	'title_pos' => '{$siteConfig['title_pos']}',\n");
 				fwrite($fh, "	'title_sep' => \"{$siteConfig['title_sep']}\",\n");
 				fwrite($fh, "	'cleanurls' => {$siteConfig['cleanurls']},\n");
-				fwrite($fh, "	'cdefault' => '{$siteConfig['cdefault']}',\n");
-				fwrite($fh, "	'adefault' => '{$siteConfig['adefault']}',\n");
+				fwrite($fh, "	'cdefault' => 'homepage',\n");
+				fwrite($fh, "	'adefault' => 'index',\n");
 				fwrite($fh, "	'url' => '{$siteConfig['url']}',\n");
 				fwrite($fh, "	'apppath' => '{$siteConfig['apppath']}',\n");
 				fwrite($fh, "	'templating' => {$siteConfig['templating']},\n");
@@ -155,24 +160,6 @@ class fabriqinstall_controller extends Controller {
 				fwrite($fh, "	'db' => '{$_POST['db']}',\n");
 				fwrite($fh, "	'server' => '{$_POST['server']}'\n");
 				fwrite($fh, ");\n");
-				fclose($fh);
-				
-				// write default controller
-				$contFile = "app/controllers/{$siteConfig['cdefault']}.controller.php";
-				$fh = fopen($contFile, 'w');
-				fwrite($fh, "<?php\n");
-				fwrite($fh, "class {$siteConfig['cdefault']}_controller extends Controller {\n");
-				fwrite($fh, "\tfunction {$siteConfig['adefault']}() {\n");
-				fwrite($fh, "\t\tFabriq::title('Welcome to {$siteConfig['title']}');\n");
-				fwrite($fh, "\t}\n");
-				fwrite($fh, "}\n");
-				fclose($fh);
-				
-				// write default action
-				mkdir("app/views/{$siteConfig['cdefault']}");
-				$actionFile = "app/views/{$siteConfig['cdefault']}/{$siteConfig['adefault']}.view.php";
-				$fh = fopen($actionFile, 'w');
-				fwrite($fh, "<h1>{$siteConfig['cdefault']}#{$siteConfig['adefault']}</h1>\n");
 				fclose($fh);
 				
 				// create the framework database tables
@@ -332,6 +319,22 @@ EMAIL;
 	}
 	
 	public function update() {
+		
+	}
+	
+	private function update_step1() {
+		
+	}
+	
+	private function update_step2() {
+		
+	}
+	
+	private function update_step3() {
+		
+	}
+	
+	private function update_step4() {
 		
 	}
 } 

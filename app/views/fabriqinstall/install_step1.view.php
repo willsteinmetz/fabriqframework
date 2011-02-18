@@ -1,14 +1,7 @@
 <h1>Welcome to Fabriq Framework</h1>
 <p>Before moving on to the next step, make sure of the following:</p>
 <ul>
-	<li>
-		Be sure that the following directories have write permissions:
-		<ul>
-			<li><code>/config</code></li>
-			<li><code>/app/controllers</code></li>
-			<li><code>/app/views</code></li>
-		</ul>
-	</li>
+	<li>Be sure that <code>/config</code> directory has write permissions</li>
 	<li>
 		Be sure to have the following details about the database you are using available:
 		<ul>

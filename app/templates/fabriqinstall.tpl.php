@@ -76,7 +76,7 @@ jQuery.extend(Fabriq.settings, {"basePath": "<?php echo PathMap::base_path(); ?>
 		<ul>
 			<li>Start</li>
 			<li>Framework updates</li>
-			<li>Module module updates</li>
+			<li>Module updates</li>
 			<li>Finish</li>
 		</ul>
 		<div class="clearbox">&nbsp;</div>
