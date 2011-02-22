@@ -26,6 +26,24 @@ class fabriqinstall_controller extends Controller {
 				header("Location: " . PathMap::build_path($_FAPP['cdefault'], $_FAPP['adefault']));
 				exit();
 			}
+		} else if ((PathMap::action() == 'update') || (PathMap::render_action() == 'update')) {
+			if (PathMap::arg(2) == 2) {
+				global $db;
+				$query = "SHOW TABLES;";
+				$db->query($query);
+				$tables = array();
+				while ($row = $db->result->fetch_array()) {
+					$tables[] = $row[0];
+				}
+				if (!in_array('fabriq_config', $tables)) {
+					$this->version = null;
+				} else {
+					$query = "SELECT version FROM fabriq_config ORDER BY installed DESC LIMIT 1";
+					$db->query($query);
+					$data = mysqli_fetch_array($db->result);
+					$this->version = $data['version'];
+				}
+			}
 		}
 		Fabriq::add_css('fabriqinstall', 'screen', 'core/');
 	}
@@ -319,15 +337,55 @@ EMAIL;
 	}
 	
 	public function update() {
-		
+		if (FabriqModules::module('roles')->hasRole('administrator') || (isset($_SESSION['FAB_INSTALL_nomods']) && ($_SESSION['FAB_INSTALL_nomods'] == true))) {
+			switch (PathMap::arg(2)) {
+				case 2:
+					$this->update_step2();
+				break;
+				case 3:
+					$this->update_step3();
+				break;
+				case 4:
+					$this->update_step4();
+				break;
+				case 1: default:
+					$this->update_step1();
+				break;
+			}
+		}
 	}
 	
 	private function update_step1() {
-		
+		Fabriq::title('Fabriq Update');
 	}
 	
 	private function update_step2() {
+		Fabriq::title('Framework updates');
 		
+		// get the list of updates
+		$methods = get_class_methods('fabriqinstall_controller');
+		$available = array();
+		foreach ($methods as $method) {
+			if ((substr($method, 0, 7) == 'update_') && (($method >= $this->version) || ($this->version == null))) {
+				$available[] = $method;
+			}
+		}
+		$toInstall = array();
+		for ($i = 0; $i < count($available); $i++) {
+			$toInstall[] = $this->$available[i]();
+		}
+		
+		if (isset($_POST['submit'])) {
+			if (count($toInstall) > 0) {
+				foreach ($toInstall as $update) {
+					$this->$update();
+				}
+			}
+			header("Location: " . PathMap::build_path('fabriqinstall', 'update', 3));
+			exit();
+		} else {
+			FabriqTemplates::set_var('toInstall', $toInstall);
+		}
 	}
 	
 	private function update_step3() {
@@ -336,5 +394,61 @@ EMAIL;
 	
 	private function update_step4() {
 		
+	}
+	
+	private function update_1_3() {
+		if (isset($_POST['submit'])) {
+			global $db;
+			// install config table
+			$query = "CREATE TABLE IF NOT EXISTS  `fabriq_config` (
+					`version` VARCHAR(10) NOT NULL,
+					`installed` DATETIME NOT NULL,
+					PRIMARY KEY (`version`)
+				) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+			$db->query($query);
+			$query = "INSERT INTO fabriq_config (version, installed) VALUES (?, ?)";
+			$db->prepare_cud($query, array('1.3', date('Y-m-d H:i:s')));
+			// modules table
+			$query = "CREATE TABLE IF NOT EXISTS `fabmods_modules` (
+					`id` int(11) NOT NULL AUTO_INCREMENT,
+					`module` varchar(100) NOT NULL,
+					`enabled` tinyint(4) NOT NULL,
+					`hasconfigs` tinyint(1) NOT NULL,
+					`installed` tinyint(1) NOT NULL,
+					`versioninstalled` varchar(20) NOT NULL,
+					`description` text NOT NULL,
+					`dependson` text,
+					`created` datetime NOT NULL,
+					`updated` datetime NOT NULL,
+					PRIMARY KEY (`id`)
+				) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+			$db->query($query);
+			// module configs table
+			$query = "CREATE TABLE IF NOT EXISTS `fabmods_module_configs` (
+					`id` int(11) NOT NULL AUTO_INCREMENT,
+					`module` int(11) NOT NULL,
+					`var` varchar(100) NOT NULL,
+					`val` text NOT NULL,
+					`created` datetime NOT NULL,
+					`updated` datetime NOT NULL,
+					PRIMARY KEY (`id`)
+				) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+			$db->query($query);
+			// module perms table
+			$query = "CREATE TABLE IF NOT EXISTS `fabmods_perms` (
+					`id` int(11) NOT NULL AUTO_INCREMENT,
+					`permission` varchar(100) NOT NULL,
+					`module` int(11) NOT NULL,
+					`created` datetime NOT NULL,
+					`updated` datetime NOT NULL,
+					PRIMARY KEY (`id`)
+				) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+			$db->query($query);
+		} else {
+			return array(
+				'version' => '1.3',
+				'description' => 'Configure the database for use with modules starting in version 1.3'
+			);
+		}	
 	}
 } 
