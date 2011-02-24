@@ -3,6 +3,10 @@
  * @file fabriqinstall.controller.php
  * @author Will Steinmetz
  * Fabriq install and update framework functionality
+ * 
+ * Copyright (c)2011, Ralivue.com
+ * Licensed under the BSD license.
+ * http://fabriqframework.com/license
  */
 
 class fabriqinstall_controller extends Controller {
@@ -14,6 +18,7 @@ class fabriqinstall_controller extends Controller {
 			header("Location: " . PathMap::build_path($_FAPP['cdefault'], $_FAPP['adefault']));
 			exit();
 		} else if (((PathMap::action() == 'install') || (PathMap::render_action() == 'install')) && $installed && (PathMap::arg(2) >= 4)) {
+			// determine which version is installed
 			global $db;
 			$query = "SHOW TABLES;";
 			$db->query($query);
@@ -27,6 +32,7 @@ class fabriqinstall_controller extends Controller {
 				exit();
 			}
 		} else if ((PathMap::action() == 'update') || (PathMap::render_action() == 'update')) {
+			// figure out what updates are available
 			if (PathMap::arg(2) == 2) {
 				global $db;
 				$query = "SHOW TABLES;";
@@ -48,6 +54,9 @@ class fabriqinstall_controller extends Controller {
 		Fabriq::add_css('fabriqinstall', 'screen', 'core/');
 	}
 	
+	/**
+	 * Determine which install step to go to
+	 */
 	public function install() {
 		switch (PathMap::arg(2)) {
 			case 2:
@@ -68,10 +77,19 @@ class fabriqinstall_controller extends Controller {
 		}
 	}
 	
+	/**
+	 * Install step 1
+	 * Displays the overview of starting the install of
+	 * the framework
+	 */
 	private function install_step1() {
 		Fabriq::title('Start');
 	}
 	
+	/**
+	 * Install step 2
+	 * Website configuration details
+	 */
 	private function install_step2() {
 		Fabriq::title('Site configuration');
 		
@@ -109,7 +127,11 @@ class fabriqinstall_controller extends Controller {
 			FabriqTemplates::set_var('submitted', true);
 		}
 	}
-
+	
+	/**
+	 * Install step 3
+	 * Database configuration details
+	 */
 	private function install_step3() {
 		Fabriq::title('Database configuration');
 		
@@ -235,6 +257,11 @@ class fabriqinstall_controller extends Controller {
 		}
 	}
 	
+	/**
+	 * Install step 4
+	 * Install the core database tables and modules and create the
+	 * default administrator
+	 */
 	private function install_step4() {
 		Fabriq::title('Core module configuration');
 		FabriqTemplates::enable();
@@ -325,6 +352,10 @@ EMAIL;
 		}
 	}
 	
+	/**
+	 * Install step 5
+	 * Display message about end of install and finish installation
+	 */
 	private function install_step5() {
 		Fabriq::title('Install complete');
 		FabriqTemplates::enable();
@@ -336,6 +367,9 @@ EMAIL;
 		unset($_SESSION['FAB_INSTALL_mods_installed']);
 	}
 	
+	/**
+	 * Determine which update step to process
+	 */
 	public function update() {
 		if (FabriqModules::module('roles')->hasRole('administrator') || (isset($_SESSION['FAB_INSTALL_nomods']) && ($_SESSION['FAB_INSTALL_nomods'] == true))) {
 			switch (PathMap::arg(2)) {
@@ -355,10 +389,18 @@ EMAIL;
 		}
 	}
 	
+	/**
+	 * Update step 1
+	 * Display the overview of the update
+	 */
 	private function update_step1() {
 		Fabriq::title('Fabriq Update');
 	}
 	
+	/**
+	 * Update step2
+	 * Apply the updates to the framework
+	 */
 	private function update_step2() {
 		Fabriq::title('Framework updates');
 		
@@ -366,7 +408,7 @@ EMAIL;
 		$methods = get_class_methods('fabriqinstall_controller');
 		$available = array();
 		foreach ($methods as $method) {
-			if ((substr($method, 0, 7) == 'update_') && (($method >= $this->version) || ($this->version == null))) {
+			if ((substr($method, 0, 7) == 'update_') && ((str_replace('_', '.', str_replace('update_', '', $method)) > $this->version) || ($this->version == null))) {
 				$available[] = $method;
 			}
 		}
@@ -378,7 +420,8 @@ EMAIL;
 		if (isset($_POST['submit'])) {
 			if (count($toInstall) > 0) {
 				foreach ($toInstall as $update) {
-					$this->$update();
+					$u = 'update_' . str_replace('.', '_', $update['version']);
+					$this->$u();
 				}
 			}
 			header("Location: " . PathMap::build_path('fabriqinstall', 'update', 3));
@@ -388,15 +431,29 @@ EMAIL;
 		}
 	}
 	
+	/**
+	 * Update step 3
+	 * Module updates
+	 */
 	private function update_step3() {
-		
+		Fabriq::title('Module Updates');
 	}
 	
+	/**
+	 * Update step4
+	 * Finish the updating process
+	 */
 	private function update_step4() {
 		
 	}
 	
+	/**
+	 * Version 1.3 update
+	 * Add the core database tables for the framework and module functionality
+	 * @return array
+	 */
 	private function update_1_3() {
+		// apply the update
 		if (isset($_POST['submit'])) {
 			global $db;
 			// install config table
@@ -444,6 +501,7 @@ EMAIL;
 					PRIMARY KEY (`id`)
 				) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 			$db->query($query);
+		// return the update details
 		} else {
 			return array(
 				'version' => '1.3',

@@ -6,8 +6,7 @@
 	<li><strong><?php $update['version']; ?>:</strong> <?php $update['description']; ?></li>
 	<?php endforeach; ?>
 </ul>
-<form method="post" action="<?php echo PathMap::build_path('fabriqinstall', 'update', 2); ?>">
-	<p>There are no framework updates available. Continue on to check for module updates.</p>
+<form method="post" action="<?php echo PathMap::build_path('fabriqinstall', 'update', 2); ?>">=
 	<p style="text-align: right;">
 		<input type="submit" name="submit" value="Install updates and continue &raquo;" />
 	</p>
