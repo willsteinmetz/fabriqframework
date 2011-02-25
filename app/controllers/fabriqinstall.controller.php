@@ -17,19 +17,26 @@ class fabriqinstall_controller extends Controller {
 			global $_FAPP;
 			header("Location: " . PathMap::build_path($_FAPP['cdefault'], $_FAPP['adefault']));
 			exit();
-		} else if (((PathMap::action() == 'install') || (PathMap::render_action() == 'install')) && $installed && (PathMap::arg(2) >= 4)) {
+		} else if (((PathMap::action() == 'install') || (PathMap::render_action() == 'install')) && $installed && (PathMap::arg(2) == 4)) {
 			// determine which version is installed
-			global $db;
-			$query = "SHOW TABLES;";
-			$db->query($query);
-			$tables = array();
-			while ($row = $db->result->fetch_array()) {
-				$tables[] = $row[0];
-			}
-			if (in_array('fabmod_users_users', $tables)) {
-				global $_FAPP;
-				header("Location: " . PathMap::build_path($_FAPP['cdefault'], $_FAPP['adefault']));
-				exit();
+			if (!isset($_POST['submit'])) {
+				global $db;
+				$query = "SHOW TABLES;";
+				$db->query($query);
+				$tables = array();
+				while ($row = $db->result->fetch_array()) {
+					$tables[] = $row[0];
+				}
+				if (in_array('fabmod_users_users', $tables)) {
+					$query = "SELECT COUNT(*) AS num FROM fabmod_users_users";
+					$db->query($query);
+					$row = $db->result->fetch_array();
+					if ($row['num'] > 0) {
+						global $_FAPP;
+						header("Location: " . PathMap::build_path($_FAPP['cdefault'], $_FAPP['adefault']));
+						exit();
+					}
+				}
 			}
 		} else if ((PathMap::action() == 'update') || (PathMap::render_action() == 'update')) {
 			// figure out what updates are available
@@ -202,6 +209,24 @@ class fabriqinstall_controller extends Controller {
 				fwrite($fh, ");\n");
 				fclose($fh);
 				
+				// write default controller
+				$contFile = "app/controllers/homepage.controller.php";
+				$fh = fopen($contFile, 'w');
+				fwrite($fh, "<?php\n");
+				fwrite($fh, "class homepage_controller extends Controller {\n");
+				fwrite($fh, "\tfunction index() {\n");
+				fwrite($fh, "\t\tFabriq::title('Welcome to {$siteConfig['title']}');\n");
+				fwrite($fh, "\t}\n");
+				fwrite($fh, "}\n");
+				fclose($fh);
+				
+				// write default action
+				mkdir("app/views/homepage");
+				$actionFile = "app/views/homepage/index.view.php";
+				$fh = fopen($actionFile, 'w');
+				fwrite($fh, "<h1>homepage#index</h1>\n");
+				fclose($fh);
+				
 				// create the framework database tables
 				global $db;
 				$db_info = array(
@@ -320,6 +345,13 @@ class fabriqinstall_controller extends Controller {
 				$user->id = $user->create();
 				$user->encpwd = crypt($user->encpwd, $user->id);
 				$user->update();
+				
+				$role = FabriqModules::new_model('roles', 'Roles');
+				$role->getRole('administrator');
+				$userRole = FabriqModules::new_model('users', 'UserRoles');
+				$userRole->user = $user->id;
+				$userRole->role = $role->id;
+				$userRole->id = $userRole->create();
 				
 				global $_FAPP;
 				$url = $_FAPP['url'] . PathMap::build_path('users', 'login');
