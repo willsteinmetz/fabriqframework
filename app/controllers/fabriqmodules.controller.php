@@ -95,6 +95,7 @@ class fabriqmodules_controller extends Controller {
 			if ($module->module != '') {
 				$module->installed = 1;
 				$module->update();
+				FabriqModules::install($module->module);
 				echo json_encode(array('success' => true, 'hasConfiguration' => $module->hasconfigs));
 			} else {
 				echo json_encode(array('success' => false));

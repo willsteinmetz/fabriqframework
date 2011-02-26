@@ -317,6 +317,19 @@ class fabriqinstall_controller extends Controller {
 			$module->enabled = 1;
 			$module->update();
 			Messaging::message('Installed users module', 'success');
+			
+			// get admin role and give it all perms so that the admin can actually set
+			// things up
+			$role = FabriqModules::new_model('roles', 'Roles');
+			$role->getRole('administrator');
+			$perms = new Perms();
+			$perms->getAll();
+			foreach ($perms as $perm) {
+				$modPerm = FabriqModules::new_model('roles', 'ModulePerms');
+				$modPerm->permission = $perm->id;
+				$modPerm->role = $role->id;
+				$modPerm->create();
+			}
 			$_SESSION['FAB_INSTALL_mods_installed'] = true;
 		}
 		
