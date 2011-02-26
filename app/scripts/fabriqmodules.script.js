@@ -117,6 +117,7 @@ FabriqModules = {
 						} else {
 							jQuery('#enable-button-' + module)
 								.text('enable')
+								.removeAttr('onclick')
 								.unbind('click')
 								.click(function(event) {
 									FabriqModules.enable(module);
@@ -124,6 +125,7 @@ FabriqModules = {
 						}
 						jQuery('#install-button-' + module)
 							.text('uninstall')
+							.removeAttr('onclick')
 							.unbind('click')
 							.click(function(event) {
 								FabriqModules.uninstall(module);
