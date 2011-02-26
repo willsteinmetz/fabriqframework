@@ -106,18 +106,34 @@ FabriqModules = {
 					window.location = window.location;
 				} else {
 					if (data.success) {
-						jQuery('#enable-button-' + module)
-							.text('enable')
+						if (jQuery('#enable-button-' + module).length == 0) {
+							var enableButton = jQuery('<button />');
+							enableButton.text('enable')
+								.attr('id', 'enable-button-' + module)
+								.click(function(event) {
+									FabriqModules.enable(module);
+								});
+							$('tr#module-' + module).find('td.fabriqmodules-enable-col').append(enableButton);
+						} else {
+							jQuery('#enable-button-' + module)
+								.text('enable')
+								.unbind('click')
+								.click(function(event) {
+									FabriqModules.enable(module);
+								});
+						}
+						jQuery('#install-button-' + module)
+							.text('uninstall')
 							.unbind('click')
 							.click(function(event) {
-								FabriqModules.enable(module);
+								FabriqModules.uninstall(module);
 							});
 						jQuery('#message-box')
 							.addClass('successes')
 							.html('Module has been installed')
 							.fadeIn();
 						if (parseInt(data.hasConfiguration, 10) == 1) {
-							jQuery('#module-' + module + ' td.fabriqmodules-config-col').html('').append(
+							jQuery('tr#module-' + module).find('td.fabriqmodules-config-col').html('').append(
 								jQuery('<button />')
 									.text('configure')
 									.attr('id', 'config-button-' + module)
@@ -126,6 +142,39 @@ FabriqModules = {
 									})
 							);
 						}
+					} else {
+						jQuery('#message-box')
+							.addClass('errors')
+							.html('Module could not be installed')
+							.fadeIn();
+					}
+				}
+			}
+		});
+	},
+	
+	uninstall: function(module) {
+		jQuery.ajax({
+			type: 'GET',
+			url: Fabriq.build_path('fabriqmodules', 'uninstall', module),
+			dataType: 'json',
+			success: function(data, status) {
+				if (data.notLoggedIn) {
+					window.location = window.location;
+				} else {
+					if (data.success) {
+						jQuery('#enable-button-' + module).remove();
+						jQuery('#install-button-' + module)
+							.text('install')
+							.unbind('click')
+							.click(function(event) {
+								FabriqModules.install(module);
+							});
+						jQuery('#message-box')
+							.addClass('successes')
+							.html('Module has been uninstalled')
+							.fadeIn();
+						jQuery('#config-button-' + module).remove();
 					} else {
 						jQuery('#message-box')
 							.addClass('errors')

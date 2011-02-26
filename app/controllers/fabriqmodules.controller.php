@@ -104,6 +104,25 @@ class fabriqmodules_controller extends Controller {
 			echo json_encode(array('success' => false, 'notLoggedIn' => true));
 		}
 	}
+
+	public function uninstall() {
+		Fabriq::render('none');
+		header('Content-type:application/json');
+		
+		if (FabriqModules::module('roles')->hasRole('administrator')) {
+			$module = new Modules(PathMap::arg(2));
+			if ($module->module != '') {
+				$module->installed = 0;
+				$module->update();
+				FabriqModules::uninstall($module->module);
+				echo json_encode(array('success' => true));
+			} else {
+				echo json_encode(array('success' => false));
+			}
+		} else {
+			echo json_encode(array('success' => false, 'notLoggedIn' => true));
+		}
+	}
 	
 	public function configure() {
 		Fabriq::render('view');
