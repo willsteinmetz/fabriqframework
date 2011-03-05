@@ -191,7 +191,7 @@ class Model implements ArrayAccess, Iterator, Countable {
 	public function destroy($index = NULL) {
 		global $db;
 		
-		$sql = "DELETE FROM {$this->db_table} WHERE `{$this->id_name}` = ";
+		$sql = "DELETE FROM {$this->db_table} WHERE `{$this->id_name}` = ?";
 		if (is_numeric($index) && ($index < count($this->data))) {
 			$db->prepare_cud($sql, array($this->data[$index]->id));
 			return $db->affected_rows;

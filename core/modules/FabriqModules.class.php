@@ -15,6 +15,7 @@ abstract class FabriqModules {
 	private static $cssqueue = array();
 	private static $jsqueue = array();
 	private static $hasPermission = true;
+	private static $stoppedMappedRender = false;
 	
 	/**
 	 * Calls the install function to install a module for use in the
@@ -343,6 +344,19 @@ abstract class FabriqModules {
 		}
 		eval("\$item = new {$class}();");
 		return $item;
+	}
+	
+	/**
+	 * Stops the mapped to module function's view from being rendered
+	 * @param bool $stop
+	 * @return bool
+	 */
+	public static function stopMappedRender($stop = null) {
+		if ($stop != null) {
+			self::$stoppedMappedRender = $stop;
+		} else {
+			return self::$stoppedMappedRender;
+		}
 	}
 }
 	
