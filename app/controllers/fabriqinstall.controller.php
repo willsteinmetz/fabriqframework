@@ -50,6 +50,7 @@ class fabriqinstall_controller extends Controller {
 				}
 				if (!in_array('fabriq_config', $tables)) {
 					$this->version = null;
+					$_SESSION['FAB_INSTALL_nomods'] = true;
 				} else {
 					$query = "SELECT version FROM fabriq_config ORDER BY installed DESC LIMIT 1";
 					$db->query($query);
@@ -469,8 +470,10 @@ EMAIL;
 					$this->$u();
 				}
 			}
-			header("Location: " . PathMap::build_path('fabriqinstall', 'update', 3));
-			exit();
+			if (!Messaging::has_messages()) {
+				header("Location: " . PathMap::build_path('fabriqinstall', 'update', 3));
+				exit();
+			}
 		} else {
 			FabriqTemplates::set_var('toInstall', $toInstall);
 		}
@@ -482,6 +485,41 @@ EMAIL;
 	 */
 	private function update_step3() {
 		Fabriq::title('Module Updates');
+		global $db;
+		
+		// get modules and versions that are in the database
+		$query = "SELECT `id`, `module`, `versionInstalled` FROM `fabmods_modules` ORDER BY `module`;";
+		$installed = $db->prepare_select($query, array('id', 'module', 'versionInstalled'));
+		
+		// look for updates to the installed modules in the code
+		$available = array();
+		$installs = array();
+		for ($i = 0; $i < count($installed); $i++) {
+			if (!array_key_exists($installed[$i]['module'], $available)) {
+				$available[$installed[$i]['module']] = array();
+			}
+			$install = "modules/{$installed[$i]['module']}/{$installed[$i]['module']}.install.php";
+			if (file_exists($install)) {
+				require_once($install);
+				eval('$installer = new ' . $installed[$i]['module'] . '_install();');
+				$installs[$installed[$i]['module']] = $installer;
+				
+				$methods = get_class_methods($installer);
+				$available = array();
+				foreach ($methods as $method) {
+					if ((substr($method, 0, 7) == 'update_') && ((str_replace('_', '.', str_replace('update_', '', $method)) > $installed[$i]['module']['versionInstalled']) || ($installed[$i]['module']['versionInstalled'] == null))) {
+						$available[$installed[$i]['module']][] = $method;
+					}
+				}
+			}
+		}
+		
+		if (isset($_POST['submit'])) {
+			
+		} else {
+			FabriqTemplates::set_var('installed', $installed);
+			FabriqTemplates::set_var('available', $available);
+		}
 	}
 	
 	/**
@@ -500,57 +538,129 @@ EMAIL;
 	private function update_1_3() {
 		// apply the update
 		if (isset($_POST['submit'])) {
+			$installed = unserialize($_SESSION['FAB_UPDATES']);
 			global $db;
-			// install config table
-			$query = "CREATE TABLE IF NOT EXISTS  `fabriq_config` (
-					`version` VARCHAR(10) NOT NULL,
-					`installed` DATETIME NOT NULL,
-					PRIMARY KEY (`version`)
-				) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
-			$db->query($query);
-			$query = "INSERT INTO fabriq_config (version, installed) VALUES (?, ?)";
-			$db->prepare_cud($query, array('1.3', date('Y-m-d H:i:s')));
-			// modules table
-			$query = "CREATE TABLE IF NOT EXISTS `fabmods_modules` (
-					`id` int(11) NOT NULL AUTO_INCREMENT,
-					`module` varchar(100) NOT NULL,
-					`enabled` tinyint(4) NOT NULL,
-					`hasconfigs` tinyint(1) NOT NULL,
-					`installed` tinyint(1) NOT NULL,
-					`versioninstalled` varchar(20) NOT NULL,
-					`description` text NOT NULL,
-					`dependson` text,
-					`created` datetime NOT NULL,
-					`updated` datetime NOT NULL,
-					PRIMARY KEY (`id`)
-				) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
-			$db->query($query);
-			// module configs table
-			$query = "CREATE TABLE IF NOT EXISTS `fabmods_module_configs` (
-					`id` int(11) NOT NULL AUTO_INCREMENT,
-					`module` int(11) NOT NULL,
-					`var` varchar(100) NOT NULL,
-					`val` text NOT NULL,
-					`created` datetime NOT NULL,
-					`updated` datetime NOT NULL,
-					PRIMARY KEY (`id`)
-				) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
-			$db->query($query);
-			// module perms table
-			$query = "CREATE TABLE IF NOT EXISTS `fabmods_perms` (
-					`id` int(11) NOT NULL AUTO_INCREMENT,
-					`permission` varchar(100) NOT NULL,
-					`module` int(11) NOT NULL,
-					`created` datetime NOT NULL,
-					`updated` datetime NOT NULL,
-					PRIMARY KEY (`id`)
-				) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
-			$db->query($query);
+			if (!isset($installed['1.3']) || !$installed['1.3']) {
+				// install config table
+				$query = "CREATE TABLE IF NOT EXISTS  `fabriq_config` (
+						`version` VARCHAR(10) NOT NULL,
+						`installed` DATETIME NOT NULL,
+						PRIMARY KEY (`version`)
+					) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+				$db->query($query);
+				$query = "INSERT INTO fabriq_config (version, installed) VALUES (?, ?)";
+				$db->prepare_cud($query, array('1.3', date('Y-m-d H:i:s')));
+				// modules table
+				$query = "CREATE TABLE IF NOT EXISTS `fabmods_modules` (
+						`id` int(11) NOT NULL AUTO_INCREMENT,
+						`module` varchar(100) NOT NULL,
+						`enabled` tinyint(4) NOT NULL,
+						`hasconfigs` tinyint(1) NOT NULL,
+						`installed` tinyint(1) NOT NULL,
+						`versioninstalled` varchar(20) NOT NULL,
+						`description` text NOT NULL,
+						`dependson` text,
+						`created` datetime NOT NULL,
+						`updated` datetime NOT NULL,
+						PRIMARY KEY (`id`)
+					) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+				$db->query($query);
+				// module configs table
+				$query = "CREATE TABLE IF NOT EXISTS `fabmods_module_configs` (
+						`id` int(11) NOT NULL AUTO_INCREMENT,
+						`module` int(11) NOT NULL,
+						`var` varchar(100) NOT NULL,
+						`val` text NOT NULL,
+						`created` datetime NOT NULL,
+						`updated` datetime NOT NULL,
+						PRIMARY KEY (`id`)
+					) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+				$db->query($query);
+				// module perms table
+				$query = "CREATE TABLE IF NOT EXISTS `fabmods_perms` (
+						`id` int(11) NOT NULL AUTO_INCREMENT,
+						`permission` varchar(100) NOT NULL,
+						`module` int(11) NOT NULL,
+						`created` datetime NOT NULL,
+						`updated` datetime NOT NULL,
+						PRIMARY KEY (`id`)
+					) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+				$db->query($query);
+				
+				// install the core modules
+				$installed['1.3'] = true;
+				$_SESSION['FAB_UPDATES'] = serialize($installed['1.3']);
+			}
+			
+			$emailPattern = '/^([a-z0-9])(([-a-z0-9._])*([a-z0-9]))*\@([a-z0-9])(([a-z0-9-])*([a-z0-9]))+' . '(\.([a-z0-9])([-a-z0-9_-])?([a-z0-9])+)+$/i';
+			$displayPattern = '/([A-z0-9]){6,24}/';
+			$user = FabriqModules::new_model('users', 'Users');
+			$user->display = $_POST['display'];
+			$user->email = $_POST['email'];
+			$user->encpwd = $_POST['pwd'];
+			
+			if (!preg_match($displayPattern, $user->display)) {
+				Messaging::message("Display name is invalid");
+			}
+			if (!preg_match($emailPattern, $user->email)) {
+				Messaging::message("e-mail address is invalid");
+			}
+			if ((strlen($user->encpwd) < 8) || ($user->encpwd == $user->display) || ($user->encpwd == $user->email)) {
+				Messaging::message("Password is invalid");
+			}
+			
+			if (!Messaging::has_messages()) {
+				$user->status = 1;
+				$user->banned = 0;
+				$user->forcepwdreset = 0;
+				$user->id = $user->create();
+				$user->encpwd = crypt($user->encpwd, $user->id);
+				$user->update();
+				
+				$role = FabriqModules::new_model('roles', 'Roles');
+				$role->getRole('administrator');
+				$userRole = FabriqModules::new_model('users', 'UserRoles');
+				$userRole->user = $user->id;
+				$userRole->role = $role->id;
+				$userRole->id = $userRole->create();
+				
+				global $_FAPP;
+				$url = $_FAPP['url'] . PathMap::build_path('users', 'login');
+				$message = <<<EMAIL
+Hello {$user->display},
+
+Your account has been created on the {$_FAPP['title']} website.
+
+You can log in by navigating to {$url} in your browser.
+
+Thanks,
+The {$_FAPP['title']} team
+
+
+NOTE: Do not reply to this message. It was automatically generated.
+EMAIL;
+				mail(
+					$user->email,
+					"Your account at {$_FAPP['title']}",
+					$message,
+					'From: noreply@' . str_replace('http://', '', str_replace('https://', '', str_replace('www.', '', $_FAPP['url'])))
+				);
+				
+				$query = "INSERT INTO `fabriq_config`
+					(`version`, `installed`)
+					VALUES
+					(?, ?)";
+				$db->prepare_cud($query, array('1.3', date('Y-m-d H:i:s')));
+			}
+			
+			FabriqTemplates::set_var('submitted', true);
+			
 		// return the update details
 		} else {
 			return array(
 				'version' => '1.3',
-				'description' => 'Configure the database for use with modules starting in version 1.3'
+				'description' => 'Configure the database for use with modules starting in version 1.3',
+				'hasDisplay' => true
 			);
 		}	
 	}
