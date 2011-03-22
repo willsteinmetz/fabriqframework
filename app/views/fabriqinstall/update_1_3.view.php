@@ -22,4 +22,4 @@
 		<label for="update_1_3_confpwd">Confirm password: </label>
 		<input type="password" name="update_1_3_confpwd" id="update_1_3_confpwd" size="24" /><br />
 	</div>
-</fieldset>>
+</fieldset>

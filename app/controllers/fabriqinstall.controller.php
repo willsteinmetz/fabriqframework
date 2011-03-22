@@ -12,9 +12,15 @@
 class fabriqinstall_controller extends Controller {
 	function __construct() {
 		global $installed;
+		global $_FAPP;
+		
+		if (!isset($_FAPP['templating']) || !$_FAPP['templating']) {
+			$_FAPP['templating'] = true;
+			require_once('core/FabriqTemplates.class.php');
+			FabriqTemplates::template('fabriqinstall');
+		}
 		
 		if (((PathMap::action() == 'install') || (PathMap::render_action() == 'install')) && $installed && (PathMap::arg(2) < 4)) {
-			global $_FAPP;
 			header("Location: " . PathMap::build_path($_FAPP['cdefault'], $_FAPP['adefault']));
 			exit();
 		} else if (((PathMap::action() == 'install') || (PathMap::render_action() == 'install')) && $installed && (PathMap::arg(2) == 4)) {
@@ -32,7 +38,6 @@ class fabriqinstall_controller extends Controller {
 					$db->query($query);
 					$row = $db->result->fetch_array();
 					if ($row['num'] > 0) {
-						global $_FAPP;
 						header("Location: " . PathMap::build_path($_FAPP['cdefault'], $_FAPP['adefault']));
 						exit();
 					}
@@ -40,22 +45,27 @@ class fabriqinstall_controller extends Controller {
 			}
 		} else if ((PathMap::action() == 'update') || (PathMap::render_action() == 'update')) {
 			// figure out what updates are available
-			if (PathMap::arg(2) == 2) {
-				global $db;
-				$query = "SHOW TABLES;";
+			global $db;
+			$query = "SHOW TABLES;";
+			$db->query($query);
+			$tables = array();
+			while ($row = $db->result->fetch_array()) {
+				$tables[] = $row[0];
+			}
+			if (!in_array('fabriq_config', $tables)) {
+				$this->version = null;
+				$_SESSION['FAB_INSTALL_nomods'] = true;
+			} else {
+				$query = "SELECT version FROM fabriq_config ORDER BY installed DESC LIMIT 1";
 				$db->query($query);
-				$tables = array();
-				while ($row = $db->result->fetch_array()) {
-					$tables[] = $row[0];
-				}
-				if (!in_array('fabriq_config', $tables)) {
-					$this->version = null;
-					$_SESSION['FAB_INSTALL_nomods'] = true;
-				} else {
-					$query = "SELECT version FROM fabriq_config ORDER BY installed DESC LIMIT 1";
-					$db->query($query);
-					$data = mysqli_fetch_array($db->result);
-					$this->version = $data['version'];
+				$data = mysqli_fetch_array($db->result);
+				$this->version = $data['version'];
+			}
+			
+			if (!FabriqModules::module('roles')->hasRole('administrator')) {
+				if ($this->version != null) {
+					header('Location: ' . PathMap::build_path('users', 'login', 'fabriqinstall', 'update'));
+					exit();
 				}
 			}
 		}
@@ -348,7 +358,7 @@ class fabriqinstall_controller extends Controller {
 			if (!preg_match($emailPattern, $user->email)) {
 				Messaging::message("e-mail address is invalid");
 			}
-			if ((strlen($user->encpwd) < 8) || ($user->encpwd == $user->display) || ($user->encpwd == $user->email)) {
+			if ((strlen($user->encpwd) < 8) || ($user->encpwd == $user->display) || ($user->encpwd == $user->email) || ($user->encpwd != $_POST['confpwd'])) {
 				Messaging::message("Password is invalid");
 			}
 			
@@ -454,22 +464,16 @@ EMAIL;
 		$methods = get_class_methods('fabriqinstall_controller');
 		$available = array();
 		foreach ($methods as $method) {
-			if ((substr($method, 0, 7) == 'update_') && ((str_replace('_', '.', str_replace('update_', '', $method)) > $this->version) || ($this->version == null))) {
+			if ((substr($method, 0, 7) == 'update_') && (substr($method, 0, 11) != 'update_step') && ((str_replace('_', '.', str_replace('update_', '', $method)) > $this->version) || ($this->version == null))) {
 				$available[] = $method;
 			}
 		}
 		$toInstall = array();
 		for ($i = 0; $i < count($available); $i++) {
-			$toInstall[] = $this->$available[i]();
+			$toInstall[] = $this->{$available[$i]}();
 		}
 		
 		if (isset($_POST['submit'])) {
-			if (count($toInstall) > 0) {
-				foreach ($toInstall as $update) {
-					$u = 'update_' . str_replace('.', '_', $update['version']);
-					$this->$u();
-				}
-			}
 			if (!Messaging::has_messages()) {
 				header("Location: " . PathMap::build_path('fabriqinstall', 'update', 3));
 				exit();
@@ -505,17 +509,24 @@ EMAIL;
 				$installs[$installed[$i]['module']] = $installer;
 				
 				$methods = get_class_methods($installer);
-				$available = array();
 				foreach ($methods as $method) {
-					if ((substr($method, 0, 7) == 'update_') && ((str_replace('_', '.', str_replace('update_', '', $method)) > $installed[$i]['module']['versionInstalled']) || ($installed[$i]['module']['versionInstalled'] == null))) {
-						$available[$installed[$i]['module']][] = $method;
+					if ((substr($method, 0, 7) == 'update_') && ((str_replace('_', '.', str_replace('update_', '', $method)) > $installed[$i]['versionInstalled']) || ($installed[$i]['versionInstalled'] == null))) {
+						$available[$installed[$i]['module']][] = array('method' => $method, 'version' => str_replace('_', '.', str_replace('update_', '', $method)));
 					}
 				}
 			}
 		}
 		
 		if (isset($_POST['submit'])) {
-			
+			foreach ($available as $module => $updates) {
+				if (count($updates) > 0) {
+					foreach ($updates as $update) {
+						$installs[$module]->{$update['method']}();
+					}
+				}
+			}
+			header("Location: " . PathMap::build_path('fabriqinstall', 'update', 4));
+			exit();
 		} else {
 			FabriqTemplates::set_var('installed', $installed);
 			FabriqTemplates::set_var('available', $available);
@@ -527,7 +538,8 @@ EMAIL;
 	 * Finish the updating process
 	 */
 	private function update_step4() {
-		
+		Fabriq::title('Updates Complete');
+		unset($_SESSION['FAB_UPDATES']);
 	}
 	
 	/**
@@ -539,6 +551,9 @@ EMAIL;
 		// apply the update
 		if (isset($_POST['submit'])) {
 			$installed = unserialize($_SESSION['FAB_UPDATES']);
+			if (!is_array($installed)) {
+				$installed = array();
+			}
 			global $db;
 			if (!isset($installed['1.3']) || !$installed['1.3']) {
 				// install config table
@@ -588,6 +603,39 @@ EMAIL;
 				$db->query($query);
 				
 				// install the core modules
+				FabriqModules::register_module('pathmap');
+				FabriqModules::register_module('roles');
+				FabriqModules::register_module('users');
+				FabriqModules::install('pathmap');
+				$module = new Modules();
+				$module->getModuleByName('pathmap');
+				$module->enabled = 1;
+				$module->update();
+				FabriqModules::install('roles');
+				$module = new Modules();
+				$module->getModuleByName('roles');
+				$module->enabled = 1;
+				$module->update();
+				FabriqModules::install('users');
+				$module = new Modules();
+				$module->getModuleByName('users');
+				$module->enabled = 1;
+				$module->update();
+				
+				// get admin role and give it all perms so that the admin can actually set
+				// things up
+				$role = FabriqModules::new_model('roles', 'Roles');
+				$role->getRole('administrator');
+				$perms = new Perms();
+				$perms->getAll();
+				foreach ($perms as $perm) {
+					$modPerm = FabriqModules::new_model('roles', 'ModulePerms');
+					$modPerm->permission = $perm->id;
+					$modPerm->role = $role->id;
+					$modPerm->create();
+				}
+				
+				// mark the database and module installs as done
 				$installed['1.3'] = true;
 				$_SESSION['FAB_UPDATES'] = serialize($installed['1.3']);
 			}
@@ -595,9 +643,9 @@ EMAIL;
 			$emailPattern = '/^([a-z0-9])(([-a-z0-9._])*([a-z0-9]))*\@([a-z0-9])(([a-z0-9-])*([a-z0-9]))+' . '(\.([a-z0-9])([-a-z0-9_-])?([a-z0-9])+)+$/i';
 			$displayPattern = '/([A-z0-9]){6,24}/';
 			$user = FabriqModules::new_model('users', 'Users');
-			$user->display = $_POST['display'];
-			$user->email = $_POST['email'];
-			$user->encpwd = $_POST['pwd'];
+			$user->display = $_POST['update_1_3_display'];
+			$user->email = $_POST['update_1_3_email'];
+			$user->encpwd = $_POST['update_1_3_pwd'];
 			
 			if (!preg_match($displayPattern, $user->display)) {
 				Messaging::message("Display name is invalid");
@@ -605,7 +653,7 @@ EMAIL;
 			if (!preg_match($emailPattern, $user->email)) {
 				Messaging::message("e-mail address is invalid");
 			}
-			if ((strlen($user->encpwd) < 8) || ($user->encpwd == $user->display) || ($user->encpwd == $user->email)) {
+			if ((strlen($user->encpwd) < 8) || ($user->encpwd == $user->display) || ($user->encpwd == $user->email) || ($user->encpwd != $_POST['update_1_3_confpwd'])) {
 				Messaging::message("Password is invalid");
 			}
 			
@@ -656,12 +704,11 @@ EMAIL;
 			FabriqTemplates::set_var('submitted', true);
 			
 		// return the update details
-		} else {
-			return array(
-				'version' => '1.3',
-				'description' => 'Configure the database for use with modules starting in version 1.3',
-				'hasDisplay' => true
-			);
-		}	
+		}
+		return array(
+			'version' => '1.3',
+			'description' => 'Configure the database for use with modules starting in version 1.3',
+			'hasDisplay' => true
+		);
 	}
 } 

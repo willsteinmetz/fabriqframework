@@ -1,17 +1,23 @@
 <h1>Framework updates</h1>
-<?php if (count($toInstall) > 0): ?>
+<?php
+if (count($toInstall) > 0):
+	if (Messaging::has_messages()) {
+		Messaging::display_messages();
+	}
+?>
+
 <p>Available framework updates:</p>
 <ul>
 	<?php foreach($toInstall as $update): ?>
-	<li><strong><?php $update['version']; ?>:</strong> <?php $update['description']; ?></li>
+	<li><strong><?php echo $update['version']; ?>:</strong> <?php echo $update['description']; ?></li>
 	<?php endforeach; ?>
 </ul>
 <form method="post" action="<?php echo PathMap::build_path('fabriqinstall', 'update', 2); ?>">
 <?php
 foreach($toInstall as $update) {
 	if (isset($update['hasDisplay']) && $update['hasDisplay']) {
-		if (file_exists('app/view/fabriqinstall/update_' . str_replace(".", "_", $update['version']) . '.view.php')) {
-			require_once('app/view/fabriqinstall/update_' . str_replace(".", "_", $update['version']) . '.view.php');
+		if (file_exists('app/views/fabriqinstall/update_' . str_replace(".", "_", $update['version']) . '.view.php')) {
+			require_once('app/views/fabriqinstall/update_' . str_replace(".", "_", $update['version']) . '.view.php');
 		}
 	}
 }

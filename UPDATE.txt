@@ -13,28 +13,40 @@ TO UPDATE TO VERSION 1.3 OF FABRIQ FROM 1.1/1.2
    MAKE CHANGES TO CORE FILES IN ORDER TO EASILY UPGRADE BETWEEN VERSIONS!):
    - /core/BaseMapping.class.php
    - /core/Controller.class.php
-   - /core/Database.interface.php
-   - /core/DatabaseMySQL.class.php
-   - /core/DatabasepgSQL.class.php
+   - /core/Database.class.php
    - /core/Fabriq.class.php
    - /core/FabriqLibs.class.php
    - /core/FabriqTemplates.class.php
+   - /core/fabriq.base.css
    - /core/fabriq.js
-   - /core/Model.class.php
+   - /core/fabriq.ui.css
+   - /core/fabriq.ui.js
+   - /core/fabriqinstall.css
    - /core/Messaging.class.php
+   - /core/Model.class.php
+   - /core/modules/FabriqModule.class.php
+   - /core/modules/FabriqModules.class.php
+   - /core/modules/ModuleConfigs.class.php
+   - /core/modules/ModuleModel.class.php
+   - /core/modules/Modules.model.php
+   - /core/modules/Perms.model.php
    
- - Delete the file /core/Database.class.php from your current installation as it is replaced by
-   /core/Database.interface.php, /core/DatabaseMySQL.class.php, /core/Database.pgSQL.class.php.
+ - Remove the following files from the /core directory
+   - /core/Database.interface.php
+   - /core/DatabaseMySQL.class.php
+   - /core/DatabasepgSQL.class.php
    
- - Copy the following file(s) from the expanded archive to the /public/stylesheets directory
+ - Remove the following file from the expanded archive to the /public/stylesheets directory
    of your Fabriq web application(s)/website(s):
    - /public/stylesheets/fabriq.base.css
    
  - Copy the index.php file from the expanded archive to the / (root) directory
    of your Fabriq web application(s)/website(s)
    
- - Copy the libs directory and all of its contents to the / (root) directory of your Fabriq
-   web application(s)/website(s) creating a new /libs directory in root
+ - Copy the following changes to the /libs directory
+   - /libs/css/pie to the /libs/css directory
+   - /libs/javascript/jquery/jquery-1.4.4.min.js to the /libs/javascript/jquery directory
+   - /libs/javascript/jquery/plugins to the /libs/javascript/jquery directory
    
  - Copy the .htaccess file (this will need to be done from command line in Unix, Mac, and Linux based
    systems) to the / (root) directory of your Fabriq web application(s)/website(s)
@@ -46,7 +58,24 @@ TO UPDATE TO VERSION 1.3 OF FABRIQ FROM 1.1/1.2
      'templates' => array(
      	'default' => 'application'
      )
-   to the $_FAPP variable 
+   AND
+     'url' => '[app/site URL]'
+   to the $_FAPP variable
+
+ - Copy the following files to /app/controllers
+   - /app/controllers/fabriqinstall.controller.php
+   - /app/controllers/fabriqmodules.controller.php
+ 
+ - Copy the following views directories to /app/views
+   - /app/views/fabriqinstall
+   - /app/views/fabriqmodules
+   - /app/views/modules
+
+ - Copy the following directory to /app
+   - /app/templates
+   
+ - Copy the following directory with its contents to the root directory
+   - /modules
 
 NOTES (READ CAREFULLY FOR FURTHER DETAILS ON UPDATING):
  - When updating between versions, if your version is more than 2 minor versions different (the
@@ -58,6 +87,10 @@ NOTES (READ CAREFULLY FOR FURTHER DETAILS ON UPDATING):
  - When referencing mapping functions, the PathMap class should be referenced and
    not the BaseMapping class. The PathMap class extends the BaseMapping class and
    therefore has inherits all of the BaseMapping class' functionality.
+   
+ - With the release of version 1.3, helper files have been deprecated. You should move any functions
+   inside of helper files to their respective controllers. If the functions are for use only in
+   the controller, they should be marked as private.
    
  - Please note that starting with the release of version 1.0, all odd numbered minor versions
    (the minor version is the first number after the decimal point starting from the left) are

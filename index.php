@@ -87,7 +87,7 @@ if (FabriqModules::enabled('users') && (!isset($_SESSION['FABMOD_USERS_roles']) 
 // determine whether to use templating by default
 if (!isset($_FAPP['templating'])) {
 	$_FAPP['templating'] = false;
-} else {
+} else if ($_FAPP['templating']) {
 	require_once('core/FabriqTemplates.class.php');
 	if (!isset($_FAPP['templates']['default'])) {
 		$_FAPP['templates']['default'] = 'application';

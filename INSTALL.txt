@@ -15,4 +15,3 @@ TO INSTALL THIS VERSION OF FABRIQ:
     - INSTALL.txt
     - LICENSE.txt
     - UPDATE.txt
-    - install.php
