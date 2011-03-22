@@ -1,7 +1,7 @@
 Fabriq Framework change log
   - Initiated 05/05/10 for version 0.5
 
-Version 1.3
+Version 1.3 2011-03-21
   - Added templating system
   - Added module system
   - Updated database prepare function to check that inputs are in an array and if a single input, to put it into
@@ -22,14 +22,14 @@ Version 1.3
     and update functions make use of the framework functionality. After updating to version 1.3, a user
     assigned the administrator role will be required to run further updates
 
-Version 1.2
+Version 1.2 2010-10-27
   - Fixed bugs in Model::find()
   - Fixed a bug in Model::fill() that didn't properly display zero count when empty
   - Cleaned up license text
   - Fixed bug in class autoloading function
   - Cleaned up 404 error reporting in index.php
 
-Version 1.1
+Version 1.1 2010-10-16
   - Added support for PostgreSQL. When setting up a new app, you now have the choice between MySQL (default) and
     PostgreSQL. The Model class has been updated to work with PostgreSQL as well and you can continue to use
     Model::find(), Model::create(), Model::update(), and Model::destroy() the same way for both MySQL and PostgreSQL
