@@ -1,14 +1,35 @@
 Fabriq Framework change log
   - Initiated 05/05/10 for version 0.5
 
-Version 1.2
+Version 1.3 2011-03-21
+  - Added templating system
+  - Added module system
+  - Updated database prepare function to check that inputs are in an array and if a single input, to put it into
+    an array
+  - Added placeholder creators for database class
+  - Removed PostgreSQL support for the time being because it was a poor implementation
+  - Started the Fabriq UI JavaScript and CSS framework components
+  - Moved fabriq.base.css to the core directory
+  - Cleaned up structure of the index.php file to reduce the amount of code
+  - jQuery is now required for the Framework and the include was moved to index.php
+  - Moved the includes for fabriq.js and fabriq.base.css to the index.php
+  - Added PIE to the libs directory
+  - /app/helpers is now deprecated. Move all functions from custom helper files into their controllers as private
+    functions and update references. This functionality will remain until the first release candidate for the
+    official 2.0 version
+  - Fixed bug in Database::qmarks()
+  - Added a new install and update system to make it easier to install the framework and update it. The install
+    and update functions make use of the framework functionality. After updating to version 1.3, a user
+    assigned the administrator role will be required to run further updates
+
+Version 1.2 2010-10-27
   - Fixed bugs in Model::find()
   - Fixed a bug in Model::fill() that didn't properly display zero count when empty
   - Cleaned up license text
   - Fixed bug in class autoloading function
   - Cleaned up 404 error reporting in index.php
 
-Version 1.1
+Version 1.1 2010-10-16
   - Added support for PostgreSQL. When setting up a new app, you now have the choice between MySQL (default) and
     PostgreSQL. The Model class has been updated to work with PostgreSQL as well and you can continue to use
     Model::find(), Model::create(), Model::update(), and Model::destroy() the same way for both MySQL and PostgreSQL

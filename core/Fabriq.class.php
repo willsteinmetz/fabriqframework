@@ -3,20 +3,28 @@
  * @files This file contains functions used throughout Fabriq applications - DO NOT EDIT
  * @author Will Steinmetz
  * 
- * Copyright (c)2010, Ralivue.com
+ * Copyright (c)2011, Ralivue.com
  * Licensed under the BSD license.
  * http://fabriqframework.com/license
  */
 
-function __autoload($class) {
-	// autoload appropriate database class
-	if (strpos($class, 'Database') !== FALSE) {
-		require_once("core/{$class}.class.php");
+function fabriq_default_autoload($class) {
+	// include helper file
+	if (strpos($class, '_helper') !== FALSE) {
+		require_once("app/helpers/" . str_replace('_helper', '', $class) . ".helper.php");
+	// include module install file
+	} else if (strpos($class, '_install') !== FALSE) {
+		$module = str_replace('_install', '', $class);
+		require_once("modules/{$module}/{$module}.install.php");
+	// initialize module core
+	} else if (trim($class) == 'FabriqModules') {
+		Fabriq::init_module_core();
 	// autoload model
-	} else if (strpos($class, '_controller') !== FALSE) {
-		return false;
 	} else {
-		require_once("app/models/{$class}.model.php");
+		$model = "app/models/{$class}.model.php";
+		if (file_exists($model)) {
+			require_once($model);
+		}
 	}
 }
 
@@ -42,6 +50,7 @@ abstract class Fabriq {
 	 * @return array
 	 */
 	public static function cssqueue() {
+		self::$cssqueue = array_merge(self::$cssqueue, FabriqModules::cssqueue());
 		return self::$cssqueue;
 	}
 	
@@ -60,6 +69,7 @@ abstract class Fabriq {
 	 * @return array
 	 */
 	public static function jsqueue() {
+		self::$jsqueue = array_merge(self::$jsqueue, FabriqModules::jsqueue());
 		return self::$jsqueue;
 	}
 	
@@ -171,13 +181,35 @@ abstract class Fabriq {
 	}
 	
 	/**
+	 * include fabriq ui functionality
+	 */
+	public static function fabriq_ui_on() {
+		Fabriq::add_js('fabriq.ui', 'core/');
+		Fabriq::add_css('fabriq.ui', 'screen', 'core/');
+	}
+	
+	/**
 	 * Determines whether or not the configuration file has been
 	 * created yet
 	 */
 	public static function installed() {
-		if (!file_exists('config/config.inc.php')) {
-			header("Location: install.php");
-			exit();
+		if (file_exists('config/config.inc.php')) {
+			return true;
 		}
+		return false;
+	}
+	
+	/**
+	 * Returns a config setting
+	 * @param string $var
+	 * @return mixed
+	 */
+	public static function config($var) {
+		global $_FAPP;
+		
+		if (!array_key_exists($var, $_FAPP)) {
+			return null;
+		}
+		return $_FAPP[$var];
 	}
 }

@@ -4,7 +4,7 @@
  * The index.php file includes the core required files for running a Fabriq based app:
  * @author Will Steinmetz
  * 
- * Copyright (c)2010, Ralivue.com
+ * Copyright (c)2011, Ralivue.com
  * Licensed under the BSD license.
  * http://fabriqframework.com/license
  */
@@ -16,36 +16,84 @@ error_reporting(E_ALL & ~E_NOTICE);
 // start sessions
 session_start();
 
+// require base Fabriq class
 require_once('core/Fabriq.class.php');
 
 // check to make sure application has been configured
-Fabriq::installed();
+$installed = Fabriq::installed();
+
+// register default __autoload function
+spl_autoload_register('fabriq_default_autoload');
 
 // include core files
-require_once('config/config.inc.php');
-require_once('core/Database.interface.php');
+if ($installed) {
+	require_once('config/config.inc.php');
+}
+require_once('core/Database.class.php');
 require_once('core/Controller.class.php');
 require_once('core/Model.class.php');
 require_once('core/BaseMapping.class.php');
 require_once('app/PathMap.class.php');
 require_once('core/Messaging.class.php');
 require_once('core/FabriqLibs.class.php');
+require_once('core/modules/Modules.model.php');
+require_once('core/modules/Perms.model.php');
+require_once('core/modules/FabriqModules.class.php');
+require_once('core/modules/FabriqModule.class.php');
+require_once('core/modules/ModuleModel.class.php');
+require_once('core/modules/ModuleConfigs.class.php');
 
-// include the application helper file
-require_once('app/helpers/application.helper.php');
+// DEPRECATED
+// include the application helper file if available
+// @TODO remove for 2.0 release candidate
+if (file_exists('app/helpers/application.helper.php')) {
+	require_once('app/helpers/application.helper.php');
+}
+
+// initialize database
+if ($installed) {
+	$db = new Database($_FDB['default']);
+} else {
+	$_FAPP = array();
+	$_FAPP['templating'] = true;
+	$_FAPP['templates']['default'] = 'fabriqinstall';
+}
 
 // query variable
 $q = explode('/', $_GET['q']);
+if (trim($q[0]) == '') {
+	array_shift($q);
+}
+
+// include core JavaScript libraries
+FabriqLibs::js_lib('jquery-1.4.4.min', 'jquery');
+Fabriq::add_js('fabriq', 'core/');
+Fabriq::add_css('fabriq.base', 'screen', 'core/');
 
 // determine the controller and action to render
 PathMap::map_path();
 
-// initialize database
-if (!isset($_FDB['default']['type'])) {
-	$_FDB['default']['type'] = 'MySQL';
+// check if user is logged in and if not give viewer
+// unathenticated role
+if (FabriqModules::enabled('users') && (!isset($_SESSION['FABMOD_USERS_roles']) || ($_SESSION['FABMOD_USERS_roles'] == ''))) {
+	$role = FabriqModules::new_model('roles', 'Roles');
+	$role->getRole('unauthenticated');
+	$_SESSION['FABMOD_USERS_roles'] = serialize(array(
+		$role->id,
+		$role->role
+	));
 }
-$dbType = 'Database' . $_FDB['default']['type'];
-$db = new $dbType($_FDB['default']);
+
+// determine whether to use templating by default
+if (!isset($_FAPP['templating'])) {
+	$_FAPP['templating'] = false;
+} else if ($_FAPP['templating']) {
+	require_once('core/FabriqTemplates.class.php');
+	if (!isset($_FAPP['templates']['default'])) {
+		$_FAPP['templates']['default'] = 'application';
+	}
+	FabriqTemplates::template($_FAPP['templates']['default']);
+}
 
 // include the controller, action, and helper files
 require_once('app/controllers/application.controller.php');
@@ -114,30 +162,36 @@ if (PathMap::render_controller() != PathMap::controller()) {
 	}
 }
 
-// render view (if necessary)
-switch(Fabriq::render()) {
-	case 'none':
-		break;
-	case 'view':
-		if (!file_exists("app/views/" . PathMap::render_controller() . "/" . PathMap::render_action() . ".view.php")) {
-			require_once("app/views/errors/fourohfour.view.php");
-		} else {
-			require_once("app/views/" . PathMap::render_controller() . "/" . PathMap::render_action() . ".view.php");
-		}
-		break;
-	case 'layout': default:
-		if (!file_exists("app/views/" . PathMap::render_controller() . "/" . PathMap::render_action() . ".view.php")) {
-			require_once("app/views/errors/fourohfour.view.php");
-		} else {
-			if (!file_exists("app/views/layouts/" . Fabriq::layout() . ".view.php")) {
-				require_once('app/views/layouts/application.view.php');
+if ($_FAPP['templating']) {
+	FabriqTemplates::render();
+} else {
+	// render view (if necessary)
+	switch(Fabriq::render()) {
+		case 'none':
+			break;
+		case 'view':
+			if (!file_exists("app/views/" . PathMap::render_controller() . "/" . PathMap::render_action() . ".view.php")) {
+				require_once("app/views/errors/fourohfour.view.php");
 			} else {
-				require_once("app/views/layouts/" . Fabriq::layout() . ".view.php");
+				require_once("app/views/" . PathMap::render_controller() . "/" . PathMap::render_action() . ".view.php");
 			}
-		}
-		break;
+			break;
+		case 'layout': default:
+			if (!file_exists("app/views/" . PathMap::render_controller() . "/" . PathMap::render_action() . ".view.php")) {
+				require_once("app/views/errors/fourohfour.view.php");
+			} else {
+				if (!file_exists("app/views/layouts/" . Fabriq::layout() . ".view.php")) {
+					require_once('app/views/layouts/application.view.php');
+				} else {
+					require_once("app/views/layouts/" . Fabriq::layout() . ".view.php");
+				}
+			}
+			break;
+	}
 }
 
 // close the database connection
-$db->close();
+if ($installed) {
+	$db->close();
+}
 ?>

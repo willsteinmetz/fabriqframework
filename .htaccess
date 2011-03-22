@@ -7,26 +7,32 @@ Options		-Indexes
 	# Rewrite rule to make sure that files located in public are served properly
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteCond %{REQUEST_URI} (.*)(public/)(.*)$
+	RewriteCond %{REQUEST_URI} (.*)(/public/)(.*)$
 	RewriteRule ^(.*)(public/)(.*)$ $2$3
 
 	# Rewrite rule to make sure that scripts located in app/scripts are served properly
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteCond %{REQUEST_URI} (.*)(app/scripts/)(.*)$
+	RewriteCond %{REQUEST_URI} (.*)(/app/scripts/)(.*)$
 	RewriteRule ^(.*)(app/scripts/)(.*)$ $2$3
 	
 	# Rewrite rule to make sure that scripts located in core are served properly
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteCond %{REQUEST_URI} (.*)(core/)(.*)$
+	RewriteCond %{REQUEST_URI} (.*)(/core/)(.*)$
 	RewriteRule ^(.*)(core/)(.*)$ $2$3
 
 	# Rewrite rule to make sure that scripts and stylesheets located in libs are served properly
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteCond %{REQUEST_URI} (.*)(libs/)(.*)$
+	RewriteCond %{REQUEST_URI} (.*)(/libs/)(.*)$
 	RewriteRule ^(.*)(libs/)(.*)$ $2$3
+	
+	# Rewrite rule to make sure that scripts and stylesheets located in modules are served properly
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteCond %{REQUEST_URI} (.*)(/modules/)(.*)$
+	RewriteRule ^(.*)(modules/)(.*)$ $2$3
 
 	# Rewrite for clean URLs
 	RewriteCond %{REQUEST_FILENAME} !-f

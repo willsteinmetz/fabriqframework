@@ -3,11 +3,11 @@
  * @file MySQL Database connectivity file - DO NOT EDIT
  * @author Will Steinmetz
  * 
- * Copyright (c)2010, Ralivue.com
+ * Copyright (c)2011, Ralivue.com
  * Licensed under the BSD license.
  * http://fabriqframework.com/license
  */
-class DatabaseMySQL implements Database {
+class Database {
 	// public variables
 	public $db;
 	public $last;
@@ -18,8 +18,6 @@ class DatabaseMySQL implements Database {
 	public $total_queries = 0;
 	private $errorNo;
 	private $errorStr;
-	public $type = 'MySQL';
-	public $delim = '`';
 	
 	// private variables
 	
@@ -54,6 +52,9 @@ class DatabaseMySQL implements Database {
 		$stmt = $this->db->stmt_init();
 		if ($stmt->prepare($sql)) {
 			$types = '';
+			if (!is_array($inputs)) {
+				$inputs = array($inputs);
+			}
 			foreach ($inputs as $input) {
 				if (is_int($input)) {
 					$types .= 'i';
@@ -96,6 +97,9 @@ class DatabaseMySQL implements Database {
 		$stmt = $this->db->stmt_init();
 		
 		if ($stmt->prepare($sql)) {
+			if (!is_array($inputs)) {
+				$inputs = array($inputs);
+			}
 			if (count($inputs) > 0) {
 				$types = '';
 				foreach ($inputs as $input) {
@@ -234,5 +238,22 @@ class DatabaseMySQL implements Database {
 	 */
 	public function error_str() {
 		return $this->errorNo . ': ' . $this->errorStr;
+	}
+	
+	/**
+	 * Builds a question mark string to be used for prepared statements
+	 * @param int $num
+	 * @return string
+	 */
+	public function qmarks($num) {
+		$qmarks = '';
+		for ($i = 0; $i < $num; $i++) {
+			$qmarks .= '?';
+			if ($i != ($num - 1)) {
+				$qmarks .= ', ';
+			}
+		}
+		
+		return $qmarks;
 	}
 }
