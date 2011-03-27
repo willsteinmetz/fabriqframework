@@ -637,7 +637,7 @@ EMAIL;
 				
 				// mark the database and module installs as done
 				$installed['1.3'] = true;
-				$_SESSION['FAB_UPDATES'] = serialize($installed['1.3']);
+				$_SESSION['FAB_UPDATES'] = serialize($installed);
 			}
 			
 			$emailPattern = '/^([a-z0-9])(([-a-z0-9._])*([a-z0-9]))*\@([a-z0-9])(([a-z0-9-])*([a-z0-9]))+' . '(\.([a-z0-9])([-a-z0-9_-])?([a-z0-9])+)+$/i';
@@ -709,6 +709,44 @@ EMAIL;
 			'version' => '1.3',
 			'description' => 'Configure the database for use with modules starting in version 1.3',
 			'hasDisplay' => true
+		);
+	}
+
+	private function update_1_3_1() {
+		if (isset($_POST['submit'])) {
+			$installed = unserialize($_SESSION['FAB_UPDATES']);
+			if (!is_array($installed)) {
+				$installed = array();
+			}
+			global $db;
+			if (!isset($installed['1.3.1']) || !$installed['1.3.1']) {
+				$query = "CREATE TABLE IF NOT EXISTS `fabmods_module_events` (
+					`id` INT(11) NOT NULL AUTO_INCREMENT,
+					`eventModule` VARCHAR(50) NOT NULL,
+					`eventAction` VARCHAR(50) NOT NULL,
+					`eventName` VARCHAR(100) NOT NULL,
+					`handlerModule` VARCHAR(50) NOT NULL,
+					`handlerAction` VARCHAR(50) NOT NULL,
+					PRIMARY KEY (`id`)
+				) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+				$db->query($query);
+				
+				// mark the database and module installs as done
+				$installed['1.3.1'] = true;
+				$_SESSION['FAB_UPDATES'] = serialize($installed);
+				$query = "INSERT INTO `fabriq_config`
+					(`version`, `installed`)
+					VALUES
+					(?, ?)";
+				$db->prepare_cud($query, array('1.3.1', date('Y-m-d H:i:s')));
+			}
+			
+			FabriqTemplates::set_var('submitted', true);
+		}
+		return array(
+			'version' => '1.3.1',
+			'description' => 'Configure the database for modules events starting in version 1.3.1',
+			'hasDisplay' => false
 		);
 	}
 } 

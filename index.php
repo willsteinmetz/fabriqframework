@@ -53,6 +53,8 @@ if (file_exists('app/helpers/application.helper.php')) {
 // initialize database
 if ($installed) {
 	$db = new Database($_FDB['default']);
+	// get module handlers
+	FabriqModules::get_handlers();
 } else {
 	$_FAPP = array();
 	$_FAPP['templating'] = true;

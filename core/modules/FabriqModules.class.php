@@ -16,6 +16,7 @@ abstract class FabriqModules {
 	private static $jsqueue = array();
 	private static $hasPermission = true;
 	private static $stoppedMappedRender = false;
+	private static $eventHandlers = array();
 	
 	/**
 	 * Calls the install function to install a module for use in the
@@ -356,6 +357,80 @@ abstract class FabriqModules {
 			self::$stoppedMappedRender = $stop;
 		} else {
 			return self::$stoppedMappedRender;
+		}
+	}
+	
+	/**
+	 * Registers a handler for a module event
+	 * @param string $eventModule
+	 * @param string $eventAction
+	 * @param string $eventName
+	 * @param string $handlerModule
+	 * @param string $handlerAction
+	 */
+	public static function register_handler($eventModule, $eventAction, $eventName, $handlerModule, $handlerAction) {
+		global $db;
+		
+		$query = "INSERT INTO `fabmods_module_events`
+			(`eventModule`, `eventAction`, `eventName`, `handlerModule`, `handlerAction`)
+			VALUES (?, ?, ?, ?, ?)";
+		$db->prepare_cud($query, array($eventModule, $eventAction, $eventName, $handlerModule, $handlerAction));
+	}
+	
+	/**
+	 * Removes a handler for a module event
+	 * @param string $eventModule
+	 * @param string $eventAction
+	 * @param string $eventName
+	 * @param string $handlerModule
+	 * @param string $handlerAction
+	 */
+	public static function remove_handler($eventModule, $eventAction, $eventName, $handlerModule, $handlerAction) {
+		global $db;
+		
+		$query = "DELETE FROM `fabmods_module_events`
+			WHERE `eventModule` = ? AND `eventAction` = ? AND `eventName` = ? AND `handlerModule` = ? AND `handlerAction` = ?";
+		$db->prepare_cud($query, array($eventModule, $eventAction, $eventName, $handlerModule, $handlerAction));
+	}
+	
+	/**
+	 * Get all module event handlers
+	 */
+	public static function get_handlers() {
+		global $db;
+		
+		$query = "SELECT *
+			FROM `fabmods_module_events`
+			ORDER BY eventModule, eventAction, eventName";
+		$data = $db->prepare_select($query, array('id', 'eventModule', 'eventAction', 'eventName', 'handlerModule', 'handlerAction'));
+		for ($i = 0; $i < count($data); $i++) {
+			if (!array_key_exists("{$data[$i]['eventModule']}_{$data[$i]['eventAction']}", self::$eventHandlers)) {
+				self::$eventHandlers["{$data[$i]['eventModule']}_{$data[$i]['eventAction']}"] = array();
+			}
+			if (!is_array(self::$eventHandlers["{$data[$i]['eventModule']}_{$data[$i]['eventAction']}"][$eventName])) {
+				self::$eventHandlers["{$data[$i]['eventModule']}_{$data[$i]['eventAction']}"][$eventName] = array();
+			}
+			self::$eventHandlers["{$data[$i]['eventModule']}_{$data[$i]['eventAction']}"][$data[$i]['eventName']][] = array(
+				'module' => $data[$i]['handlerModule'],
+				'action' => $data[$i]['handleAction']
+			);
+		}
+	}
+	
+	/**
+	 * Triggers an event so that handlers can take action if necessary
+	 * @param string $module
+	 * @param string $action
+	 * @param string $name
+	 * @param mixed $data
+	 */
+	public static function trigger_event($module, $action, $name, $data = null) {
+		if (array_key_exists("{$module}_{$action}", self::$eventHandlers)) {
+			if (array_key_exists($name, self::$eventHandlers["{$module}_{$action}"])) {
+				for ($i = 0; $i < count(self::$eventHandlers["{$module}_{$action}"][$name]); $i++) {
+					FabriqModules::module(self::$eventHandlers["{$module}_{$action}"][$name][$i]['module'])->{self::$eventHandlers["{$module}_{$action}"][$name][$i]['action']}($data);
+				}
+			}
 		}
 	}
 }
