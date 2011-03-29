@@ -407,12 +407,12 @@ abstract class FabriqModules {
 			if (!array_key_exists("{$data[$i]['eventModule']}_{$data[$i]['eventAction']}", self::$eventHandlers)) {
 				self::$eventHandlers["{$data[$i]['eventModule']}_{$data[$i]['eventAction']}"] = array();
 			}
-			if (!is_array(self::$eventHandlers["{$data[$i]['eventModule']}_{$data[$i]['eventAction']}"][$eventName])) {
-				self::$eventHandlers["{$data[$i]['eventModule']}_{$data[$i]['eventAction']}"][$eventName] = array();
+			if (!is_array(self::$eventHandlers["{$data[$i]['eventModule']}_{$data[$i]['eventAction']}"][$data[$i]['eventName']])) {
+				self::$eventHandlers["{$data[$i]['eventModule']}_{$data[$i]['eventAction']}"][$data[$i]['eventName']] = array();
 			}
 			self::$eventHandlers["{$data[$i]['eventModule']}_{$data[$i]['eventAction']}"][$data[$i]['eventName']][] = array(
 				'module' => $data[$i]['handlerModule'],
-				'action' => $data[$i]['handleAction']
+				'action' => $data[$i]['handlerAction']
 			);
 		}
 	}
