@@ -17,7 +17,6 @@ class fabriqinstall_controller extends Controller {
 		if (!isset($_FAPP['templating']) || !$_FAPP['templating']) {
 			$_FAPP['templating'] = true;
 			require_once('core/FabriqTemplates.class.php');
-			FabriqTemplates::template('fabriqinstall');
 		}
 		
 		if (((PathMap::action() == 'install') || (PathMap::render_action() == 'install')) && $installed && (PathMap::arg(2) < 4)) {
@@ -69,7 +68,9 @@ class fabriqinstall_controller extends Controller {
 				}
 			}
 		}
+		Fabriq::empty_css_queue();
 		Fabriq::add_css('fabriqinstall', 'screen', 'core/');
+		FabriqTemplates::template('fabriqinstall');
 	}
 	
 	/**

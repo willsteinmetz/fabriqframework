@@ -55,6 +55,14 @@ abstract class Fabriq {
 	}
 	
 	/**
+	 * Empties the CSS queue except for the fabriq base css file
+	 */
+	public static function empty_css_queue() {
+		self::$cssqueue = array();
+		self::add_css('fabriq.base', 'screen', 'core/');
+	}
+	
+	/**
 	 * Adds a JavaScript file to the JavaScript queue for JavaScript includes
 	 * @param string $javascript
 	 * @param string $path
