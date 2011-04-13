@@ -8,6 +8,8 @@
  * http://fabriqframework.com/license
  */
 class ModuleModel extends Model {
+	public $module;
+	
 	/**
 	 * Module model base class constructor
 	 * Module tables must be prefixed with fabmod_[modulename]_.
@@ -17,6 +19,7 @@ class ModuleModel extends Model {
 	 * @param string $id_name
 	 */
 	function __construct($module, $attributes, $db_table, $id_name = 'id') {
+		$this->module = $module;
 		$db_table = "fabmod_{$module}_{$db_table}";
 		parent::__construct($attributes, $db_table, $id_name);
 	}
