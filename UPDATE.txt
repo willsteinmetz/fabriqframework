@@ -3,6 +3,48 @@ sure whether or not to use this version, wait for the next stable release.
 
 The next stable release will be version 1.4
 
+TO UPDATE TO VERSION 1.3.1 OF FABRIQ FROM 1.3
+
+ - Expand the downloaded archive (.zip or .tar.gz file)
+ 
+ - Copy the following files from the expanded archive to the /core directory
+   of your Fabriq web application(s)/website(s) (NOTE: be sure if you have edited
+   these files to back up your changes. IT IS STRONGLY RECOMMENDED THAT YOU DO NOT
+   MAKE CHANGES TO CORE FILES IN ORDER TO EASILY UPGRADE BETWEEN VERSIONS!):
+   - /core/BaseMapping.class.php
+   - /core/Controller.class.php
+   - /core/Database.class.php
+   - /core/Fabriq.class.php
+   - /core/FabriqLibs.class.php
+   - /core/FabriqTemplates.class.php
+   - /core/fabriq.base.css
+   - /core/fabriq.js
+   - /core/fabriq.ui.css
+   - /core/fabriq.ui.js
+   - /core/fabriqinstall.css
+   - /core/Messaging.class.php
+   - /core/Model.class.php
+   - /core/modules/FabriqModule.class.php
+   - /core/modules/FabriqModules.class.php
+   - /core/modules/ModuleConfigs.class.php
+   - /core/modules/ModuleModel.class.php
+   - /core/modules/Modules.model.php
+   - /core/modules/Perms.model.php
+
+ - Copy the index.php file from the expanded archive to the / (root) directory
+   of your Fabriq web application(s)/website(s)
+
+ - Copy the .htaccess file (this will need to be done from command line in Unix, Mac, and Linux based
+   systems) to the / (root) directory of your Fabriq web application(s)/website(s)
+
+ - Copy the following files to /app/controllers
+   - /app/controllers/fabriqinstall.controller.php
+   - /app/controllers/fabriqmodules.controller.php
+ 
+ - Copy the following views directories to /app/views
+   - /app/views/fabriqinstall
+   - /app/views/fabriqmodules
+
 TO UPDATE TO VERSION 1.3 OF FABRIQ FROM 1.1/1.2
 
  - Expand the downloaded archive (.zip or .tar.gz file)
@@ -36,7 +78,7 @@ TO UPDATE TO VERSION 1.3 OF FABRIQ FROM 1.1/1.2
    - /core/DatabaseMySQL.class.php
    - /core/DatabasepgSQL.class.php
    
- - Remove the following file from the expanded archive to the /public/stylesheets directory
+ - Remove the following file from the /public/stylesheets directory
    of your Fabriq web application(s)/website(s):
    - /public/stylesheets/fabriq.base.css
    
@@ -58,7 +100,7 @@ TO UPDATE TO VERSION 1.3 OF FABRIQ FROM 1.1/1.2
      'templates' => array(
      	'default' => 'application'
      )
-   AND
+   AND also add
      'url' => '[app/site URL]'
    to the $_FAPP variable
 
