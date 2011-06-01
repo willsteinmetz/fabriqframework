@@ -171,6 +171,11 @@ abstract class FabriqModules {
 	 * @return bool
 	 */
 	public static function enabled($module) {
+		// make sure that fabriq is installed
+		if (!Fabriq::installed()) {
+			return false;
+		}
+		
 		global $db;
 		
 		$sql = "SELECT enabled FROM fabmods_modules WHERE module = ?";
