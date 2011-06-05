@@ -271,7 +271,7 @@ abstract class FabriqModules {
 	 * @param string $action
 	 */
 	public static function render_now($module, $action) {
-		$file = "app/views/modules/{$module}/views/{$action}.view.php";
+		$file = "app/views/modules/{$module}/{$action}.view.php";
 		if (!file_exists($file)) {
 			$file = "modules/{$module}/views/{$action}.view.php";
 			if (!file_exists($file)) {

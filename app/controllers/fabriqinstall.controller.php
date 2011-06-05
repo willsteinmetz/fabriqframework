@@ -750,4 +750,36 @@ EMAIL;
 			'hasDisplay' => false
 		);
 	}
+
+	private function update_1_3_2() {
+		if (isset($_POST['submit'])) {
+			$_SESSION['FAB_UPDATES'] = serialize($installed);
+			$query = "INSERT INTO `fabriq_config`
+				(`version`, `installed`)
+				VALUES
+				(?, ?)";
+			$db->prepare_cud($query, array('1.3.3', date('Y-m-d H:i:s')));
+		}
+		return array(
+			'version' => '1.3.2',
+			'description' => 'Adds fixes',
+			'hasDisplay' => false
+		);
+	}
+
+	private function update_1_3_3() {
+		if (isset($_POST['submit'])) {
+			$_SESSION['FAB_UPDATES'] = serialize($installed);
+			$query = "INSERT INTO `fabriq_config`
+				(`version`, `installed`)
+				VALUES
+				(?, ?)";
+			$db->prepare_cud($query, array('1.3.3', date('Y-m-d H:i:s')));
+		}
+		return array(
+			'version' => '1.3.3',
+			'description' => 'Adds fix for FabriqModules::render_now() to enable rendering of custom views for modules',
+			'hasDisplay' => false
+		);
+	}
 } 
