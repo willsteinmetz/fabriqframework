@@ -94,7 +94,9 @@ if (!isset($_FAPP['templating'])) {
 	if (!isset($_FAPP['templates']['default'])) {
 		$_FAPP['templates']['default'] = 'application';
 	}
-	FabriqTemplates::template($_FAPP['templates']['default']);
+	if (trim(FabriqTemplates::template() == '')) { 
+		FabriqTemplates::template($_FAPP['templates']['default']);
+	}
 }
 
 // include the controller, action, and helper files
