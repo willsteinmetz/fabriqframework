@@ -36,6 +36,7 @@ require_once('core/BaseMapping.class.php');
 require_once('app/PathMap.class.php');
 require_once('core/Messaging.class.php');
 require_once('core/FabriqLibs.class.php');
+require_once('core/FabriqTemplates.class.php');
 require_once('core/modules/Modules.model.php');
 require_once('core/modules/Perms.model.php');
 require_once('core/modules/FabriqModules.class.php');
@@ -89,8 +90,7 @@ if (FabriqModules::enabled('users') && (!isset($_SESSION['FABMOD_USERS_roles']) 
 // determine whether to use templating by default
 if (!isset($_FAPP['templating'])) {
 	$_FAPP['templating'] = false;
-} else if ($_FAPP['templating']) {
-	require_once('core/FabriqTemplates.class.php');
+} else if ($_FAPP['templating']) {	
 	if (!isset($_FAPP['templates']['default'])) {
 		$_FAPP['templates']['default'] = 'application';
 	}

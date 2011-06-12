@@ -753,6 +753,7 @@ EMAIL;
 
 	private function update_1_3_2() {
 		if (isset($_POST['submit'])) {
+			global $db;
 			$_SESSION['FAB_UPDATES'] = serialize($installed);
 			$query = "INSERT INTO `fabriq_config`
 				(`version`, `installed`)
@@ -769,6 +770,7 @@ EMAIL;
 
 	private function update_1_3_3() {
 		if (isset($_POST['submit'])) {
+			global $db;
 			$_SESSION['FAB_UPDATES'] = serialize($installed);
 			$query = "INSERT INTO `fabriq_config`
 				(`version`, `installed`)

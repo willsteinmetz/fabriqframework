@@ -37,28 +37,6 @@ class PathMap extends BaseMapping {
 				self::render_controller('errors');
 				self::render_action('fiveohoh');
 			break;
-			case 'changelog':
-				if (self::action() != 'log') {
-					if (!isLoggedIn()) {
-						header("Location: " . PathMap::build_path('user', 'login', 'changelog', self::action()));
-						exit();
-					}
-				}
-			break;
-			case 'roadmap':
-				if (self::action() != 'milestones') {
-					if (!isLoggedIn()) {
-						header("Location: " . PathMap::build_path('user', 'login', 'roadmap', self::action()));
-						exit();
-					}
-				}
-			break;
-			case 'sitevars':
-				if (!isLoggedIn()) {
-					header("Location: " . PathMap::build_path('user', 'login', 'sitevars', self::action()));
-					exit();
-				}
-			break;
 		}
 	}
 }
