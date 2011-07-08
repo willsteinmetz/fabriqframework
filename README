@@ -1,0 +1,3 @@
+Fabriq is an object-oriented, MVC, rapid development framework for PHP. Fabriq gives you an MVC architecture for developing pages as well as creating modules.
+
+NOTE: Be sure to download a copy of the modules and place them in the /modules directory of your Fabriq install.
