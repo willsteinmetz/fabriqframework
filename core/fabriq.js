@@ -15,14 +15,14 @@ Fabriq = {
 	 * Returns the base path for the app
 	 */
 	base_path: function() {
-		return this.settings.basePath;
+		return Fabriq.settings.basePath;
 	},
 	
 	/**
 	 * Returns whether or not clean URLs are used
 	 */
 	clean_urls: function() {
-		return this.settings.cleanURLs;
+		return Fabriq.settings.cleanURLs;
 	},
 	
 	/**
@@ -30,10 +30,10 @@ Fabriq = {
 	 */
 	ajax_path: function() {
 		var path = '';
-		if (!this.clean_urls()) {
+		if (!Fabriq.clean_urls()) {
 			path += 'index.php?q=';
 		} else {
-			path += this.base_path();
+			path += Fabriq.base_path();
 		}
 		args = arguments;
 		path += args[0];
@@ -49,10 +49,10 @@ Fabriq = {
 	 */
 	build_path: function() {
 		var path = '';
-		if (!this.clean_urls()) {
+		if (!Fabriq.clean_urls()) {
 			path += 'index.php?q=';
 		} else {
-			path += this.base_path();
+			path += Fabriq.base_path();
 		}
 		args = arguments;
 		path += args[0];

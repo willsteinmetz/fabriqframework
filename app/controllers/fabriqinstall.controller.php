@@ -248,6 +248,15 @@ class fabriqinstall_controller extends Controller {
 					'db' => trim($_POST['db'])
 				);
 				$db = new Database($db_info);
+				// install config table
+				$query = "CREATE TABLE IF NOT EXISTS  `fabriq_config` (
+						`version` VARCHAR(10) NOT NULL,
+						`installed` DATETIME NOT NULL,
+						PRIMARY KEY (`version`)
+					) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+				$db->query($query);
+				$query = "INSERT INTO fabriq_config (version, installed) VALUES (?, ?)";
+				$db->prepare_cud($query, array('1.3.4', date('Y-m-d H:i:s')));
 				// modules table
 				$query = "CREATE TABLE IF NOT EXISTS `fabmods_modules` (
 						`id` int(11) NOT NULL AUTO_INCREMENT,
@@ -283,6 +292,17 @@ class fabriqinstall_controller extends Controller {
 						`updated` datetime NOT NULL,
 						PRIMARY KEY (`id`)
 					) ENGINE=InnoDB  DEFAULT CHARSET=utf8;";
+				$db->query($query);
+				// install the module events table
+				$query = "CREATE TABLE IF NOT EXISTS `fabmods_module_events` (
+					`id` INT(11) NOT NULL AUTO_INCREMENT,
+					`eventModule` VARCHAR(50) NOT NULL,
+					`eventAction` VARCHAR(50) NOT NULL,
+					`eventName` VARCHAR(100) NOT NULL,
+					`handlerModule` VARCHAR(50) NOT NULL,
+					`handlerAction` VARCHAR(50) NOT NULL,
+					PRIMARY KEY (`id`)
+				) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 				$db->query($query);
 				
 				// go to next step
@@ -759,7 +779,7 @@ EMAIL;
 				(`version`, `installed`)
 				VALUES
 				(?, ?)";
-			$db->prepare_cud($query, array('1.3.3', date('Y-m-d H:i:s')));
+			$db->prepare_cud($query, array('1.3.2', date('Y-m-d H:i:s')));
 		}
 		return array(
 			'version' => '1.3.2',
@@ -781,6 +801,23 @@ EMAIL;
 		return array(
 			'version' => '1.3.3',
 			'description' => 'Adds fix for FabriqModules::render_now() to enable rendering of custom views for modules',
+			'hasDisplay' => false
+		);
+	}
+	
+	private function update_1_3_4() {
+		if (isset($_POST['submit'])) {
+			global $db;
+			$_SESSION['FAB_UPDATES'] = serialize($installed);
+			$query = "INSERT INTO `fabriq_config`
+				(`version`, `installed`)
+				VALUES
+				(?, ?)";
+			$db->prepare_cud($query, array('1.3.4', date('Y-m-d H:i:s')));
+		}
+		return array(
+			'version' => '1.3.3',
+			'description' => 'Adds fix for installer not properly installing all tables',
 			'hasDisplay' => false
 		);
 	}
