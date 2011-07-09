@@ -1,0 +1,6 @@
+{
+	"module": "pathmap",
+	"version": "1.0",
+	"author": "Will Steinmetz",
+	"description": "pathmap enables developers to create custom paths to different pages on their website. Ex: creating a custom path to a blog entry \"http://mysite.com/blog/read/123\" could be \"http://mysite.com/myblogentry\""
+}

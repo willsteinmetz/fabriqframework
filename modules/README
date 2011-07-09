@@ -1,4 +1,1 @@
-be sure to place a copy of the Fabriq modules in here before running the installer or it will fail.
-
-the modules can be downloaded from http://github.com/willsteinmetz/fabriqmodules  or you can clone a copy:
-git://github.com/willsteinmetz/fabriqmodules.git
+check the readme on the Fabriq framework github site for links to other modules that are not part of the core set.

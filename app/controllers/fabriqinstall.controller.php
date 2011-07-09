@@ -256,7 +256,7 @@ class fabriqinstall_controller extends Controller {
 					) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 				$db->query($query);
 				$query = "INSERT INTO fabriq_config (version, installed) VALUES (?, ?)";
-				$db->prepare_cud($query, array('1.3.4', date('Y-m-d H:i:s')));
+				$db->prepare_cud($query, array('1.3.5', date('Y-m-d H:i:s')));
 				// modules table
 				$query = "CREATE TABLE IF NOT EXISTS `fabmods_modules` (
 						`id` int(11) NOT NULL AUTO_INCREMENT,
@@ -816,8 +816,25 @@ EMAIL;
 			$db->prepare_cud($query, array('1.3.4', date('Y-m-d H:i:s')));
 		}
 		return array(
-			'version' => '1.3.3',
+			'version' => '1.3.4',
 			'description' => 'Adds fix for installer not properly installing all tables',
+			'hasDisplay' => false
+		);
+	}
+
+	private function update_1_3_5() {
+		if (isset($_POST['submit'])) {
+			global $db;
+			$_SESSION['FAB_UPDATES'] = serialize($installed);
+			$query = "INSERT INTO `fabriq_config`
+				(`version`, `installed`)
+				VALUES
+				(?, ?)";
+			$db->prepare_cud($query, array('1.3.5', date('Y-m-d H:i:s')));
+		}
+		return array(
+			'version' => '1.3.5',
+			'description' => 'Fixes missing core directories from move to Github, rolls core modules into main Fabriq project',
 			'hasDisplay' => false
 		);
 	}
