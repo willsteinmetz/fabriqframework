@@ -559,7 +559,11 @@ EMAIL;
 			header('Location: ' . PathMap::build_path('users', 'login'));
 			exit();
 		}
-		Fabriq::title('My account');
+		if (isset($_POST['isAjax'])) {
+			Fabriq::render('view');
+		} else {
+			Fabriq::title('My account');
+		}
 	}
 	
 	public function updateAccount() {
