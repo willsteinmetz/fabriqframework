@@ -147,7 +147,7 @@ class fabriqmodules_controller extends Controller {
 		$modules = array();
 		if ($handle = opendir('modules')) {
 			while (false !== ($file = readdir($handle))) {
-				if ((strpos($file, '.') === FALSE) && is_dir($file)) {
+				if ((strpos($file, '.') === FALSE) && is_dir('modules/' . $file)) {
 					$modules[] = $file;
 				}
 			}
