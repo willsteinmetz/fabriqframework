@@ -1,6 +1,27 @@
 Fabriq Framework change log
   - Initiated 05/05/10 for version 0.5
 
+Version 1.4 2012-02-18
+  - Fixed a bug that prevented copying an app to a new location from being installed correctly
+  - New stable version
+
+Version 1.3.7 2011-09-16
+  - Fixed bug when scanning for modules
+
+Version 1.3.6 2011-09-12
+  - Fixed templating initialization to not overwrite template set by PathMap
+  - Fixed PathMap class, moved FabriqTemplates include file
+  - Fixed Fabriq installer missing tables and not installing the version number
+  - Rolled core modules into main project
+  - Updated users#myAccount to be able to be loaded with AJAX
+  - Fixed bug in fabriqmodules controller for module scanning
+
+Version 1.3.3 2011-06-04
+  - Fixing FabriqModules::render_now() function to be able to render custom module views
+
+Version 1.3.2 2011-05-31
+  - Fixed a bug in FabriqModules that prevented install from completing properly
+
 Version 1.3.1 2011-04-23
   - Added event handling and trigger to modules
   - Fixed the install template

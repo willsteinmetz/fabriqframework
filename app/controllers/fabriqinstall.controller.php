@@ -221,23 +221,33 @@ class fabriqinstall_controller extends Controller {
 				fwrite($fh, ");\n");
 				fclose($fh);
 				
-				// write default controller
+				// write default controller if the file isn't already there
+				// file may exist from being created in a dev environment or this is
+				// a distributed web app
 				$contFile = "app/controllers/homepage.controller.php";
-				$fh = fopen($contFile, 'w');
-				fwrite($fh, "<?php\n");
-				fwrite($fh, "class homepage_controller extends Controller {\n");
-				fwrite($fh, "\tfunction index() {\n");
-				fwrite($fh, "\t\tFabriq::title('Welcome to {$siteConfig['title']}');\n");
-				fwrite($fh, "\t}\n");
-				fwrite($fh, "}\n");
-				fclose($fh);
+				if (!file_exists($contFile)) {
+					$fh = fopen($contFile, 'w');
+					fwrite($fh, "<?php\n");
+					fwrite($fh, "class homepage_controller extends Controller {\n");
+					fwrite($fh, "\tfunction index() {\n");
+					fwrite($fh, "\t\tFabriq::title('Welcome to {$siteConfig['title']}');\n");
+					fwrite($fh, "\t}\n");
+					fwrite($fh, "}\n");
+					fclose($fh);
+				}
 				
-				// write default action
-				mkdir("app/views/homepage");
+				// write default action if it doesn't already exist
+				// may already exist from being created in a dev environmentor this is
+				// a distributed web app
+				if (!is_dir("app/views/homepage")) {
+					mkdir("app/views/homepage");
+				}
 				$actionFile = "app/views/homepage/index.view.php";
-				$fh = fopen($actionFile, 'w');
-				fwrite($fh, "<h1>homepage#index</h1>\n");
-				fclose($fh);
+				if (!file_exists($actionFile)) {
+					$fh = fopen($actionFile, 'w');
+					fwrite($fh, "<h1>homepage#index</h1>\n");
+					fclose($fh);
+				}
 				
 				// create the framework database tables
 				global $db;
@@ -835,6 +845,23 @@ EMAIL;
 		return array(
 			'version' => '1.3.5',
 			'description' => 'Fixes missing core directories from move to Github, rolls core modules into main Fabriq project',
+			'hasDisplay' => false
+		);
+	}
+	
+	private function update_1_4() {
+		if (isset($_POST['submit'])) {
+			global $db;
+			$_SESSION['FAB_UPDATES'] = serialize($installed);
+			$query = "INSERT INTO `fabriq_config`
+				(`version`, `installed`)
+				VALUES
+				(?, ?)";
+			$db->prepare_cud($query, array('1.4', date('Y-m-d H:i:s')));
+		}
+		return array(
+			'version' => '1.4',
+			'description' => 'Stable release rolling in all changes from the 1.3.x line. Next dev line is 1.5.x.',
 			'hasDisplay' => false
 		);
 	}
