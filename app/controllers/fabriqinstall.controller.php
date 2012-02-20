@@ -865,4 +865,21 @@ EMAIL;
 			'hasDisplay' => false
 		);
 	}
+	
+	private function update_1_5_1() {
+		if (isset($_POST['submit'])) {
+			global $db;
+			$_SESSION['FAB_UPDATES'] = serialize($installed);
+			$query = "INSERT INTO `fabriq_config`
+				(`version`, `installed`)
+				VALUES
+				(?, ?)";
+			$db->prepare_cud($query, array('1.5.1', date('Y-m-d H:i:s')));
+		}
+		return array(
+			'version' => '1.5.1',
+			'description' => 'Rolled core classes into core file, rolled module core classes into core file, added warning messages to deprecated functions',
+			'hasDisplay' => false
+		);
+	}
 } 

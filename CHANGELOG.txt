@@ -1,6 +1,11 @@
 Fabriq Framework change log
   - Initiated 05/05/10 for version 0.5
 
+Version 1.5 2012-02
+  - Merged core classes into single core file
+  - Merged core module classes into single core file
+  - Added warning messages to code that has been deprecated
+
 Version 1.4 2012-02-18
   - Fixed a bug that prevented copying an app to a new location from being installed correctly
   - New stable version
