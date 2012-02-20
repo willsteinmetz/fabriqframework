@@ -4,7 +4,7 @@
  * The index.php file includes the core required files for running a Fabriq based app:
  * @author Will Steinmetz
  * 
- * Copyright (c)2011, Ralivue.com
+ * Copyright (c)2012, Ralivue.com
  * Licensed under the BSD license.
  * http://fabriqframework.com/license
  */
@@ -16,8 +16,8 @@ error_reporting(E_ALL & ~E_NOTICE);
 // start sessions
 session_start();
 
-// require base Fabriq class
-require_once('core/Fabriq.class.php');
+// require core Fabriq classes
+require_once('core/Fabriq.core.php');
 
 // check to make sure application has been configured
 $installed = Fabriq::installed();
@@ -29,14 +29,6 @@ spl_autoload_register('fabriq_default_autoload');
 if ($installed) {
 	require_once('config/config.inc.php');
 }
-require_once('core/Database.class.php');
-require_once('core/Controller.class.php');
-require_once('core/Model.class.php');
-require_once('core/BaseMapping.class.php');
-require_once('app/PathMap.class.php');
-require_once('core/Messaging.class.php');
-require_once('core/FabriqLibs.class.php');
-require_once('core/FabriqTemplates.class.php');
 require_once('core/modules/Modules.model.php');
 require_once('core/modules/Perms.model.php');
 require_once('core/modules/FabriqModules.class.php');
@@ -48,6 +40,7 @@ require_once('core/modules/ModuleConfigs.class.php');
 // include the application helper file if available
 // @TODO remove for 2.0 release candidate
 if (file_exists('app/helpers/application.helper.php')) {
+	Messaging::message('Helper files, including the application helper, have been deprecated and will be removed in version 2.0 RC', 'warning');
 	require_once('app/helpers/application.helper.php');
 }
 
@@ -108,7 +101,11 @@ if (!file_exists("app/controllers/" . PathMap::controller() . ".controller.php")
 	PathMap::render_action('fourohfour');
 }
 
+// DEPRECATED
+// include the controller helper file if available
+// @TODO remove for 2.0 release candidate
 if (file_exists("app/helpers/" . PathMap::controller() . ".helper.php")) {
+	Messaging::message('Helper files have been deprecated and will be removed in version 2.0 RC', 'warning');
 	require_once("app/helpers/" . PathMap::controller() . ".helper.php");
 }
 require_once("app/controllers/" . PathMap::controller() . ".controller.php");
@@ -138,6 +135,7 @@ if (PathMap::render_controller() != PathMap::controller()) {
 		PathMap::render_action('fourohfour');
 	}
 	if (file_exists("app/helpers/" . PathMap::render_controller() . ".helper.php")) {
+		Messaging::message('Helper files have been deprecated and will be removed in version 2.0 RC', 'warning');
 		require_once("app/helpers/" . PathMap::render_controller() . ".helper.php");
 	}
 	require_once("app/controllers/" . PathMap::render_controller() . ".controller.php");
