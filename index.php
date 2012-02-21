@@ -29,7 +29,8 @@ spl_autoload_register('fabriq_default_autoload');
 if ($installed) {
 	require_once('config/config.inc.php');
 }
-require_once('core/modules/FabriqModules.core.php');
+require_once('core/FabriqModules.core.php');
+require_once('app/PathMap.class.php');
 
 // DEPRECATED
 // include the application helper file if available
