@@ -19,7 +19,7 @@ class users_module extends FabriqModule {
 			Fabriq::title('Manage users');
 			Fabriq::fabriq_ui_on();
 			FabriqModules::add_js('users', 'jquery.validate.min');
-			FabriqLibs::js_lib('jquery.tmpl.min', 'jquery/plugins');
+			FabriqLibs::js_lib('handlebars', 'handlebars');
 			FabriqModules::add_js('users', 'users-index');
 			FabriqModules::add_css('users', 'users-admin');
 			FabriqModules::set_var('users', 'users', $users);

@@ -2,11 +2,19 @@ UsersIndex = {
 	displayPattern: /([A-z0-9]){6,24}/,
 	
 	init: function() {
-		jQuery.template('userRoleTmpl', $('#user-role-tmpl'));
-		jQuery('#update-form').template('updateUserForm');
-		jQuery('#add-form').template('addUserForm');
-		jQuery('#new-user').template('newUserTmpl');
+		this.compileTemplates();
 		Fabriq.UI.Overlay.init();
+	},
+	
+	/**
+	 * Compile the templates that use Handlebars.js
+	 */
+	compileTemplates: function() {
+		this.templates = {};
+		this.templates.userRole = Handlebars.compile(jQuery('#user-role-tmpl').html());
+		this.templates.updateForm = Handlebars.compile(jQuery('#update-form').html());
+		this.templates.addForm = Handlebars.compile(jQuery('#add-form').html());
+		this.templates.newUser = Handlebars.compile(jQuery('#new-user').html());
 	},
 	
 	ban: function(user) {
@@ -109,7 +117,7 @@ UsersIndex = {
 			success: function(data, status) {
 				if (data.success) {
 					UsersIndex.mode = 'edit';
-					Fabriq.UI.Overlay.open('Update User', jQuery.tmpl('updateUserForm', data['user']));
+					Fabriq.UI.Overlay.open('Update User', UsersIndex.templates.updateForm(data['user']));
 					jQuery('#update-user-' + user).validate({
 						onsubmit: false,
 						rules: {
@@ -140,7 +148,7 @@ UsersIndex = {
 					jQuery('#email').keyup(UsersIndex.checkEmail);
 					jQuery('#update-roles-row').html('');
 					for (var i in data.roles) {
-						jQuery.tmpl('userRoleTmpl', data.roles[i]).appendTo('#update-roles-row');
+						jQuery('#update-roles-row').append(jQuery(UsersIndex.templates.userRole(data.roles[i])));
 						if (inArray(data.roles[i].id, data.user.roles)) {
 							$('input[name="role' + data.roles[i].id + '"]').attr('checked', 'checked');
 						}
@@ -292,7 +300,7 @@ UsersIndex = {
 			url: Fabriq.build_path('users', 'getRoles'),
 			dataType: 'json',
 			success: function(data, status) {
-				Fabriq.UI.Overlay.open('Add User', jQuery.tmpl('addUserForm', null));
+				Fabriq.UI.Overlay.open('Add User', UsersIndex.templates.addForm({}));
 				jQuery('#add-user').validate({
 					onsubmit: false,
 					rules: {
@@ -342,7 +350,7 @@ UsersIndex = {
 					window.location = window.location;
 				} else {
 					for (var i in data.roles) {
-						jQuery.tmpl('userRoleTmpl', data.roles[i]).appendTo('#add-roles-row');
+						jQuery('#add-roles-row').append(jQuery(UsersIndex.templates.userRole(data.roles[i])));
 					}
 				}
 			}
@@ -377,7 +385,7 @@ UsersIndex = {
 							)
 							.show();
 						Fabriq.UI.Overlay.close();
-						jQuery.tmpl('newUserTmpl', data.user).appendTo('#users-list tbody');
+						jQuery('#users-list tbody').append(jQuery(UsersIndex.templates.newUser(data.user)));
 					} else {
 						if (data.notLoggedIn) {
 							window.location = window.location;

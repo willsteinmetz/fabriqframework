@@ -1,21 +1,21 @@
-<script id="user-role-tmpl" type="text/x-jquery-tmpl">
+<script id="user-role-tmpl" type="text/x-handlebars-template">
 <div style="padding: 2px;">
-	<input type="checkbox" name="role${id}" data-fabmodUsersRole="${id}" style="margin-left: 10px;" class="role" value="1" /> ${role}
+	<input type="checkbox" name="role{{id}}" data-fabmodUsersRole="{{id}}" style="margin-left: 10px;" class="role" value="1" /> {{role}}
 </div>
 </script>
-<script id="update-form" type="text/x-jquery-tmpl">
-<form id="update-user-${id}" class="update-user">
+<script id="update-form" type="text/x-handlebars-template">
+<form id="update-user-{{id}}" class="update-user">
 	<div style="padding: 2px;">
 		<label for="display">
 			Display name: <span id="display-available" class="value-check"></span><br />
-			<input type="text" value="${display}" name="display" id="display" size="24" maxlength="24" /><br />
+			<input type="text" value="{{display}}" name="display" id="display" size="24" maxlength="24" /><br />
 			<span style="font-size: 8pt;">Display names may only contain charcters, number, and the underscore character between 6 and 24 characters long.</span>
 		</label>
 	</div>
 	<div style="padding: 2px;">
 		<label for="email">
 			e-mail address: <span id="email-available" class="value-check"></span><br />
-			<input type="text" value="${email}" name="email" id="email" size="50" maxlength="100" /><br />
+			<input type="text" value="{{email}}" name="email" id="email" size="50" maxlength="100" /><br />
 			<span style="font-size: 8pt;">Must be a valid e-mail address. This e-mail address will be used when necessary to contact the user.</span>
 		</label>
 	</div>
@@ -24,11 +24,11 @@
 		<div id="update-roles-row"></div>
 	</div>
 	<div style="padding: 2px;">
-		<button type="button" onclick="UsersIndex.saveUpdate(${id});" id="save-update">Save</button> <button type="button" onclick="UsersIndex.closeConfigure();">Cancel</button>
+		<button type="button" onclick="UsersIndex.saveUpdate({{id}});" id="save-update">Save</button> <button type="button" onclick="UsersIndex.closeConfigure();">Cancel</button>
 	</div>
 </form>
 </script>
-<script id="add-form" type="text/x-jquery-tmpl">
+<script id="add-form" type="text/x-handlebars-template">
 <form id="add-user">
 	<div style="padding: 2px;">
 		<label for="display">
@@ -69,15 +69,15 @@
 	</div>
 </form>
 </script>
-<script id="new-user" type="text/x-jquery-tmpl">
-		<tr id="user-${id}" class="user-info">
-			<td id="user-display-${id}">${display}</td>
-			<td id="user-email-${id}">${email}</td>
+<script id="new-user" type="text/x-handlebars-template">
+		<tr id="user-{{id}}" class="user-info">
+			<td id="user-display-{{id}}">{{display}}</td>
+			<td id="user-email-{{id}}">{{email}}</td>
 			<td>active</td>
 			<td>enabled</td>
 			<td>
-				<button type="button" class="edit-button" id="edit-button-${id}" onclick="UsersIndex.updateUser(${id});">Edit</button> 
-				<button type="button" class="ban-button" id="ban-button-${id}" onclick="UsersIndex.ban(${id});">Ban</button>
+				<button type="button" class="edit-button" id="edit-button-{{id}}" onclick="UsersIndex.updateUser({{id}});">Edit</button> 
+				<button type="button" class="ban-button" id="ban-button-{{id}}" onclick="UsersIndex.ban({{id}});">Ban</button>
 			</td>
 		</tr>
 </script>

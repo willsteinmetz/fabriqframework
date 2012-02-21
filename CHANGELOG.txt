@@ -1,7 +1,10 @@
 Fabriq Framework change log
   - Initiated 05/05/10 for version 0.5
 
-Version 1.5 2012-02
+Version 1.5.2 2012-0
+  - Changed code that used the no longer supported jQuery templates to use Handlebars.js
+
+Version 1.5.1 2012-02-20
   - Merged core classes into single core file
   - Merged core module classes into single core file
   - Added warning messages to code that has been deprecated
