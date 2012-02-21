@@ -1,11 +1,18 @@
 <?php
 /**
- * @file Module managing functionality file - DO NOT EDIT
- * @author Will Steinmetz
- * 
- * Copyright (c)2010, Ralivue.com
- * Licensed under the BSD license.
- * http://fabriqframework.com/license
+* @file FabriqModules.core.php
+* @author Will Steinmetz
+* This file contains functions and classes used throughout Fabriq modules - DO NOT EDIT
+* 
+* Copyright (c)2012, Ralivue.com
+* Licensed under the BSD license.
+* http://fabriqframework.com/license
+*/
+
+/**
+ * @class FabriqModules
+ * Provides the core functionality for interacting with modules in
+ * the Fabriq platform
  */
 abstract class FabriqModules {
 	private static $modules = array();
@@ -17,7 +24,7 @@ abstract class FabriqModules {
 	private static $hasPermission = true;
 	private static $stoppedMappedRender = false;
 	private static $eventHandlers = array();
-	
+
 	/**
 	 * Calls the install function to install a module for use in the
 	 * Fabriq app
@@ -34,7 +41,7 @@ abstract class FabriqModules {
 		eval('$installer = new ' . $module . '_install();');
 		return $installer->install();
 	}
-	
+
 	/**
 	 * Registers a module with the modules database table
 	 * @param string $module
@@ -61,7 +68,7 @@ abstract class FabriqModules {
 				$mod->dependson = implode(',', $info['dependsOn']);
 			}
 			$mod->id = $mod->create();
-			
+
 			// register configs if available
 			if (isset($info['configs'])) {
 				foreach ($info['configs'] as $con) {
@@ -79,10 +86,10 @@ abstract class FabriqModules {
 				$mod->update();
 			}
 		}
-		
+
 		return $mod->id;
 	}
-	
+
 	/**
 	 * Registers permissions available for setting for this module
 	 * @param int $module_id
@@ -101,10 +108,10 @@ abstract class FabriqModules {
 			$perm->module = $module_id;
 			$perm_ids[] = $perm->create();
 		}
-		
+
 		return $perm_ids;
 	}
-	
+
 	/**
 	 * Calls the uninstall function to uninstall a module from a Fabriq app
 	 * @param string $module
@@ -120,18 +127,18 @@ abstract class FabriqModules {
 		eval('$installer = new ' . $module . '_install();');
 		return $installer->uninstall();
 	}
-	
+
 	/**
 	 * Remove permissions for the given module
 	 * @param int $module_id
 	 */
 	public static function remove_perms($module_id) {
 		global $db;
-		
+
 		$sql = "DELETE FROM fabmods_perms WHERE `module` = ?";
 		$db->prepare_cud($sql, array($module_id));
 	}
-	
+
 	/**
 	 * Loads a module's code
 	 * @param $module
@@ -151,7 +158,7 @@ abstract class FabriqModules {
 		self::$modules[$module] = $mod;
 		self::$module_vars[$module] = array();
 	}
-	
+
 	/**
 	 * Returns a reference to the specified module for easier use
 	 * @param string $module
@@ -161,10 +168,10 @@ abstract class FabriqModules {
 		if (!array_key_exists($module, self::$modules)) {
 			FabriqModules::load($module);
 		}
-		
+
 		return self::$modules[$module];
 	}
-	
+
 	/**
 	 * Returns whether or the module is enabled
 	 * @param string $module
@@ -175,9 +182,9 @@ abstract class FabriqModules {
 		if (!Fabriq::installed()) {
 			return false;
 		}
-		
+
 		global $db;
-		
+
 		$sql = "SELECT enabled FROM fabmods_modules WHERE module = ?";
 		$data = $db->prepare_select($sql, array('enabled'), array($module));
 		if (count($data) == 0) {
@@ -185,7 +192,7 @@ abstract class FabriqModules {
 		}
 		return ($data[0]['enabled'] == 1) ? TRUE : FALSE;
 	}
-	
+
 	/**
 	 * Adds a module variable
 	 * @param string $module
@@ -195,7 +202,7 @@ abstract class FabriqModules {
 	public static function set_var($module, $name, $var) {
 		self::$module_vars[$module][$name] = $var;
 	}
-	
+
 	/**
 	 * Adds a set of module variables at once
 	 * @param string $module
@@ -209,7 +216,7 @@ abstract class FabriqModules {
 			self::$module_vars[$module][$key] = $val;
 		}
 	}
-	
+
 	/**
 	 * Returns a module variable
 	 * @param string $module
@@ -222,7 +229,7 @@ abstract class FabriqModules {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Returns the module variables for a module
 	 * @param string $module
@@ -234,7 +241,7 @@ abstract class FabriqModules {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Adds the output of this view to the body variable that is appended to the
 	 * FabriqModules class' $body variable. For rendering one module at a time,
@@ -255,7 +262,7 @@ abstract class FabriqModules {
 		require_once($file);
 		self::$body .= ob_get_clean();
 	}
-	
+
 	/**
 	 * Returns the rendered module content
 	 * @return string
@@ -263,7 +270,7 @@ abstract class FabriqModules {
 	public static function body() {
 		return self::$body;
 	}
-	
+
 	/**
 	 * Renders the module action's view content and returns it to be added at
 	 * a specific place
@@ -284,7 +291,7 @@ abstract class FabriqModules {
 		require_once($file);
 		return ob_get_clean();
 	}
-	
+
 	/**
 	 * Add a module stylesheet to the CSS queue
 	 * @param string $module
@@ -296,7 +303,7 @@ abstract class FabriqModules {
 	public static function add_css($module, $stylesheet, $media = 'screen', $path = '', $ext = '.css') {
 		self::$cssqueue[] = array('css' => $stylesheet, 'media' => $media, 'path' => "modules/{$module}/stylesheets/{$path}", 'ext' => $ext);
 	}
-	
+
 	/**
 	 * Public getter for $cssqueue
 	 * @return array
@@ -304,7 +311,7 @@ abstract class FabriqModules {
 	public static function cssqueue() {
 		return self::$cssqueue;
 	}
-	
+
 	/**
 	 * Add a module JavaScript to the JS queue
 	 * @param string $module
@@ -315,7 +322,7 @@ abstract class FabriqModules {
 	public static function add_js($module, $javascript, $path = '', $ext = '.js') {
 		self::$jsqueue[] = array('js' => $javascript, 'path' => "modules/{$module}/javascripts/{$path}", 'ext' => $ext);
 	}
-	
+
 	/**
 	 * Public getter for $jsqueue
 	 * @return array
@@ -323,7 +330,7 @@ abstract class FabriqModules {
 	public static function jsqueue() {
 		return self::$jsqueue;
 	}
-	
+
 	/**
 	 * Public getter and setter for hasPermission
 	 * @param boolean $hasPerm
@@ -336,7 +343,7 @@ abstract class FabriqModules {
 			self::$hasPermission = $hasPerm;
 		}
 	}
-	
+
 	/**
 	 * Creates a new instance of a module model
 	 * @param string $module
@@ -351,7 +358,7 @@ abstract class FabriqModules {
 		eval("\$item = new {$class}();");
 		return $item;
 	}
-	
+
 	/**
 	 * Stops the mapped to module function's view from being rendered
 	 * @param bool $stop
@@ -364,7 +371,7 @@ abstract class FabriqModules {
 			return self::$stoppedMappedRender;
 		}
 	}
-	
+
 	/**
 	 * Registers a handler for a module event
 	 * @param string $eventModule
@@ -375,13 +382,13 @@ abstract class FabriqModules {
 	 */
 	public static function register_handler($eventModule, $eventAction, $eventName, $handlerModule, $handlerAction) {
 		global $db;
-		
+
 		$query = "INSERT INTO `fabmods_module_events`
 			(`eventModule`, `eventAction`, `eventName`, `handlerModule`, `handlerAction`)
 			VALUES (?, ?, ?, ?, ?)";
 		$db->prepare_cud($query, array($eventModule, $eventAction, $eventName, $handlerModule, $handlerAction));
 	}
-	
+
 	/**
 	 * Removes a handler for a module event
 	 * @param string $eventModule
@@ -392,18 +399,18 @@ abstract class FabriqModules {
 	 */
 	public static function remove_handler($eventModule, $eventAction, $eventName, $handlerModule, $handlerAction) {
 		global $db;
-		
+
 		$query = "DELETE FROM `fabmods_module_events`
 			WHERE `eventModule` = ? AND `eventAction` = ? AND `eventName` = ? AND `handlerModule` = ? AND `handlerAction` = ?";
 		$db->prepare_cud($query, array($eventModule, $eventAction, $eventName, $handlerModule, $handlerAction));
 	}
-	
+
 	/**
 	 * Get all module event handlers
 	 */
 	public static function get_handlers() {
 		global $db;
-		
+
 		$query = "SELECT *
 			FROM `fabmods_module_events`
 			ORDER BY eventModule, eventAction, eventName";
@@ -421,7 +428,7 @@ abstract class FabriqModules {
 			);
 		}
 	}
-	
+
 	/**
 	 * Triggers an event so that handlers can take action if necessary
 	 * @param string $module
@@ -439,4 +446,223 @@ abstract class FabriqModules {
 		}
 	}
 }
-	
+
+/**
+ * @class Modules
+ * Model for storing the info about a module
+ */
+class Modules extends Model {
+	/**
+	 * Constructor to set up the Module model
+	 * @param int $id
+	 */
+	function __construct($id = NULL) {
+		parent::__construct(array('module', 'enabled', 'hasconfigs', 'installed', 'versioninstalled', 'description', 'dependson'), 'fabmods_modules');
+		if ($id != NULL) {
+			$this->find($id);
+		}
+	}
+
+	/**
+	 * Get a module by its name
+	 * @param int $module
+	 */
+	public function getModuleByName($module) {
+		global $db;
+
+		$sql = "SELECT * FROM fabmods_modules WHERE module=?";
+		$this->fill($db->prepare_select($sql, $this->fields(), $module));
+	}
+
+	/**
+	 * Get the modules that are enabled
+	 */
+	public function getEnabled() {
+		global $db;
+
+		$sql = "SELECT * FROM {$this->db_table} WHERE enabled = ? ORDER BY module";
+		$this->fill($db->prepare_select($sql, $this->fields(), 1));
+	}
+
+	/**
+	 * Get all of the modules
+	 */
+	public function getAll() {
+		global $db;
+
+		$sql = "SELECT * FROM {$this->db_table} ORDER BY module";
+		$this->fill($db->prepare_select($sql, $this->fields()));
+	}
+
+	/**
+	 * Enable the module assigned to this model instance
+	 */
+	public function enable() {
+		global $db;
+
+		$sql = "UPDATE {$this->db_table} SET enabled = ? WHERE {$this->id_name} = ?";
+		$db->prepare_cud($sql, array(1, $this->id));
+	}
+
+	/**
+	* Disable the module assigned to this model instance
+	*/
+	public function disable() {
+		global $db;
+
+		$sql = "UPDATE {$this->db_table} SET enabled = ? WHERE {$this->id_name} = ?";
+		$db->prepare_cud($sql, array(0, $this->id));
+	}
+
+	/**
+	 * Determine whether or not the given module is installed
+	 * @param string $module
+	 * @return bool
+	 */
+	public function installed($module) {
+		foreach ($this as $mod) {
+			if ($mod->module == $module) {
+				return TRUE;
+			}
+		}
+		return FALSE;
+	}
+}
+
+/**
+ * @class ModuleConfigs
+ * Configuration model for modules
+ */
+class ModuleConfigs extends Model {
+	public $configs = array();
+
+	/**
+	 * Constructor
+	 * @param int $id
+	 */
+	function __construct($id = NULL) {
+		parent::__construct(array('module', 'var', 'val'), 'fabmods_module_configs');
+		if ($id != NULL) {
+			$this->find($id);
+		}
+	}
+
+	/**
+	 * Get the configuration options for the given module
+	 * @param int/string $module
+	 */
+	function getForModule($module) {
+		global $db;
+
+		if (is_numeric($module)) {
+			$sql = "SELECT * FROM {$this->db_table} WHERE module = ? ORDER BY var";
+		} else {
+			$sql = "SELECT * FROM {$this->db_table} WHERE module = (SELECT id FROM fabmods_modules WHERE module = ?) ORDER BY var";
+		}
+		$this->fill($db->prepare_select($sql, $this->fields(), $module));
+
+		for ($i = 0; $i < $this->count(); $i++) {
+			$this->configs[$this[$i]->var] = $i;
+		}
+	}
+
+	/**
+	 * Get a specific configuration object for the given module
+	 * @param int/string $module
+	 * @param string $config
+	 */
+	function getConfig($module, $config) {
+		global $db;
+
+		if (is_numeric($module)) {
+			$sql = "SELECT * FROM {$this->db_table} WHERE module = ? AND var = ? ORDER BY var";
+		} else {
+			$sql = "SELECT * FROM {$this->db_table} WHERE module = (SELECT id FROM fabmods_modules WHERE module = ?) AND var = ? ORDER BY var";
+		}
+		$this->fill($db->prepare_select($sql, $this->fields(), array($module, $config)));
+	}
+}
+
+/**
+ * @class Perms
+ * Model for getting and using the values of a module permission
+ */
+class Perms extends Model {
+	public $modules = array();
+
+	/**
+	 * Constructor for the module
+	 * @param int $id
+	 */
+	function __construct($id = NULL) {
+		parent::__construct(array('permission', 'module'), 'fabmods_perms');
+		if ($id != NULL) {
+			$this->find($id);
+		}
+	}
+
+	/**
+	 * Get the permissions for a module
+	 * @param int $module_id
+	 */
+	public function getModulePerms($module_id) {
+		global $db;
+
+		$sql = "SELECT * FROM {$this->db_table} WHERE module=?";
+		$this->fill($db->prepare_select($sql, $this->fields(), $module_id));
+	}
+
+	/**
+	 * Get all of the permissions
+	 */
+	public function getAll() {
+		global $db;
+
+		$sql = "SELECT * FROM {$this->db_table} ORDER BY module, permission";
+		$this->fill($db->prepare_select($sql, $this->fields()));
+
+		// organize perms
+		for ($i = 0; $i < $this->count(); $i++) {
+			if (!array_key_exists($this[$i]->module, $this->modules)) {
+				$this->modules[$this[$i]->module] = array();
+			}
+			$this->modules[$this[$i]->module][] = $i;
+		}
+	}
+}
+
+/**
+ * @class FabriqModule
+ * Core module controller class that all modules are extended from
+ */
+class FabriqModule extends Controller {
+	public $name;
+	public static $mname;
+
+	function __construct() {
+		$this->name = str_replace('_module', '', get_class($this));
+		self::$mname = $this->name;
+	}
+}
+
+/**
+ * @class FabriqModules
+ * Core model class that all module models are extended from
+ */
+class ModuleModel extends Model {
+	public $module;
+
+	/**
+	 * Module model base class constructor
+	 * Module tables must be prefixed with fabmod_[modulename]_.
+	 * When defining the model, do not provide fabmod_[modulename]_
+	 * @param array $attributes
+	 * @param string $db_table
+	 * @param string $id_name
+	 */
+	function __construct($module, $attributes, $db_table, $id_name = 'id') {
+		$this->module = $module;
+		$db_table = "fabmod_{$module}_{$db_table}";
+		parent::__construct($attributes, $db_table, $id_name);
+	}
+}

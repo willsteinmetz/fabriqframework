@@ -16,7 +16,7 @@ error_reporting(E_ALL & ~E_NOTICE);
 // start sessions
 session_start();
 
-// require core Fabriq classes
+// require core Fabriq base classes
 require_once('core/Fabriq.core.php');
 
 // check to make sure application has been configured
@@ -29,12 +29,7 @@ spl_autoload_register('fabriq_default_autoload');
 if ($installed) {
 	require_once('config/config.inc.php');
 }
-require_once('core/modules/Modules.model.php');
-require_once('core/modules/Perms.model.php');
-require_once('core/modules/FabriqModules.class.php');
-require_once('core/modules/FabriqModule.class.php');
-require_once('core/modules/ModuleModel.class.php');
-require_once('core/modules/ModuleConfigs.class.php');
+require_once('core/modules/FabriqModules.core.php');
 
 // DEPRECATED
 // include the application helper file if available
