@@ -1,6 +1,10 @@
 Fabriq Framework change log
   - Initiated 05/05/10 for version 0.5
 
+Version 1.5.3 2012-02
+  - Fixed bug in install that got wrong version if multiple updates were installed at
+    the same time.
+
 Version 1.5.2 2012-02-21
   - Changed code that used the no longer supported jQuery templates to use Handlebars.js
   - Added the site/application title to the session variables so that multiple instances
