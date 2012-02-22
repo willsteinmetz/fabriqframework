@@ -1,8 +1,11 @@
 Fabriq Framework change log
   - Initiated 05/05/10 for version 0.5
 
-Version 1.5.2 2012-0
+Version 1.5.2 2012-02-21
   - Changed code that used the no longer supported jQuery templates to use Handlebars.js
+  - Added the site/application title to the session variables so that multiple instances
+    of the framework on the same server don't have the potential to unintentionally share
+    session variables
 
 Version 1.5.1 2012-02-20
   - Merged core classes into single core file

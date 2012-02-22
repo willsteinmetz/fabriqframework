@@ -46,11 +46,11 @@ class users_module extends FabriqModule {
 				if ($user->count() == 1) {
 					if ($user->banned == 0) {
 						if (crypt($_POST['pwd'], $user->id) == $user->encpwd) {
-							$_SESSION['FABMOD_USERS_displayname'] = $user->display;
-							$_SESSION['FABMOD_USERS_email'] = $user->email;
-							$_SESSION['FABMOD_USERS_userid'] = $user->id;
+							$_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_displayname'] = $user->display;
+							$_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_email'] = $user->email;
+							$_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_userid'] = $user->id;
 							if ($user->forcepwdreset == 1) {
-								$_SESSION['FABMOD_USERS_forcepwdreset'] = 1;
+								$_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_forcepwdreset'] = 1;
 							}
 							$roles = FabriqModules::new_model('users', 'UserRoles');
 							$roles->getRoles($user->id);
@@ -63,7 +63,7 @@ class users_module extends FabriqModule {
 							$authenticated->getRole('authenticated');
 							$r[] = $authenticated->id;
 							$r[] = $authenticated->role;
-							$_SESSION['FABMOD_USERS_roles'] = serialize($r);
+							$_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_roles'] = serialize($r);
 							if (isset($_POST['return_to'])) {
 								$path = explode('/', $_POST['return_to']);
 								if ($user->forcepwdreset == 1) {
@@ -97,11 +97,11 @@ class users_module extends FabriqModule {
 	}
 	
 	public function logout() {
-		unset($_SESSION['FABMOD_USERS_displayname']);
-		unset($_SESSION['FABMOD_USERS_email']);
-		unset($_SESSION['FABMOD_USERS_userid']);
-		unset($_SESSION['FABMOD_USERS_roles']);
-		unset($_SESSION['FABMOD_USERS_forcepwdreset']);
+		unset($_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_displayname']);
+		unset($_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_email']);
+		unset($_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_userid']);
+		unset($_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_roles']);
+		unset($_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_forcepwdreset']);
 		header("Location: " . PathMap::build_path('users', 'login'));
 		exit();
 	}
@@ -321,7 +321,7 @@ EMAIL;
 		Fabriq::render('none');
 		
 		if (FabriqModules::module('roles')->requiresPermission('administer users', $this->name)) {
-			if ($_POST['user'] != $_SESSION['FABMOD_USERS_userid']) {
+			if ($_POST['user'] != $_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_userid']) {
 				$user = FabriqModules::new_model('users', 'Users');
 				$user->find($_POST['user']);
 				if ($user->display != '') {
@@ -351,7 +351,7 @@ EMAIL;
 		Fabriq::render('none');
 		
 		if (FabriqModules::module('roles')->requiresPermission('administer users', $this->name)) {
-			if ($_POST['user'] != $_SESSION['FABMOD_USERS_userid']) {
+			if ($_POST['user'] != $_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_userid']) {
 				$user = FabriqModules::new_model('users', 'Users');
 				$user->find($_POST['user']);
 				if ($user->display != '') {
@@ -519,7 +519,7 @@ EMAIL;
 		Fabriq::title('Change password');
 		
 		$user = FabriqModules::new_model('users', 'Users');
-		$user->find($_SESSION['FABMOD_USERS_userid']);
+		$user->find($_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_userid']);
 		
 		if ($user->forcepwdreset == 1) {
 			Messaging::message('You must change your password before you can continue', 'warning');
@@ -540,8 +540,8 @@ EMAIL;
 				$user->encpwd = crypt($_POST['newpwd'], $user->id);
 				$user->forcepwdreset = 0;
 				$user->update();
-				$_SESSION['FABMOD_USERS_forcepwdreset'] = null;
-				unset($_SESSION['FABMOD_USERS_forcepwdreset']);
+				$_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_forcepwdreset'] = null;
+				unset($_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_forcepwdreset']);
 				if (isset($_POST['return_to'])) {
 					header('Location:' . call_user_func_array('PathMap::build_path', explode('/', $_POST['return_to'])));
 					exit();
@@ -574,7 +574,7 @@ EMAIL;
 		Fabriq::title('Update account');
 		
 		$user = FabriqModules::new_model('users', 'Users');
-		$user->find($_SESSION['FABMOD_USERS_userid']);
+		$user->find($_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_userid']);
 		
 		if (isset($_POST['submit'])) {
 			$emailPattern = '/^([a-z0-9])(([-a-z0-9._])*([a-z0-9]))*\@([a-z0-9])(([a-z0-9-])*([a-z0-9]))+' . '(\.([a-z0-9])([-a-z0-9_-])?([a-z0-9])+)+$/i';
@@ -592,8 +592,8 @@ EMAIL;
 				$user->email = $_POST['email'];
 				$user->update();
 				
-				$_SESSION['FABMOD_USERS_displayname'] = $user->display;
-				$_SESSION['FABMOD_USERS_email'] = $user->email;
+				$_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_displayname'] = $user->display;
+				$_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_email'] = $user->email;
 				
 				Messaging::message('Account has bee updated', 'success');
 			}
@@ -608,7 +608,7 @@ EMAIL;
 	}
 	
 	public function isLoggedIn() {
-		if (isset($_SESSION['FABMOD_USERS_displayname']) && ($_SESSION['FABMOD_USERS_displayname'] != '')) {
+		if (isset($_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_displayname']) && ($_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_displayname'] != '')) {
 			return TRUE;
 		}
 		return FALSE;
@@ -653,6 +653,17 @@ EMAIL;
 		} else {
 			echo json_encode(array('notLoggedIn' => true));
 		}
+	}
+	
+	public function getUserRoles() {
+		Fabriq::render('none');
+		
+		$roles = array();
+		if (isset($_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_roles'])) {
+			$roles = unserialize($_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_roles']);
+		}
+		
+		return $roles;
 	}
 }
 	

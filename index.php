@@ -67,10 +67,10 @@ PathMap::map_path();
 
 // check if user is logged in and if not give viewer
 // unathenticated role
-if (FabriqModules::enabled('users') && (!isset($_SESSION['FABMOD_USERS_roles']) || ($_SESSION['FABMOD_USERS_roles'] == ''))) {
+if (FabriqModules::enabled('users') && (!isset($_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_roles']) || ($_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_roles'] == ''))) {
 	$role = FabriqModules::new_model('roles', 'Roles');
 	$role->getRole('unauthenticated');
-	$_SESSION['FABMOD_USERS_roles'] = serialize(array(
+	$_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_roles'] = serialize(array(
 		$role->id,
 		$role->role
 	));

@@ -111,8 +111,8 @@ class roles_module extends FabriqModule {
 	}
 
 	public function hasRole($role) {
-		if (isset($_SESSION['FABMOD_USERS_roles'])) {
-			$roles = unserialize($_SESSION['FABMOD_USERS_roles']);
+		if (isset($_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_roles'])) {
+			$roles = unserialize($_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_roles']);
 			if (count($roles) > 0) {
 				if (in_array($role, $roles)) {
 					return TRUE;
@@ -137,8 +137,8 @@ class roles_module extends FabriqModule {
 	}
 	
 	public function requiresPermission($permission, $module) {
-		if (isset($_SESSION['FABMOD_USERS_roles'])) {
-			$roles = unserialize($_SESSION['FABMOD_USERS_roles']);
+		if (isset($_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_roles'])) {
+			$roles = unserialize($_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_roles']);
 			if (count($roles) > 0) {
 				global $db;
 				
@@ -182,8 +182,8 @@ IN (" . $db->qmarks(count($roles)) . ")";
 	}
 
 	public function userHasPermission($permission, $module) {
-		if (isset($_SESSION['FABMOD_USERS_roles'])) {
-			$roles = unserialize($_SESSION['FABMOD_USERS_roles']);
+		if (isset($_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_roles'])) {
+			$roles = unserialize($_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_roles']);
 			if (count($roles) > 0) {
 				global $db;
 				

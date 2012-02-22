@@ -882,4 +882,21 @@ EMAIL;
 			'hasDisplay' => false
 		);
 	}
+	
+	private function update_1_5_2() {
+		if (isset($_POST['submit'])) {
+			global $db;
+			$_SESSION['FAB_UPDATES'] = serialize($installed);
+			$query = "INSERT INTO `fabriq_config`
+				(`version`, `installed`)
+				VALUES
+				(?, ?)";
+			$db->prepare_cud($query, array('1.5.2', date('Y-m-d H:i:s')));
+		}
+		return array(
+			'version' => '1.5.2',
+			'description' => 'Removed jQuery templating functionality for Handlebars.js, added site name to config',
+			'hasDisplay' => true
+		);
+	}
 } 

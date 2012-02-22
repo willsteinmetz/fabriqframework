@@ -143,6 +143,15 @@ abstract class Fabriq {
 			return self::$title;
 		}
 	}
+	
+	/**
+	 * Return the site's title
+	 * @return string
+	 */
+	public static function siteTitle() {
+		global $_FAPP;
+		return $_FAPP['title'];
+	}
 
 	/**
 	 * getter/setter for the $render variable
@@ -383,7 +392,7 @@ class BaseMapping {
 		$mapped = false;
 
 		if ($installed && FabriqModules::enabled('pathmap')) {
-			if (isset($_SESSION['FABMOD_USERS_forcepwdreset']) && ($_SESSION['FABMOD_USERS_forcepwdreset'] == 1)) {
+			if (isset($_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_forcepwdreset']) && ($_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_forcepwdreset'] == 1)) {
 				if (!in_array('users', $q) && !in_array('changePassword', $q)) {
 					header('Location:' . call_user_func_array('BaseMapping::build_path', array_merge(array('users', 'changePassword'), $q)));
 				}
