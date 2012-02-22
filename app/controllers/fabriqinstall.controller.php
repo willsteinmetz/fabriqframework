@@ -55,7 +55,7 @@ class fabriqinstall_controller extends Controller {
 				$this->version = null;
 				$_SESSION['FAB_INSTALL_nomods'] = true;
 			} else {
-				$query = "SELECT version FROM fabriq_config ORDER BY installed DESC LIMIT 1";
+				$query = "SELECT version FROM fabriq_config ORDER BY installed DESC, version DESC LIMIT 1";
 				$db->query($query);
 				$data = mysqli_fetch_array($db->result);
 				$this->version = $data['version'];
