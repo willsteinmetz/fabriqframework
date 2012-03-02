@@ -1221,7 +1221,7 @@ class Model implements ArrayAccess, Iterator, Countable {
 			if ($this->data[$index]->$attribute !== null) {
 				$data[] = $this->data[$index]->$attribute;
 			} else {
-				$data[] = '';
+				$data[] = null;
 			}
 		}
 		$values = array_merge($data, array($this->data[$index]->created, $this->data[$index]->updated));
@@ -1259,7 +1259,7 @@ class Model implements ArrayAccess, Iterator, Countable {
 			if ($this->data[$index]->$attribute !== null) {
 				$data[] = $this->data[$index]->$attribute;
 			} else {
-				$data[] = '';
+				$data[] = null;
 			}
 		}
 		$values = array_merge($data, array($this->data[$index]->created, $this->data[$index]->updated, $this->data[$index]->id));

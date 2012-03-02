@@ -938,4 +938,21 @@ EMAIL;
 			'hasDisplay' => true
 		);
 	}
+	
+	private function update_1_5_5() {
+		if (isset($_POST['submit'])) {
+			global $db;
+			$_SESSION['FAB_UPDATES'] = serialize($installed);
+			$query = "INSERT INTO `fabriq_config`
+				(`version`, `installed`)
+				VALUES
+				(?, ?)";
+			$db->prepare_cud($query, array('1.5.5', date('Y-m-d H:i:s')));
+		}
+		return array(
+			'version' => '1.5.5',
+			'description' => 'Fixed bug in Model that did not let NULL values set properly',
+			'hasDisplay' => true
+		);
+	}
 } 
