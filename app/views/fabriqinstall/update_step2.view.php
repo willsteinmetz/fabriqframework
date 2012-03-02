@@ -1,9 +1,9 @@
 <h1>Framework updates</h1>
 <?php
+if ($submitted && Messaging::has_messages()) {
+	Messaging::display_messages();
+}
 if (count($toInstall) > 0):
-	if (Messaging::has_messages()) {
-		Messaging::display_messages();
-	}
 ?>
 
 <p>Available framework updates:</p>

@@ -1,6 +1,6 @@
 <?php
 if (FabriqModules::module('roles')->hasRole('administrator')):
-	$core = array('users', 'roles', 'pathmap');
+	$core = array('users', 'roles', 'pathmap', 'fabriqupdates');
 ?>
 <h1>Manage Modules</h1>
 <div class="message" style="display: none;" id="message-box"></div>

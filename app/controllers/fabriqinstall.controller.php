@@ -341,6 +341,7 @@ class fabriqinstall_controller extends Controller {
 			FabriqModules::register_module('pathmap');
 			FabriqModules::register_module('roles');
 			FabriqModules::register_module('users');
+			FabriqModules::register_module('fabriqupdates');
 			FabriqModules::install('pathmap');
 			$module = new Modules();
 			$module->getModuleByName('pathmap');
@@ -359,6 +360,12 @@ class fabriqinstall_controller extends Controller {
 			$module->enabled = 1;
 			$module->update();
 			Messaging::message('Installed users module', 'success');
+			FabriqModules::install('fabriqupdates');
+			$module = new Modules();
+			$module->getModuleByName('fabriqupdates');
+			$module->enabled = 1;
+			$module->update();
+			Messaging::message('Installed fabriqupdates module', 'success');
 			
 			// get admin role and give it all perms so that the admin can actually set
 			// things up
@@ -503,15 +510,18 @@ EMAIL;
 		for ($i = 0; $i < count($available); $i++) {
 			$toInstall[] = $this->{$available[$i]}();
 		}
+		$submitted = false;
 		
 		if (isset($_POST['submit'])) {
 			if (!Messaging::has_messages()) {
 				header("Location: " . PathMap::build_path('fabriqinstall', 'update', 3));
 				exit();
+			} else {
+				$submitted = true;
 			}
-		} else {
-			FabriqTemplates::set_var('toInstall', $toInstall);
 		}
+		FabriqTemplates::set_var('toInstall', $toInstall);
+		FabriqTemplates::set_var('submitted', $submitted);
 	}
 	
 	/**
@@ -896,6 +906,35 @@ EMAIL;
 		return array(
 			'version' => '1.5.2',
 			'description' => 'Removed jQuery templating functionality for Handlebars.js, added site name to config',
+			'hasDisplay' => true
+		);
+	}
+	
+	private function update_1_5_4() {
+		if (isset($_POST['submit'])) {
+			if (file_exists('modules/fabriqupdates/fabriqupdates.module.php')) {
+				global $db;
+				$_SESSION['FAB_UPDATES'] = serialize($installed);
+				
+				FabriqModules::register_module('fabriqupdates');
+				FabriqModules::install('fabriqupdates');
+				$module = new Modules();
+				$module->getModuleByName('fabriqupdates');
+				$module->enabled = 1;
+				$module->update();
+				
+				$query = "INSERT INTO `fabriq_config`
+					(`version`, `installed`)
+					VALUES
+					(?, ?)";
+				$db->prepare_cud($query, array('1.5.4', date('Y-m-d H:i:s')));
+			} else {
+				Messaging::message('The files for Fabriq 1.5.4 cannot be found. Check that you have added all of the update files to your project.');
+			}
+		}
+		return array(
+			'version' => '1.5.4',
+			'description' => 'Added the new fabriqupdates module',
 			'hasDisplay' => true
 		);
 	}
