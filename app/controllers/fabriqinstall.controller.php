@@ -955,4 +955,29 @@ EMAIL;
 			'hasDisplay' => true
 		);
 	}
+	
+	private function update_1_5_6() {
+		if (isset($_POST['submit'])) {
+			global $db;
+			$_SESSION['FAB_UPDATES'] = serialize($installed);
+			
+			FabriqModules::register_module('sitemenus');
+			FabriqModules::install('sitemenus');
+			$module = new Modules();
+			$module->getModuleByName('sitemenus');
+			$module->enabled = 1;
+			$module->update();
+			
+			$query = "INSERT INTO `fabriq_config`
+				(`version`, `installed`)
+				VALUES
+				(?, ?)";
+			$db->prepare_cud($query, array('1.5.6', date('Y-m-d H:i:s')));
+		}
+		return array(
+			'version' => '1.5.6',
+			'description' => 'Addition of the sitemenus module',
+			'hasDisplay' => true
+		);
+	}
 } 
