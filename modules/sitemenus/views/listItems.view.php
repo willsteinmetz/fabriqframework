@@ -1,9 +1,9 @@
-<?php if ($menu->menuName != ''): ?>
-<nav class="sitemenus-menu" id="sitemenu-<?php echo str_replace(' ', '_', strtolower($menu->menuName)); ?>">
+<?php if ($listMenu->menuName != ''): ?>
+<nav class="sitemenus-menu" id="sitemenu-<?php echo str_replace(' ', '_', strtolower($listMenu->menuName)); ?>">
 	<ul>
 	<?php
-		for ($i = 0; $i < count($menu->items); $i++) {
-			echo $menu->items[$i]->getItemHtml();
+		for ($i = 0; $i < count($listMenu->items); $i++) {
+			echo $listMenu->items[$i]->getItemHtml();
 		}
 	?>
 	</ul>

@@ -259,7 +259,7 @@ abstract class FabriqModules {
 		}
 		ob_start();
 		extract(self::$module_vars[$module]);
-		require_once($file);
+		require($file);
 		self::$body .= ob_get_clean();
 	}
 
@@ -288,7 +288,7 @@ abstract class FabriqModules {
 		self::$render_positions[] = $module;
 		ob_start();
 		extract(self::$module_vars[$module]);
-		require_once($file);
+		require($file);
 		return ob_get_clean();
 	}
 

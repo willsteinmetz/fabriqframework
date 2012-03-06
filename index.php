@@ -62,12 +62,9 @@ FabriqLibs::js_lib('jquery-1.4.4.min', 'jquery');
 Fabriq::add_js('fabriq', 'core/');
 Fabriq::add_css('fabriq.base', 'screen', 'core/');
 
-// determine the controller and action to render
-PathMap::map_path();
-
 // check if user is logged in and if not give viewer
 // unathenticated role
-if (FabriqModules::enabled('users') && (!isset($_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_roles']) || ($_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_roles'] == ''))) {
+if ((!isset($_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_roles']) || ($_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_roles'] == ''))) {
 	$role = FabriqModules::new_model('roles', 'Roles');
 	$role->getRole('unauthenticated');
 	$_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_roles'] = serialize(array(
@@ -75,6 +72,9 @@ if (FabriqModules::enabled('users') && (!isset($_SESSION[Fabriq::siteTitle()]['F
 		$role->role
 	));
 }
+
+// determine the controller and action to render
+PathMap::map_path();
 
 // determine whether to use templating by default
 if (!isset($_FAPP['templating'])) {

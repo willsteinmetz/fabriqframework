@@ -268,9 +268,9 @@ class sitemenus_module extends FabriqModule {
 	
 	public function listItems($listMenu, $clear = false) {
 		$menu = FabriqModules::new_model('sitemenus', 'Menus');
-		$menu->getMenuByName($lustMenu);
+		$menu->getMenuByName($listMenu);
 		$menu->buildMenu();
-		FabriqModules::set_var('sitemenus', 'menu', $menu);
+		FabriqModules::set_var('sitemenus', 'listMenu', $menu);
 		FabriqModules::set_var('sitemenus', 'clear', $clear);
 	}
 }

@@ -366,6 +366,13 @@ class fabriqinstall_controller extends Controller {
 			$module->enabled = 1;
 			$module->update();
 			Messaging::message('Installed fabriqupdates module', 'success');
+			FabriqModules::register_module('sitemenus');
+			FabriqModules::install('sitemenus');
+			$module = new Modules();
+			$module->getModuleByName('sitemenus');
+			$module->enabled = 1;
+			$module->update();
+			Messaging::message('Installed sitemenus module', 'success');
 			
 			// get admin role and give it all perms so that the admin can actually set
 			// things up
@@ -977,6 +984,23 @@ EMAIL;
 		return array(
 			'version' => '1.5.6',
 			'description' => 'Addition of the sitemenus module',
+			'hasDisplay' => true
+		);
+	}
+	
+	private function update_1_5_7() {
+		if (isset($_POST['submit'])) {
+			global $db;
+			$_SESSION['FAB_UPDATES'] = serialize($installed);
+			$query = "INSERT INTO `fabriq_config`
+				(`version`, `installed`)
+				VALUES
+				(?, ?)";
+			$db->prepare_cud($query, array('1.5.7', date('Y-m-d H:i:s')));
+		}
+		return array(
+			'version' => '1.5.7',
+			'description' => 'Fixed bug that prevented FabriqModules::render_now() from being called for the same module action more than once',
 			'hasDisplay' => true
 		);
 	}
