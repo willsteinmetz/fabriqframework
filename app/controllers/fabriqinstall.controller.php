@@ -10,6 +10,8 @@
  */
 
 class fabriqinstall_controller extends Controller {
+	private $installVersion = '1.5.8';
+	
 	function __construct() {
 		global $installed;
 		global $_FAPP;
@@ -266,7 +268,7 @@ class fabriqinstall_controller extends Controller {
 					) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 				$db->query($query);
 				$query = "INSERT INTO fabriq_config (version, installed) VALUES (?, ?)";
-				$db->prepare_cud($query, array('1.3.5', date('Y-m-d H:i:s')));
+				$db->prepare_cud($query, array($this->installVersion, date('Y-m-d H:i:s')));
 				// modules table
 				$query = "CREATE TABLE IF NOT EXISTS `fabmods_modules` (
 						`id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1001,6 +1003,23 @@ EMAIL;
 		return array(
 			'version' => '1.5.7',
 			'description' => 'Fixed bug that prevented FabriqModules::render_now() from being called for the same module action more than once',
+			'hasDisplay' => true
+		);
+	}
+	
+	private function update_1_5_8() {
+		if (isset($_POST['submit'])) {
+			global $db;
+			$_SESSION['FAB_UPDATES'] = serialize($installed);
+			$query = "INSERT INTO `fabriq_config`
+				(`version`, `installed`)
+				VALUES
+				(?, ?)";
+			$db->prepare_cud($query, array('1.5.8', date('Y-m-d H:i:s')));
+		}
+		return array(
+			'version' => '1.5.8',
+			'description' => 'Fixed a bug that set the install version as always 1.3.5 instead of current version',
 			'hasDisplay' => true
 		);
 	}
