@@ -1023,4 +1023,21 @@ EMAIL;
 			'hasDisplay' => true
 		);
 	}
+	
+	private function update_1_5_9() {
+		if (isset($_POST['submit'])) {
+			global $db;
+			$_SESSION['FAB_UPDATES'] = serialize($installed);
+			$query = "INSERT INTO `fabriq_config`
+				(`version`, `installed`)
+				VALUES
+				(?, ?)";
+			$db->prepare_cud($query, array('1.5.9', date('Y-m-d H:i:s')));
+		}
+		return array(
+			'version' => '1.5.9',
+			'description' => 'Added web.config file so that Fabriq apps will work with IIS. This requires the URL Rewrite module to be installed.',
+			'hasDisplay' => true
+		);
+	}
 } 
