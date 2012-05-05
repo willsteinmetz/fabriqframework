@@ -1,6 +1,9 @@
 Fabriq Framework change log
   - Initiated 05/05/10 for version 0.5
 
+Version 1.5.10 2012-05-05
+  - Fixed a bug that tried to set roles before the config file exists
+
 Version 1.5.9 2012-04-16
   - Added web.config file. Fabriq should run on IIS now. The URL Rewrite module for IIS
     needs to be installed in order for clean URLs to work.

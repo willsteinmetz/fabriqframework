@@ -64,7 +64,7 @@ Fabriq::add_css('fabriq.base', 'screen', 'core/');
 
 // check if user is logged in and if not give viewer
 // unathenticated role
-if ((!isset($_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_roles']) || ($_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_roles'] == ''))) {
+if (((!isset($_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_roles']) || ($_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_roles'] == ''))) && $installed) {
 	$role = FabriqModules::new_model('roles', 'Roles');
 	$role->getRole('unauthenticated');
 	$_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_roles'] = serialize(array(
