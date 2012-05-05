@@ -10,7 +10,7 @@
  */
 
 class fabriqinstall_controller extends Controller {
-	private $installVersion = '1.5.8';
+	private $installVersion = '1.5.10';
 	
 	function __construct() {
 		global $installed;
@@ -1037,6 +1037,23 @@ EMAIL;
 		return array(
 			'version' => '1.5.9',
 			'description' => 'Added web.config file so that Fabriq apps will work with IIS. This requires the URL Rewrite module to be installed.',
+			'hasDisplay' => true
+		);
+	}
+	
+	private function update_1_5_10() {
+		if (isset($_POST['submit'])) {
+			global $db;
+			$_SESSION['FAB_UPDATES'] = serialize($installed);
+			$query = "INSERT INTO `fabriq_config`
+				(`version`, `installed`)
+				VALUES
+				(?, ?)";
+			$db->prepare_cud($query, array('1.5.10', date('Y-m-d H:i:s')));
+		}
+		return array(
+			'version' => '1.5.10',
+			'description' => 'Fixed bug that tried to set roles before a config file was created preventing install.',
 			'hasDisplay' => true
 		);
 	}
