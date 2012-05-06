@@ -81,12 +81,19 @@ class users_module extends FabriqModule {
 							}
 						} else {
 							Messaging::message('Display name/e-mail address or password incorrect');
+							FabriqModules::trigger_event('users', 'login', 'User login failed', $user);
 						}
 					} else {
 						Messaging::message('User has been banned');
+						FabriqModules::trigger_event('users', 'login', 'User banned', $user);
 					}
 				} else {
 					Messaging::message('Display name/e-mail address could not be found');
+					$user = new FabriqModules::new_model('users', 'Users');
+					$user->display = $_POST['user'];
+					$user->email = $_POST['user'];
+					$user->encpwd = $_POST['pwd'];
+					FabriqModules::trigger_event('users', 'login', 'User login failed', $user);
 				}
 			} else {
 				Messaging::message('You must provide a display name or e-mail address');
@@ -184,6 +191,9 @@ EMAIL;
 				}
 				$msg = "User added";
 				$success = true;
+				
+				$user->encpwd = null;
+				FabriqModules::trigger_event('users', 'create', 'User created', $user);
 			} else {
 				$msg = "User could not be added";
 				$success = false;
@@ -284,6 +294,9 @@ EMAIL;
 					$u = new stdClass();
 					$u->display = $_POST['display'];
 					$u->email = $_POST['email'];
+					
+					$user->encpwd = null;
+					FabriqModules::trigger_event('users', 'update', 'User updated', $user);
 				} else {
 					$msg = "User found";
 					$u = new stdClass();

@@ -10,7 +10,7 @@
  */
 
 class fabriqinstall_controller extends Controller {
-	private $installVersion = '1.5.10';
+	private $installVersion = '1.5.11';
 	
 	function __construct() {
 		global $installed;
@@ -111,7 +111,7 @@ class fabriqinstall_controller extends Controller {
 	 * Install step 2
 	 * Website configuration details
 	 */
-	private function install_step2() {
+	private function install_step2($continue = TRUE) {
 		Fabriq::title('Site configuration');
 		
 		if (isset($_POST['submit'])) {
@@ -140,9 +140,11 @@ class fabriqinstall_controller extends Controller {
 				);
 				$_SESSION['FAB_INSTALL_site'] = serialize($siteConfig);
 				
-				// go to next step
-				header("Location: index.php?q=fabriqinstall/install/3");
-				exit();
+				if ($continue) {
+					// go to next step
+					header("Location: index.php?q=fabriqinstall/install/3");
+					exit();
+				}
 			}
 			
 			FabriqTemplates::set_var('submitted', true);
@@ -153,7 +155,7 @@ class fabriqinstall_controller extends Controller {
 	 * Install step 3
 	 * Database configuration details
 	 */
-	private function install_step3() {
+	private function install_step3($continue = TRUE) {
 		Fabriq::title('Database configuration');
 		
 		// go back to site configuration step if the session isn't set
@@ -317,9 +319,11 @@ class fabriqinstall_controller extends Controller {
 				) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 				$db->query($query);
 				
-				// go to next step
-				header("Location: index.php?q=fabriqinstall/install/4");
-				exit();
+				if ($continue) {
+					// go to next step
+					header("Location: index.php?q=fabriqinstall/install/4");
+					exit();
+				}
 			}
 			
 			FabriqTemplates::set_var('submitted', true);
@@ -331,7 +335,7 @@ class fabriqinstall_controller extends Controller {
 	 * Install the core database tables and modules and create the
 	 * default administrator
 	 */
-	private function install_step4() {
+	private function install_step4($continue = TRUE) {
 		Fabriq::title('Core module configuration');
 		FabriqTemplates::enable();
 		FabriqTemplates::template('fabriqinstall');
@@ -446,9 +450,11 @@ EMAIL;
 					'From: noreply@' . str_replace('http://', '', str_replace('https://', '', str_replace('www.', '', $_FAPP['url'])))
 				);
 				
-				// go to next step
-				header("Location: index.php?q=fabriqinstall/install/5");
-				exit();
+				if ($continue) {
+					// go to next step
+					header("Location: index.php?q=fabriqinstall/install/5");
+					exit();
+				}
 			}
 			
 			FabriqTemplates::set_var('submitted', true);
@@ -944,7 +950,7 @@ EMAIL;
 		return array(
 			'version' => '1.5.4',
 			'description' => 'Added the new fabriqupdates module',
-			'hasDisplay' => true
+			'hasDisplay' => false
 		);
 	}
 	
@@ -961,7 +967,7 @@ EMAIL;
 		return array(
 			'version' => '1.5.5',
 			'description' => 'Fixed bug in Model that did not let NULL values set properly',
-			'hasDisplay' => true
+			'hasDisplay' => false
 		);
 	}
 	
@@ -986,7 +992,7 @@ EMAIL;
 		return array(
 			'version' => '1.5.6',
 			'description' => 'Addition of the sitemenus module',
-			'hasDisplay' => true
+			'hasDisplay' => false
 		);
 	}
 	
@@ -1003,7 +1009,7 @@ EMAIL;
 		return array(
 			'version' => '1.5.7',
 			'description' => 'Fixed bug that prevented FabriqModules::render_now() from being called for the same module action more than once',
-			'hasDisplay' => true
+			'hasDisplay' => false
 		);
 	}
 	
@@ -1020,7 +1026,7 @@ EMAIL;
 		return array(
 			'version' => '1.5.8',
 			'description' => 'Fixed a bug that set the install version as always 1.3.5 instead of current version',
-			'hasDisplay' => true
+			'hasDisplay' => false
 		);
 	}
 	
@@ -1037,7 +1043,7 @@ EMAIL;
 		return array(
 			'version' => '1.5.9',
 			'description' => 'Added web.config file so that Fabriq apps will work with IIS. This requires the URL Rewrite module to be installed.',
-			'hasDisplay' => true
+			'hasDisplay' => false
 		);
 	}
 	
@@ -1054,7 +1060,24 @@ EMAIL;
 		return array(
 			'version' => '1.5.10',
 			'description' => 'Fixed bug that tried to set roles before a config file was created preventing install.',
-			'hasDisplay' => true
+			'hasDisplay' => false
+		);
+	}
+	
+	private function update_1_5_11() {
+		if (isset($_POST['submit'])) {
+			global $db;
+			$_SESSION['FAB_UPDATES'] = serialize($installed);
+			$query = "INSERT INTO `fabriq_config`
+				(`version`, `installed`)
+				VALUES
+				(?, ?)";
+			$db->prepare_cud($query, array('1.5.11', date('Y-m-d H:i:s')));
+		}
+		return array(
+			'version' => '1.5.11',
+			'description' => 'Made the installer extendable and added events to the users module.',
+			'hasDisplay' => false
 		);
 	}
 } 
