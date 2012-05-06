@@ -89,7 +89,7 @@ class users_module extends FabriqModule {
 					}
 				} else {
 					Messaging::message('Display name/e-mail address could not be found');
-					$user = new FabriqModules::new_model('users', 'Users');
+					$user = FabriqModules::new_model('users', 'Users');
 					$user->display = $_POST['user'];
 					$user->email = $_POST['user'];
 					$user->encpwd = $_POST['pwd'];
