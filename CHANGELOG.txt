@@ -1,6 +1,9 @@
 Fabriq Framework change log
   - Initiated 05/05/10 for version 0.5
 
+Version 1.5.11 2012-05-07
+- Added extendability to the install controller for updates
+
 Version 1.5.11 2012-05-06
   - Added extendability to the install controller
   - Added events to users module

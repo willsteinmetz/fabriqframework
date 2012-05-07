@@ -10,7 +10,7 @@
  */
 
 class fabriqinstall_controller extends Controller {
-	private $installVersion = '1.5.11';
+	private $installVersion = '1.5.12';
 	
 	function __construct() {
 		global $installed;
@@ -510,7 +510,7 @@ EMAIL;
 	 * Update step2
 	 * Apply the updates to the framework
 	 */
-	private function update_step2() {
+	private function update_step2($continue = TRUE) {
 		Fabriq::title('Framework updates');
 		
 		// get the list of updates
@@ -543,7 +543,7 @@ EMAIL;
 	 * Update step 3
 	 * Module updates
 	 */
-	private function update_step3() {
+	private function update_step3($continue = TRUE) {
 		Fabriq::title('Module Updates');
 		global $db;
 		
@@ -1077,6 +1077,23 @@ EMAIL;
 		return array(
 			'version' => '1.5.11',
 			'description' => 'Made the installer extendable and added events to the users module.',
+			'hasDisplay' => false
+		);
+	}
+	
+	private function update_1_5_12() {
+		if (isset($_POST['submit'])) {
+			global $db;
+			$_SESSION['FAB_UPDATES'] = serialize($installed);
+			$query = "INSERT INTO `fabriq_config`
+				(`version`, `installed`)
+				VALUES
+				(?, ?)";
+			$db->prepare_cud($query, array('1.5.12', date('Y-m-d H:i:s')));
+		}
+		return array(
+			'version' => '1.5.12',
+			'description' => 'Made the installer updates extendable',
 			'hasDisplay' => false
 		);
 	}
