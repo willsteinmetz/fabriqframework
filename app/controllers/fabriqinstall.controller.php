@@ -10,7 +10,7 @@
  */
 
 class fabriqinstall_controller extends Controller {
-	private $installVersion = '1.5.12';
+	protected $installVersion = '1.5.13';
 	
 	function __construct() {
 		global $installed;
@@ -103,7 +103,7 @@ class fabriqinstall_controller extends Controller {
 	 * Displays the overview of starting the install of
 	 * the framework
 	 */
-	private function install_step1() {
+	protected function install_step1() {
 		Fabriq::title('Start');
 	}
 	
@@ -111,7 +111,7 @@ class fabriqinstall_controller extends Controller {
 	 * Install step 2
 	 * Website configuration details
 	 */
-	private function install_step2($continue = TRUE) {
+	protected function install_step2($continue = TRUE) {
 		Fabriq::title('Site configuration');
 		
 		if (isset($_POST['submit'])) {
@@ -155,7 +155,7 @@ class fabriqinstall_controller extends Controller {
 	 * Install step 3
 	 * Database configuration details
 	 */
-	private function install_step3($continue = TRUE) {
+	protected function install_step3($continue = TRUE) {
 		Fabriq::title('Database configuration');
 		
 		// go back to site configuration step if the session isn't set
@@ -335,7 +335,7 @@ class fabriqinstall_controller extends Controller {
 	 * Install the core database tables and modules and create the
 	 * default administrator
 	 */
-	private function install_step4($continue = TRUE) {
+	protected function install_step4($continue = TRUE) {
 		Fabriq::title('Core module configuration');
 		FabriqTemplates::enable();
 		FabriqTemplates::template('fabriqinstall');
@@ -465,7 +465,7 @@ EMAIL;
 	 * Install step 5
 	 * Display message about end of install and finish installation
 	 */
-	private function install_step5() {
+	protected function install_step5() {
 		Fabriq::title('Install complete');
 		FabriqTemplates::enable();
 		FabriqTemplates::template('fabriqinstall');
@@ -502,7 +502,7 @@ EMAIL;
 	 * Update step 1
 	 * Display the overview of the update
 	 */
-	private function update_step1() {
+	protected function update_step1() {
 		Fabriq::title('Fabriq Update');
 	}
 	
@@ -510,15 +510,27 @@ EMAIL;
 	 * Update step2
 	 * Apply the updates to the framework
 	 */
-	private function update_step2($continue = TRUE) {
+	protected function update_step2($continue = TRUE) {
 		Fabriq::title('Framework updates');
 		
 		// get the list of updates
 		$methods = get_class_methods('fabriqinstall_controller');
 		$available = array();
+		$currentVersion = explode('.', $this->version);
 		foreach ($methods as $method) {
 			if ((substr($method, 0, 7) == 'update_') && (substr($method, 0, 11) != 'update_step') && ((str_replace('_', '.', str_replace('update_', '', $method)) > $this->version) || ($this->version == null))) {
-				$available[] = $method;
+				$version = explode('_', str_replace('update_', '', $method));
+				if ($version[0] > $currentVersion[0]) {
+					$available[] = $method;
+				} else if ($version[0] == $currentVersion[0]) {
+					if ($version[1] > $currentVersion[1]) {
+						$available[] = $method;
+					} else if ($version[1] == $currentVersion[1]) {
+						if ($version[2] > $currentVersion[2]) {
+							$available[] = $method;
+						}
+					}
+				}
 			}
 		}
 		$toInstall = array();
@@ -529,8 +541,10 @@ EMAIL;
 		
 		if (isset($_POST['submit'])) {
 			if (!Messaging::has_messages()) {
-				header("Location: " . PathMap::build_path('fabriqinstall', 'update', 3));
-				exit();
+				if ($continue) {
+					header("Location: " . PathMap::build_path('fabriqinstall', 'update', 3));
+					exit();
+				}
 			} else {
 				$submitted = true;
 			}
@@ -543,7 +557,7 @@ EMAIL;
 	 * Update step 3
 	 * Module updates
 	 */
-	private function update_step3($continue = TRUE) {
+	protected function update_step3($continue = TRUE) {
 		Fabriq::title('Module Updates');
 		global $db;
 		
@@ -581,8 +595,10 @@ EMAIL;
 					}
 				}
 			}
-			header("Location: " . PathMap::build_path('fabriqinstall', 'update', 4));
-			exit();
+			if ($continue) {
+				header("Location: " . PathMap::build_path('fabriqinstall', 'update', 4));
+				exit();
+			}
 		} else {
 			FabriqTemplates::set_var('installed', $installed);
 			FabriqTemplates::set_var('available', $available);
@@ -593,7 +609,7 @@ EMAIL;
 	 * Update step4
 	 * Finish the updating process
 	 */
-	private function update_step4() {
+	protected function update_step4() {
 		Fabriq::title('Updates Complete');
 		unset($_SESSION['FAB_UPDATES']);
 	}
@@ -603,7 +619,7 @@ EMAIL;
 	 * Add the core database tables for the framework and module functionality
 	 * @return array
 	 */
-	private function update_1_3() {
+	protected function update_1_3() {
 		// apply the update
 		if (isset($_POST['submit'])) {
 			$installed = unserialize($_SESSION['FAB_UPDATES']);
@@ -768,7 +784,7 @@ EMAIL;
 		);
 	}
 
-	private function update_1_3_1() {
+	protected function update_1_3_1() {
 		if (isset($_POST['submit'])) {
 			$installed = unserialize($_SESSION['FAB_UPDATES']);
 			if (!is_array($installed)) {
@@ -806,7 +822,7 @@ EMAIL;
 		);
 	}
 
-	private function update_1_3_2() {
+	protected function update_1_3_2() {
 		if (isset($_POST['submit'])) {
 			global $db;
 			$_SESSION['FAB_UPDATES'] = serialize($installed);
@@ -823,7 +839,7 @@ EMAIL;
 		);
 	}
 
-	private function update_1_3_3() {
+	protected function update_1_3_3() {
 		if (isset($_POST['submit'])) {
 			global $db;
 			$_SESSION['FAB_UPDATES'] = serialize($installed);
@@ -840,7 +856,7 @@ EMAIL;
 		);
 	}
 	
-	private function update_1_3_4() {
+	protected function update_1_3_4() {
 		if (isset($_POST['submit'])) {
 			global $db;
 			$_SESSION['FAB_UPDATES'] = serialize($installed);
@@ -857,7 +873,7 @@ EMAIL;
 		);
 	}
 
-	private function update_1_3_5() {
+	protected function update_1_3_5() {
 		if (isset($_POST['submit'])) {
 			global $db;
 			$_SESSION['FAB_UPDATES'] = serialize($installed);
@@ -874,7 +890,7 @@ EMAIL;
 		);
 	}
 	
-	private function update_1_4() {
+	protected function update_1_4() {
 		if (isset($_POST['submit'])) {
 			global $db;
 			$_SESSION['FAB_UPDATES'] = serialize($installed);
@@ -891,7 +907,7 @@ EMAIL;
 		);
 	}
 	
-	private function update_1_5_1() {
+	protected function update_1_5_1() {
 		if (isset($_POST['submit'])) {
 			global $db;
 			$_SESSION['FAB_UPDATES'] = serialize($installed);
@@ -908,7 +924,7 @@ EMAIL;
 		);
 	}
 	
-	private function update_1_5_2() {
+	protected function update_1_5_2() {
 		if (isset($_POST['submit'])) {
 			global $db;
 			$_SESSION['FAB_UPDATES'] = serialize($installed);
@@ -925,7 +941,7 @@ EMAIL;
 		);
 	}
 	
-	private function update_1_5_4() {
+	protected function update_1_5_4() {
 		if (isset($_POST['submit'])) {
 			if (file_exists('modules/fabriqupdates/fabriqupdates.module.php')) {
 				global $db;
@@ -954,7 +970,7 @@ EMAIL;
 		);
 	}
 	
-	private function update_1_5_5() {
+	protected function update_1_5_5() {
 		if (isset($_POST['submit'])) {
 			global $db;
 			$_SESSION['FAB_UPDATES'] = serialize($installed);
@@ -971,7 +987,7 @@ EMAIL;
 		);
 	}
 	
-	private function update_1_5_6() {
+	protected function update_1_5_6() {
 		if (isset($_POST['submit'])) {
 			global $db;
 			$_SESSION['FAB_UPDATES'] = serialize($installed);
@@ -996,7 +1012,7 @@ EMAIL;
 		);
 	}
 	
-	private function update_1_5_7() {
+	protected function update_1_5_7() {
 		if (isset($_POST['submit'])) {
 			global $db;
 			$_SESSION['FAB_UPDATES'] = serialize($installed);
@@ -1013,7 +1029,7 @@ EMAIL;
 		);
 	}
 	
-	private function update_1_5_8() {
+	protected function update_1_5_8() {
 		if (isset($_POST['submit'])) {
 			global $db;
 			$_SESSION['FAB_UPDATES'] = serialize($installed);
@@ -1030,7 +1046,7 @@ EMAIL;
 		);
 	}
 	
-	private function update_1_5_9() {
+	protected function update_1_5_9() {
 		if (isset($_POST['submit'])) {
 			global $db;
 			$_SESSION['FAB_UPDATES'] = serialize($installed);
@@ -1047,7 +1063,7 @@ EMAIL;
 		);
 	}
 	
-	private function update_1_5_10() {
+	protected function update_1_5_10() {
 		if (isset($_POST['submit'])) {
 			global $db;
 			$_SESSION['FAB_UPDATES'] = serialize($installed);
@@ -1064,7 +1080,7 @@ EMAIL;
 		);
 	}
 	
-	private function update_1_5_11() {
+	protected function update_1_5_11() {
 		if (isset($_POST['submit'])) {
 			global $db;
 			$_SESSION['FAB_UPDATES'] = serialize($installed);
@@ -1081,7 +1097,7 @@ EMAIL;
 		);
 	}
 	
-	private function update_1_5_12() {
+	protected function update_1_5_12() {
 		if (isset($_POST['submit'])) {
 			global $db;
 			$_SESSION['FAB_UPDATES'] = serialize($installed);
@@ -1094,6 +1110,23 @@ EMAIL;
 		return array(
 			'version' => '1.5.12',
 			'description' => 'Made the installer updates extendable',
+			'hasDisplay' => false
+		);
+	}
+	
+	protected function update_1_5_13() {
+		if (isset($_POST['submit'])) {
+			global $db;
+			$_SESSION['FAB_UPDATES'] = serialize($installed);
+			$query = "INSERT INTO `fabriq_config`
+				(`version`, `installed`)
+				VALUES
+				(?, ?)";
+			$db->prepare_cud($query, array('1.5.13', date('Y-m-d H:i:s')));
+		}
+		return array(
+			'version' => '1.5.13',
+			'description' => 'Fixed visibility of installer functions',
 			'hasDisplay' => false
 		);
 	}

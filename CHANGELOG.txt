@@ -1,8 +1,11 @@
 Fabriq Framework change log
   - Initiated 05/05/10 for version 0.5
 
-Version 1.5.11 2012-05-07
-- Added extendability to the install controller for updates
+Version 1.5.13 2012-05-07
+  - Fixed visibility of functions in fabriq installer
+
+Version 1.5.12 2012-05-07
+  - Added extendability to the install controller for updates
 
 Version 1.5.11 2012-05-06
   - Added extendability to the install controller
