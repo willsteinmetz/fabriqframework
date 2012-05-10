@@ -1,8 +1,12 @@
 Fabriq Framework change log
   - Initiated 05/05/10 for version 0.5
 
+Version 1.5.14 2012-05-10
+  - Added log in successful event
+  - Added user role check that does not do any forwarding
+
 Version 1.5.13 2012-05-07
-  - Fixed visibility of functions in fabriq installer
+  - Fixed visibility of functions in Fabriq installer
 
 Version 1.5.12 2012-05-07
   - Added extendability to the install controller for updates

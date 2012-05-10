@@ -10,7 +10,7 @@
  */
 
 class fabriqinstall_controller extends Controller {
-	protected $installVersion = '1.5.13';
+	protected $installVersion = '1.5.14';
 	
 	function __construct() {
 		global $installed;
@@ -1127,6 +1127,23 @@ EMAIL;
 		return array(
 			'version' => '1.5.13',
 			'description' => 'Fixed visibility of installer functions',
+			'hasDisplay' => false
+		);
+	}
+
+	protected function update_1_5_14() {
+		if (isset($_POST['submit'])) {
+			global $db;
+			$_SESSION['FAB_UPDATES'] = serialize($installed);
+			$query = "INSERT INTO `fabriq_config`
+				(`version`, `installed`)
+				VALUES
+				(?, ?)";
+			$db->prepare_cud($query, array('1.5.14', date('Y-m-d H:i:s')));
+		}
+		return array(
+			'version' => '1.5.14',
+			'description' => 'Added user successful log in event, new role checking function with no redirection',
 			'hasDisplay' => false
 		);
 	}

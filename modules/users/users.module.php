@@ -69,6 +69,7 @@ class users_module extends FabriqModule {
 								if ($user->forcepwdreset == 1) {
 									array_unshift($path, 'users', 'changePassword');
 								}
+								FabriqModules::trigger_event('users', 'login', 'User login success', $user);
 								header('Location:' . call_user_func_array('PathMap::build_path', $path));
 								exit();
 							} else {
@@ -76,6 +77,7 @@ class users_module extends FabriqModule {
 								if ($user->forcepwdreset == 1) {
 									array_unshift($path, 'users', 'changePassword');
 								}
+								FabriqModules::trigger_event('users', 'login', 'User login success', $user);
 								header('Location:' . call_user_func_array('PathMap::build_path', $path));
 								exit();
 							}

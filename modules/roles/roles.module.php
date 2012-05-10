@@ -135,6 +135,25 @@ class roles_module extends FabriqModule {
 		}
 		return FALSE;
 	}
+
+	public function userHasRole($role) {
+		if (isset($_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_roles'])) {
+			$roles = unserialize($_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_roles']);
+			if (count($roles) > 0) {
+				if (in_array($role, $roles)) {
+					return TRUE;
+				}
+				return FALSE;
+			}
+			return FALSE;
+		}
+		// user isn't logged in
+		if (Fabriq::render() != 'none') {
+			FabriqModules::module('users')->login();
+			FabriqModules::render('users', 'login');
+		}
+		return FALSE;
+	}
 	
 	public function requiresPermission($permission, $module) {
 		if (isset($_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_roles'])) {
