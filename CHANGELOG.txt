@@ -1,6 +1,9 @@
 Fabriq Framework change log
   - Initiated 05/05/10 for version 0.5
 
+Version 1.5.15 2012-05-14
+  - Added log out event
+
 Version 1.5.14 2012-05-10
   - Added log in successful event
   - Added user role check that does not do any forwarding

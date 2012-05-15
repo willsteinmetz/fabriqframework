@@ -111,6 +111,9 @@ class users_module extends FabriqModule {
 		unset($_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_userid']);
 		unset($_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_roles']);
 		unset($_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_forcepwdreset']);
+
+		FabriqModules::trigger_event('users', 'logout', 'User log out');
+
 		header("Location: " . PathMap::build_path('users', 'login'));
 		exit();
 	}

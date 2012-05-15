@@ -89,6 +89,14 @@ class users_install {
 		$mod->versioninstalled = '1.5';
 		$mod->update();
 	}
+
+	public function update_1_5_1() {
+		// update the module version number
+		$mod = new Modules();
+		$mod->getModuleByName('users');
+		$mod->versioninstalled = '1.5.1';
+		$mod->update();
+	}
 	
 	public function uninstall() {
 		// core modules cannot be uninstalled
