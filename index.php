@@ -58,7 +58,7 @@ if (trim($q[0]) == '') {
 }
 
 // include core JavaScript libraries
-FabriqLibs::js_lib('jquery-1.4.4.min', 'jquery');
+Fabriq::jquery();
 Fabriq::add_js('fabriq', 'core/');
 Fabriq::add_css('fabriq.base', 'screen', 'core/');
 

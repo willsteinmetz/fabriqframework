@@ -10,7 +10,7 @@
  */
 
 class fabriqinstall_controller extends Controller {
-	protected $installVersion = '1.5.16';
+	protected $installVersion = '1.5.17';
 	
 	function __construct() {
 		global $installed;
@@ -1194,6 +1194,31 @@ EMAIL;
 		return array(
 			'version' => '1.5.16',
 			'description' => 'Added ability to have template files use either .tmpl.php or .tpl.php file extensions',
+			'hasDisplay' => false
+		);
+	}
+	
+	protected function update_1_5_17() {
+		if (isset($_POST['submit'])) {
+			global $db;
+			$installed = unserialize($_SESSION['FAB_UPDATES']);
+			if (!is_array($installed)) {
+				$installed = array();
+			}
+			if (!isset($installed['1.5.17']) || !$installed['1.5.17']) {
+				// mark the update as done
+				$installed['1.5.17'] = true;
+				$_SESSION['FAB_UPDATES'] = serialize($installed);
+				$query = "INSERT INTO `fabriq_config`
+					(`version`, `installed`)
+					VALUES
+					(?, ?)";
+				$db->prepare_cud($query, array('1.5.17', date('Y-m-d H:i:s')));
+			}
+		}
+		return array(
+			'version' => '1.5.17',
+			'description' => 'Updated core to handle switching jQuery version',
 			'hasDisplay' => false
 		);
 	}

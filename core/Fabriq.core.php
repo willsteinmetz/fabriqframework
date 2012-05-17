@@ -70,6 +70,38 @@ abstract class Fabriq {
 		self::$cssqueue = array();
 		self::add_css('fabriq.base', 'screen', 'core/');
 	}
+	
+	/**
+	 * This function will load the given version of jQuery. If a version is in the queue,
+	 * the function will replace that version with the input version
+	 * @param string $version - @default 'latest'
+	 */
+	public static function jquery($version = 'latest') {
+		if (count(self::$jsqueue) > 0) {
+			$found = false;
+			foreach (self::$jsqueue as &$js) {
+				if ($js['js'] == 'jquery.min') {
+					$js['path'] = 'libs/javascript/' . $version;
+					$found = true;
+					break;
+				}
+			}
+			if (!$found) {
+				FabriqLibs::js_lib('jquery.min', 'jquery/' . $version);
+			}
+		} else {
+			FabriqLibs::js_lib('jquery.min', 'jquery/' . $version);
+		}
+	}
+	
+	/**
+	 * Empties the javascript queue except for the base JavaScript files and jQuery
+	 */
+	public static function empty_js_queue() {
+		self::$jsqueue = array();
+		FabriqLibs::js_lib('jquery.min', 'jquery/' . $version);
+		Fabriq::add_js('fabriq', 'core/');
+	}
 
 	/**
 	 * Adds a JavaScript file to the JavaScript queue for JavaScript includes

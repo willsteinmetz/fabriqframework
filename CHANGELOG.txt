@@ -1,6 +1,12 @@
 Fabriq Framework change log
   - Initiated 05/05/10 for version 0.5
 
+Version 1.5.17 2012-05-17
+  - Added Fabriq::jquery() for setting the jQuery version
+  - Added jQuery versions in the /libs/javascripts/jquery directory sorted by directory
+  - Added Fabriq::empty_js_queue() for emptying the JavaScript queue except for the
+    the core files and JavaScript
+
 Version 1.5.16 2012-05-16
   - Added ability to have template files use either .tmpl.php or .tpl.php file extensions
 
