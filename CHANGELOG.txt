@@ -1,6 +1,9 @@
 Fabriq Framework change log
   - Initiated 05/05/10 for version 0.5
 
+Version 1.5.16 2012-05-16
+  - Added ability to have template files use either .tmpl.php or .tpl.php file extensions
+
 Version 1.5.15 2012-05-14
   - Added log out event
 

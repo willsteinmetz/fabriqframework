@@ -636,11 +636,16 @@ abstract class FabriqTemplates {
 		ob_start();
 		extract(self::$tplvars);
 		if (Fabriq::render() == 'layout') {
-			$tpl = "app/templates/" . self::$template . ".tpl.php";
-			if (!file_exists($tpl)) {
-				throw new Exception('Template ' . self::$template . ' could not be loaded');
+			$tmpl = "app/templates/" . self::$template . ".tmpl.php";
+			if (!file_exists($tmpl)) {
+				$tpl = "app/templates/" . self::$template . ".tpl.php";
+				if (!file_exists($tpl)) {
+					throw new Exception('Template ' . self::$template . ' could not be loaded');
+				}
+				require_once($tpl);
+			} else {
+				require_once($tmpl);
 			}
-			require_once($tpl);
 		} else if (Fabriq::render() == 'view') {
 			$view = "app/views/" . PathMap::render_controller() . '/' . PathMap::render_action() . '.view.php';
 			if (!file_exists($view)) {
