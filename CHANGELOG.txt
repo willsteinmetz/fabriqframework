@@ -1,6 +1,9 @@
 Fabriq Framework change log
   - Initiated 05/05/10 for version 0.5
 
+Version 1.6 2012-05-20
+  - Updated to stable version 1.6
+
 Version 1.5.17 2012-05-17
   - Added Fabriq::jquery() for setting the jQuery version
   - Added jQuery versions in the /libs/javascripts/jquery directory sorted by directory

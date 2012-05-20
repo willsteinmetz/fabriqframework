@@ -10,7 +10,7 @@
  */
 
 class fabriqinstall_controller extends Controller {
-	protected $installVersion = '1.5.17';
+	protected $installVersion = '1.6';
 	
 	function __construct() {
 		global $installed;
@@ -1219,6 +1219,31 @@ EMAIL;
 		return array(
 			'version' => '1.5.17',
 			'description' => 'Updated core to handle switching jQuery version',
+			'hasDisplay' => false
+		);
+	}
+	
+	protected function update_1_6() {
+		if (isset($_POST['submit'])) {
+			global $db;
+			$installed = unserialize($_SESSION['FAB_UPDATES']);
+			if (!is_array($installed)) {
+				$installed = array();
+			}
+			if (!isset($installed['1.6']) || !$installed['1.6']) {
+				// mark the update as done
+				$installed['1.6'] = true;
+				$_SESSION['FAB_UPDATES'] = serialize($installed);
+				$query = "INSERT INTO `fabriq_config`
+					(`version`, `installed`)
+					VALUES
+					(?, ?)";
+				$db->prepare_cud($query, array('1.6', date('Y-m-d H:i:s')));
+			}
+		}
+		return array(
+			'version' => '1.6',
+			'description' => 'Updated to stable version 1.6',
 			'hasDisplay' => false
 		);
 	}
