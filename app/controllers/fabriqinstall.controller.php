@@ -10,7 +10,7 @@
  */
 
 class fabriqinstall_controller extends Controller {
-	protected $installVersion = '1.7';
+	protected $installVersion = '1.7.1';
 	
 	function __construct() {
 		global $installed;
@@ -1269,6 +1269,31 @@ EMAIL;
 		return array(
 			'version' => '1.7',
 			'description' => 'Removed deprecated code, 2.0 RC 1',
+			'hasDisplay' => false
+		);
+	}
+	
+	protected function update_1_7_1() {
+		if (isset($_POST['submit'])) {
+			global $db;
+			$installed = unserialize($_SESSION['FAB_UPDATES']);
+			if (!is_array($installed)) {
+				$installed = array();
+			}
+			if (!isset($installed['1.7.1']) || !$installed['1.7.1']) {
+				// mark the update as done
+				$installed['1.7.1'] = true;
+				$_SESSION['FAB_UPDATES'] = serialize($installed);
+				$query = "INSERT INTO `fabriq_config`
+					(`version`, `installed`)
+					VALUES
+					(?, ?)";
+				$db->prepare_cud($query, array('1.7.1', date('Y-m-d H:i:s')));
+			}
+		}
+		return array(
+			'version' => '1.7.1',
+			'description' => 'Removed lingering reference to helpers in code, 2.0 RC 2',
 			'hasDisplay' => false
 		);
 	}

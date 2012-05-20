@@ -14,11 +14,8 @@
  * @param string $class
  */
 function fabriq_default_autoload($class) {
-	// include helper file
-	if (strpos($class, '_helper') !== FALSE) {
-		require_once("app/helpers/" . str_replace('_helper', '', $class) . ".helper.php");
 	// include module install file
-	} else if (strpos($class, '_install') !== FALSE) {
+	if (strpos($class, '_install') !== FALSE) {
 		$module = str_replace('_install', '', $class);
 		require_once("modules/{$module}/{$module}.install.php");
 	// initialize module core
