@@ -1,16 +1,19 @@
 NOTE: This version of Fabriq is a development release and may still contain bugs. If you are not 
 sure whether or not to use this version, wait for the next stable release.
 
-To UPDATE TO VERSION 1.5.0 from version 1.3.x or 1.4.x
+To UPDATE TO VERSION 1.7.x from version 1.3.x through 1.6.x
 
  - Expand the downloaded archive (.zip or .tar.gz file)
+ 
+ - Copy the index.php to your site/applications root directory
+ 
+ - Copy the .htaccess or web.config to your site/applications root directory depending on
+   your platform
  
  - Remove the core PHP classes (*.class.php) files from the /core directory
    in your site/application
  
  - Remove the directory /core/modules
- 
- - Copy the index.php to your site/applications root directory
  
  - Copy the new combined core class files into /core
    - /core/Fabriq.core.php
@@ -26,88 +29,34 @@ To UPDATE TO VERSION 1.5.0 from version 1.3.x or 1.4.x
  - Copy the following views directories to /app/views
    - /app/views/fabriqinstall
    - /app/views/fabriqmodules
-   
-   1.5.2 AND NEWER ALSO DO THE FOLLOWING
-   
- - Copy the following from /modules to your application's /modules directory to update
-   - /modules/roles
-   - /modules/users
  
- - Copy /libs/javascripts/handlebars to your application's /libs/javascripts directory
-   - If you are not using the jQuery templates plugin for your application, remove the file
-     /libs/javascripts/jquery/plugins/jquery.tmpl.min.js If you are using it, please consider
-     switching to a maintained client-side templating library like Handlebars.js
-   - Version 1.5.17 and newer, remove /libs/javascripts/jquery/jquery-1.4.4.min.js and copy
-     the directories inside of the /libs/javascripts/jquery
-     
-   1.5.4 AND NEWER ALSO DO THE FOLLOWING
-
- - Copy the following from /modules to your application's /modules directory to update
-   - /modules/fabriqupdates
-   
-   1.5.6 AND NEWER ALSO DO THE FOLLOWING
- - Copy the following from /modules to your application's /modules directory to update
-   - /modules/sitemenus
-
-TO UPDATE TO VERSION 1.3.x or 1.4.x OF FABRIQ FROM 1.3
-
- - Expand the downloaded archive (.zip or .tar.gz file)
- 
- - Copy the following files from the expanded archive to the /core directory
-   of your Fabriq web application(s)/website(s) (NOTE: be sure if you have edited
-   these files to back up your changes. IT IS STRONGLY RECOMMENDED THAT YOU DO NOT
-   MAKE CHANGES TO CORE FILES IN ORDER TO EASILY UPGRADE BETWEEN VERSIONS!):
-   - /core/BaseMapping.class.php
-   - /core/Controller.class.php
-   - /core/Database.class.php
-   - /core/Fabriq.class.php
-   - /core/FabriqLibs.class.php
-   - /core/FabriqTemplates.class.php
-   - /core/fabriq.base.css
-   - /core/fabriq.js
-   - /core/fabriq.ui.css
-   - /core/fabriq.ui.js
-   - /core/fabriqinstall.css
-   - /core/Messaging.class.php
-   - /core/Model.class.php
-   - /core/modules/FabriqModule.class.php
-   - /core/modules/FabriqModules.class.php
-   - /core/modules/ModuleConfigs.class.php
-   - /core/modules/ModuleModel.class.php
-   - /core/modules/Modules.model.php
-   - /core/modules/Perms.model.php
-
- - Copy the index.php file from the expanded archive to the / (root) directory
-   of your Fabriq web application(s)/website(s)
-
- - Copy the .htaccess file (this will need to be done from command line in Unix, Mac, and Linux based
-   systems) to the / (root) directory of your Fabriq web application(s)/website(s)
-
- - Copy the following files to /app/controllers
-   - /app/controllers/fabriqinstall.controller.php
-   - /app/controllers/fabriqmodules.controller.php
-
  - Copy the following files to /app/scripts
    - /app/scripts/fabriqmodules.script.js
+   
+ - Copy the following from /modules to your application's /modules directory to update
+   - /modules/fabriqupdates
+   - /modules/pathpath
+   - /modules/roles
+   - /modules/sitemenus
+   - /modules/users
  
- - Copy the following views directories to /app/views
-   - /app/views/fabriqinstall
-   - /app/views/fabriqmodules
+ - Copy the following from /libs/css to your application's /libs/css directory to update
+   - /libs/css/pie
+   
+ - Copy the following from /libs/javascript to your application's /libs/javascript directory to update
+   - /libs/javascript/handlebars
+   - /libs/javascript/jquery
 
 NOTES (READ CAREFULLY FOR FURTHER DETAILS ON UPDATING):
- - When updating between versions, if your version is more than 2 minor versions different (the
-   minor version is the first number after the first decimal point starting from the left),
-   you should download updates and apply them in order for all versions between the version you
-   are currently using and the latest release. Be sure to read the UPDATE.txt file for each
-   release as each release may contain different instructions based on updates provided.
-   
  - When referencing mapping functions, the PathMap class should be referenced and
    not the BaseMapping class. The PathMap class extends the BaseMapping class and
    therefore has inherits all of the BaseMapping class' functionality.
    
  - With the release of version 1.3, helper files have been deprecated. You should move any functions
    inside of helper files to their respective controllers. If the functions are for use only in
-   the controller, they should be marked as private.
+   the controller, they should be marked as private. Version 1.7 is a release candidate for version 2.0
+   and all code marked as deprecated in the core has been removed. Code depending on the removed
+   functionality will no longer function.
    
  - Please note that starting with the release of version 1.0, all odd numbered minor versions
    (the minor version is the first number after the decimal point starting from the left) are

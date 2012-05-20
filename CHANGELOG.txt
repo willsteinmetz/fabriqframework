@@ -1,6 +1,10 @@
 Fabriq Framework change log
   - Initiated 05/05/10 for version 0.5
 
+Version 1.7 2012-05-20
+  - Removed the deprecated code
+  - Version 2.0 release candidate 1
+
 Version 1.6 2012-05-20
   - Updated to stable version 1.6
 

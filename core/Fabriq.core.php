@@ -934,40 +934,6 @@ class Database {
 	}
 
 	/**
-	 * Builds WHERE clause pieces for queries
-	 * @param string $field
-	 * @param string $operator
-	 * @param string $test
-	 * @param string $next
-	 */
-	// DEPRECATED - will be removed in version 2.0 RC
-	public function where($field, $operator, $test, $next = NULL) {
-		Messaging::message('Database::where() has been deprecated and will be removed in version 2.0 RC', 'warning');
-		if ($next == NULL) {
-			return $this->escape_string(trim($field)) . ' ' . $this->escape_string(trim($operator)) . " '" . $this->escape_string(trim($test)) . "' ";
-		} else {
-			return $this->escape_string(trim($field)) . ' ' . $this->escape_string(trim($operator)) . " '" . $this->escape_string(trim($test)) . "' " . $this->escape_string(trim($next));
-		}
-	}
-
-	/**
-	 * Builds WHERE clause pieces for queries that are used in
-	 * prepared statements
-	 * @param string $field
-	 * @param string $operator
-	 * @param string $next
-	 */
-	// DEPRECATED - will be removed in version 2.0 RC
-	public function where_prepared($field, $operator, $next = NULL) {
-		Messaging::message('Database::where_prepared() has been deprecated and will be removed in version 2.0 RC', 'warning');
-		if ($next == NULL) {
-			return $this->escape_string(trim($field)) . ' ' . $this->escape_string(trim($operator)) . " ? ";
-		} else {
-			return $this->escape_string(trim($field)) . ' ' . $this->escape_string(trim($operator)) . " ? " . $this->escape_string(trim($next));
-		}
-	}
-
-	/**
 	 * Closes the database connection
 	 */
 	public function close() {
@@ -1304,48 +1270,6 @@ class Model implements ArrayAccess, Iterator, Countable {
 
 		$db->prepare_cud($sql, $values);
 		return $db->affected_rows;
-	}
-
-	/**
-	 * Builds where clause for query
-	 * @param array $where
-	 * @return string
-	 */
-	// DEPRECATED - will be removed in version 2.0 RC
-	private function build_where($where) {
-		global $db;
-		Messaging::message('Model::build_where has been deprecated and will be removed in version 2.0 RC', 'warning');
-
-		if (count($where) > 0) {
-			$w = '';
-			foreach ($where as $clause) {
-				list($f, $o, $t, $n) = $clause;
-				$w .= $db->where($f, $o, $t, $n) . ' ';
-			}
-			return 'WHERE ' . $w . " ";
-		}
-	}
-
-	/**
-	 * Builds where clause for query for prepared statemens
-	 * @param unknown_type $where
-	 * @return string
-	 */
-	// DEPRECATED - will be removed in version 2.0 RC
-	private function build_where_prepared($where) {
-		global $db;
-		$inputs = array();
-		Messaging::message('Model::build_where_prepared has been deprecated and will be removed in version 2.0 RC', 'warning');
-
-		if (count($where) > 0) {
-			$w = '';
-			foreach ($where as $clause) {
-				list($f, $o, $t, $n) = $clause;
-				$w .= $db->where_prepared($f, $o, $n) . ' ';
-				$inputs[] = $t;
-			}
-			return array('WHERE ' . $w . " ", $inputs);
-		}
 	}
 
 	/**

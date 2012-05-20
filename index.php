@@ -32,14 +32,6 @@ if ($installed) {
 require_once('core/FabriqModules.core.php');
 require_once('app/PathMap.class.php');
 
-// DEPRECATED
-// include the application helper file if available
-// @TODO remove for 2.0 release candidate
-if (file_exists('app/helpers/application.helper.php')) {
-	Messaging::message('Helper files, including the application helper, have been deprecated and will be removed in version 2.0 RC', 'warning');
-	require_once('app/helpers/application.helper.php');
-}
-
 // initialize database
 if ($installed) {
 	$db = new Database($_FDB['default']);
@@ -97,13 +89,6 @@ if (!file_exists("app/controllers/" . PathMap::controller() . ".controller.php")
 	PathMap::render_action('fourohfour');
 }
 
-// DEPRECATED
-// include the controller helper file if available
-// @TODO remove for 2.0 release candidate
-if (file_exists("app/helpers/" . PathMap::controller() . ".helper.php")) {
-	Messaging::message('Helper files have been deprecated and will be removed in version 2.0 RC', 'warning');
-	require_once("app/helpers/" . PathMap::controller() . ".helper.php");
-}
 require_once("app/controllers/" . PathMap::controller() . ".controller.php");
 $c = PathMap::controller() . '_controller';
 $controller = new $c();
@@ -129,10 +114,6 @@ if (PathMap::render_controller() != PathMap::controller()) {
 	if (!file_exists("app/controllers/" . PathMap::render_controller() . ".controller.php")) {
 		PathMap::render_controller('errors');
 		PathMap::render_action('fourohfour');
-	}
-	if (file_exists("app/helpers/" . PathMap::render_controller() . ".helper.php")) {
-		Messaging::message('Helper files have been deprecated and will be removed in version 2.0 RC', 'warning');
-		require_once("app/helpers/" . PathMap::render_controller() . ".helper.php");
 	}
 	require_once("app/controllers/" . PathMap::render_controller() . ".controller.php");
 	$c = PathMap::render_controller() . '_controller';
