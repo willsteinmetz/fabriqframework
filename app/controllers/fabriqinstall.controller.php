@@ -10,7 +10,7 @@
  */
 
 class fabriqinstall_controller extends Controller {
-	protected $installVersion = '2.0';
+	protected $installVersion = '2.0.1';
 	
 	function __construct() {
 		global $installed;
@@ -518,8 +518,11 @@ EMAIL;
 		$available = array();
 		$currentVersion = explode('.', $this->version);
 		foreach ($methods as $method) {
-			if ((substr($method, 0, 7) == 'update_') && (substr($method, 0, 11) != 'update_step') && ((str_replace('_', '.', str_replace('update_', '', $method)) > $this->version) || ($this->version == null))) {
+			if ((substr($method, 0, 7) == 'update_') && (substr($method, 0, 11) != 'update_step') || ($this->version == null)) {
 				$version = explode('_', str_replace('update_', '', $method));
+				foreach ($version as &$v) {
+					$v = $v * 1;
+				}
 				if ($version[0] > $currentVersion[0]) {
 					$available[] = $method;
 				} else if ($version[0] == $currentVersion[0]) {
@@ -1319,6 +1322,31 @@ EMAIL;
 		return array(
 			'version' => '2.0',
 			'description' => 'Version 2.0 released!',
+			'hasDisplay' => false
+		);
+	}
+	
+	protected function update_2_0_1() {
+		if (isset($_POST['submit'])) {
+			global $db;
+			$installed = unserialize($_SESSION['FAB_UPDATES']);
+			if (!is_array($installed)) {
+				$installed = array();
+			}
+			if (!isset($installed['2.0.1']) || !$installed['2.0.1']) {
+				// mark the update as done
+				$installed['2.0.1'] = true;
+				$_SESSION['FAB_UPDATES'] = serialize($installed);
+				$query = "INSERT INTO `fabriq_config`
+					(`version`, `installed`)
+					VALUES
+					(?, ?)";
+				$db->prepare_cud($query, array('2.0.1', date('Y-m-d H:i:s')));
+			}
+		}
+		return array(
+			'version' => '2.0.1',
+			'description' => 'Fixed an install bug',
 			'hasDisplay' => false
 		);
 	}
