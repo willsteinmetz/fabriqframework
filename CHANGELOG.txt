@@ -1,6 +1,9 @@
 Fabriq Framework change log
   - Initiated 05/05/10 for version 0.5
 
+Version 2.0 2012-05-28
+  - Version 2.0 released!
+
 Version 1.7.1 2012-05-20
   - Removed lingering reference to helper in code
   - Version 2.0 release candidate 2
