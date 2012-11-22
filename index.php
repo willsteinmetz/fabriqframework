@@ -39,7 +39,6 @@ if ($installed) {
 	FabriqModules::get_handlers();
 } else {
 	$_FAPP = array();
-	$_FAPP['templating'] = true;
 	$_FAPP['templates']['default'] = 'fabriqinstall';
 }
 
@@ -68,16 +67,12 @@ if (((!isset($_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_roles']) || ($_SESSION
 // determine the controller and action to render
 PathMap::map_path();
 
-// determine whether to use templating by default
-if (!isset($_FAPP['templating'])) {
-	$_FAPP['templating'] = false;
-} else if ($_FAPP['templating']) {	
-	if (!isset($_FAPP['templates']['default'])) {
-		$_FAPP['templates']['default'] = 'application';
-	}
-	if (trim(FabriqTemplates::template() == '')) { 
-		FabriqTemplates::template($_FAPP['templates']['default']);
-	}
+// determine which template to set initially
+if (!isset($_FAPP['templates']['default'])) {
+	$_FAPP['templates']['default'] = 'application';
+}
+if (trim(FabriqTemplates::template() == '')) { 
+	FabriqTemplates::template($_FAPP['templates']['default']);
 }
 
 // include the controller, action, and helper files
@@ -141,33 +136,7 @@ if (PathMap::render_controller() != PathMap::controller()) {
 	}
 }
 
-if ($_FAPP['templating']) {
-	FabriqTemplates::render();
-} else {
-	// render view (if necessary)
-	switch(Fabriq::render()) {
-		case 'none':
-			break;
-		case 'view':
-			if (!file_exists("app/views/" . PathMap::render_controller() . "/" . PathMap::render_action() . ".view.php")) {
-				require_once("app/views/errors/fourohfour.view.php");
-			} else {
-				require_once("app/views/" . PathMap::render_controller() . "/" . PathMap::render_action() . ".view.php");
-			}
-			break;
-		case 'layout': default:
-			if (!file_exists("app/views/" . PathMap::render_controller() . "/" . PathMap::render_action() . ".view.php")) {
-				require_once("app/views/errors/fourohfour.view.php");
-			} else {
-				if (!file_exists("app/views/layouts/" . Fabriq::layout() . ".view.php")) {
-					require_once('app/views/layouts/application.view.php');
-				} else {
-					require_once("app/views/layouts/" . Fabriq::layout() . ".view.php");
-				}
-			}
-			break;
-	}
-}
+FabriqTemplates::render();
 
 // close the database connection
 if ($installed) {

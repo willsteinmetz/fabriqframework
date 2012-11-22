@@ -4,22 +4,17 @@
  * @author Will Steinmetz
  * Fabriq install and update framework functionality
  * 
- * Copyright (c)2011, Ralivue.com
+ * Copyright (c)2012, Ralivue.com
  * Licensed under the BSD license.
  * http://fabriqframework.com/license
  */
 
 class fabriqinstall_controller extends Controller {
-	protected $installVersion = '2.0.1';
+	protected $installVersion = '2.1';
 	
 	function __construct() {
 		global $installed;
 		global $_FAPP;
-		
-		if (!isset($_FAPP['templating']) || !$_FAPP['templating']) {
-			$_FAPP['templating'] = true;
-			require_once('core/FabriqTemplates.class.php');
-		}
 		
 		if (((PathMap::action() == 'install') || (PathMap::render_action() == 'install')) && $installed && (PathMap::arg(2) < 4)) {
 			header("Location: " . PathMap::build_path($_FAPP['cdefault'], $_FAPP['adefault']));
@@ -135,8 +130,7 @@ class fabriqinstall_controller extends Controller {
 					'title_sep' => $_POST['title_sep'],
 					'cleanurls' => $_POST['cleanurls'],
 					'url' => $_POST['url'],
-					'apppath' => $_POST['apppath'],
-					'templating' => ($_POST['templating']) ? 'true' : 'false'
+					'apppath' => $_POST['apppath']
 				);
 				$_SESSION['FAB_INSTALL_site'] = serialize($siteConfig);
 				
@@ -212,7 +206,6 @@ class fabriqinstall_controller extends Controller {
 				fwrite($fh, "	'adefault' => 'index',\n");
 				fwrite($fh, "	'url' => '{$siteConfig['url']}',\n");
 				fwrite($fh, "	'apppath' => '{$siteConfig['apppath']}',\n");
-				fwrite($fh, "	'templating' => {$siteConfig['templating']},\n");
 				fwrite($fh, "	'templates' => array(\n");
 				fwrite($fh, "		'default' => 'application'\n");
 				fwrite($fh, "	)\n");
@@ -1347,6 +1340,31 @@ EMAIL;
 		return array(
 			'version' => '2.0.1',
 			'description' => 'Fixed an install bug',
+			'hasDisplay' => false
+		);
+	}
+
+	protected function update_2_1() {
+		if (isset($_POST['submit'])) {
+			global $db;
+			$installed = unserialize($_SESSION['FAB_UPDATES']);
+			if (!is_array($installed)) {
+				$installed = array();
+			}
+			if (!isset($installed['2.1']) || !$installed['2.1']) {
+				// mark the update as done
+				$installed['2.1'] = true;
+				$_SESSION['FAB_UPDATES'] = serialize($installed);
+				$query = "INSERT INTO `fabriq_config`
+					(`version`, `installed`)
+					VALUES
+					(?, ?)";
+				$db->prepare_cud($query, array('2.1', date('Y-m-d H:i:s')));
+			}
+		}
+		return array(
+			'version' => '2.1',
+			'description' => 'Starting development branch 2.1',
 			'hasDisplay' => false
 		);
 	}

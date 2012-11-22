@@ -48,6 +48,9 @@ abstract class Fabriq {
 	 * @param string $path
 	 */
 	public static function add_css($stylesheet, $media = 'screen', $path = 'public/stylesheets/', $ext = '.css') {
+		if (substr($path, 0, 4) != 'http') {
+			$path = PathMap::getUrl() . $path;
+		}
 		self::$cssqueue[] = array('css' => $stylesheet, 'media' => $media, 'path' => $path, 'ext' => $ext);
 	}
 
@@ -107,6 +110,9 @@ abstract class Fabriq {
 	 * @param string $ext
 	 */
 	public static function add_js($javascript, $path = 'public/javascripts/', $ext = '.js') {
+		if (substr($path, 0, 4) != 'http') {
+			$path = PathMap::getUrl() . $path;
+		}
 		self::$jsqueue[] = array('js' => $javascript, 'path' => $path, 'ext' => $ext);
 	}
 
@@ -194,8 +200,9 @@ abstract class Fabriq {
 				case 'none':
 					self::$render = 'none';
 					break;
-				case 'layout':
-					self::$render = 'layout';
+				case 'template':
+				case 'layout':// @DEPRECATED, will be removed for 3.0
+					self::$render = 'template';
 					break;
 				case 'view': default:
 					self::$render = 'view';
@@ -475,6 +482,16 @@ class BaseMapping {
 		PathMap::render_controller(PathMap::controller());
 		PathMap::render_action(PathMap::action());
 	}
+
+	/**
+	 * Return the site's URL
+	 * @return string
+	 */
+	public static function getUrl() {
+		global $_FAPP;
+		
+		return $_FAPP['url'] . $_FAPP['apppath'];
+	}
 }
 
 /**
@@ -659,31 +676,42 @@ abstract class FabriqTemplates {
 	 * Render the specified template
 	 */
 	public static function render() {
-		if (Fabriq::render() == 'none') {
-			return false;
-		}
-		ob_start();
-		extract(self::$tplvars);
-		if (Fabriq::render() == 'layout') {
-			$tmpl = "app/templates/" . self::$template . ".tmpl.php";
-			if (!file_exists($tmpl)) {
-				$tpl = "app/templates/" . self::$template . ".tpl.php";
-				if (!file_exists($tpl)) {
-					throw new Exception('Template ' . self::$template . ' could not be loaded');
+		switch(Fabriq::render()) {
+			case 'none':
+				return false;
+			break;
+			case 'view':
+				if (!file_exists("app/views/" . PathMap::render_controller() . "/" . PathMap::render_action() . ".view.php")) {
+					require_once("app/views/errors/fourohfour.view.php");
+				} else {
+					require_once("app/views/" . PathMap::render_controller() . "/" . PathMap::render_action() . ".view.php");
 				}
-				require_once($tpl);
-			} else {
-				require_once($tmpl);
-			}
-		} else if (Fabriq::render() == 'view') {
-			$view = "app/views/" . PathMap::render_controller() . '/' . PathMap::render_action() . '.view.php';
-			if (!file_exists($view)) {
-				throw new Exception('View' . PathMap::render_controller() . '::' . PathMap::render_action() . ' could not be loaded');
-			}
-			require_once($view);
+			break;
+			case 'template': default:
+				ob_start();
+				extract(self::$tplvars);
+				if (Fabriq::render() == 'layout') {
+					$tmpl = "app/templates/" . self::$template . ".tmpl.php";
+					if (!file_exists($tmpl)) {
+						$tpl = "app/templates/" . self::$template . ".tpl.php";
+						if (!file_exists($tpl)) {
+							throw new Exception('Template ' . self::$template . ' could not be loaded');
+						}
+						require_once($tpl);
+					} else {
+						require_once($tmpl);
+					}
+				} else if (Fabriq::render() == 'view') {
+					$view = "app/views/" . PathMap::render_controller() . '/' . PathMap::render_action() . '.view.php';
+					if (!file_exists($view)) {
+						throw new Exception('View' . PathMap::render_controller() . '::' . PathMap::render_action() . ' could not be loaded');
+					}
+					require_once($view);
+				}
+				ob_flush();
+				ob_clean();
+			break;
 		}
-		ob_flush();
-		ob_clean();
 	}
 
 	/**
@@ -698,14 +726,6 @@ abstract class FabriqTemplates {
 		require_once("app/views/{$controller}/{$action}.view.php");
 		$data = ob_get_clean();
 		FabriqTemplates::set_var($var, $data);
-	}
-
-	/**
-	 * Enable templating
-	 */
-	public static function enable() {
-		global $_FAPP;
-		$_FAPP['templating'] = true;
 	}
 }
 
@@ -1169,15 +1189,12 @@ class Model implements ArrayAccess, Iterator, Countable {
 	 * @param integer $index
 	 * @return integer/boolean
 	 */
-	public function destroy($index = NULL) {
+	public function destroy($index = 0) {
 		global $db;
 
 		$sql = "DELETE FROM {$this->db_table} WHERE `{$this->id_name}` = ?";
 		if (is_numeric($index) && ($index < count($this->data))) {
 			$db->prepare_cud($sql, array($this->data[$index]->id));
-			return $db->affected_rows;
-		} else if ($index == NULL) {
-			$db->prepare_cud($sql, array($this->data[0]->id));
 			return $db->affected_rows;
 		} else {
 			return false;
