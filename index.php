@@ -32,6 +32,9 @@ if ($installed) {
 require_once('core/FabriqModules.core.php');
 require_once('app/PathMap.class.php');
 
+// require the core files
+FabriqStack::requireCore();
+
 // initialize database
 if ($installed) {
 	$db = new Database($_FDB['default']);
@@ -48,21 +51,9 @@ if (trim($q[0]) == '') {
 	array_shift($q);
 }
 
-// include core JavaScript libraries
-Fabriq::jquery();
-Fabriq::add_js('fabriq', 'core/');
-Fabriq::add_css('fabriq.base', 'screen', 'core/');
-
 // check if user is logged in and if not give viewer
 // unathenticated role
-if (((!isset($_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_roles']) || ($_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_roles'] == ''))) && $installed) {
-	$role = FabriqModules::new_model('roles', 'Roles');
-	$role->getRole('unauthenticated');
-	$_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_roles'] = serialize(array(
-		$role->id,
-		$role->role
-	));
-}
+FabriqStack::checkUserStatus();
 
 // determine the controller and action to render
 PathMap::map_path();
@@ -77,7 +68,7 @@ if (trim(FabriqTemplates::template() == '')) {
 
 // include the controller, action, and helper files
 require_once('app/controllers/application.controller.php');
-if (!file_exists("app/controllers/" . PathMap::controller() . ".controller.php")) {
+if (!FabriqStack::controllerExists(PathMap::controller())) {
 	PathMap::controller('errors');
 	PathMap::render_controller('errors');
 	PathMap::action('fourohfour');
@@ -106,7 +97,7 @@ call_user_func(array($controller, $a));
 
 // run render controller if different from given controller
 if (PathMap::render_controller() != PathMap::controller()) {
-	if (!file_exists("app/controllers/" . PathMap::render_controller() . ".controller.php")) {
+	if (!FabriqStack::controllerExists(PathMap::controller())) {
 		PathMap::render_controller('errors');
 		PathMap::render_action('fourohfour');
 	}

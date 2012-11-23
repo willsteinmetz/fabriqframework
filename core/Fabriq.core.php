@@ -38,7 +38,7 @@ abstract class Fabriq {
 	private static $cssqueue = array();
 	private static $jsqueue = array();
 	private static $title;
-	private static $render = 'layout';
+	private static $render = 'template';
 	private static $layout = 'application';
 
 	/**
@@ -681,32 +681,28 @@ abstract class FabriqTemplates {
 				return false;
 			break;
 			case 'view':
+				ob_start();
+				extract(self::$tplvars);
 				if (!file_exists("app/views/" . PathMap::render_controller() . "/" . PathMap::render_action() . ".view.php")) {
 					require_once("app/views/errors/fourohfour.view.php");
 				} else {
 					require_once("app/views/" . PathMap::render_controller() . "/" . PathMap::render_action() . ".view.php");
 				}
+				ob_flush();
+				ob_clean();
 			break;
 			case 'template': default:
 				ob_start();
 				extract(self::$tplvars);
-				if (Fabriq::render() == 'layout') {
-					$tmpl = "app/templates/" . self::$template . ".tmpl.php";
-					if (!file_exists($tmpl)) {
-						$tpl = "app/templates/" . self::$template . ".tpl.php";
-						if (!file_exists($tpl)) {
-							throw new Exception('Template ' . self::$template . ' could not be loaded');
-						}
-						require_once($tpl);
-					} else {
-						require_once($tmpl);
+				$tmpl = "app/templates/" . self::$template . ".tmpl.php";
+				if (!file_exists($tmpl)) {
+					$tpl = "app/templates/" . self::$template . ".tpl.php";
+					if (!file_exists($tpl)) {
+						throw new Exception('Template ' . self::$template . ' could not be loaded');
 					}
-				} else if (Fabriq::render() == 'view') {
-					$view = "app/views/" . PathMap::render_controller() . '/' . PathMap::render_action() . '.view.php';
-					if (!file_exists($view)) {
-						throw new Exception('View' . PathMap::render_controller() . '::' . PathMap::render_action() . ' could not be loaded');
-					}
-					require_once($view);
+					require_once($tpl);
+				} else {
+					require_once($tmpl);
 				}
 				ob_flush();
 				ob_clean();
@@ -783,6 +779,50 @@ abstract class FabriqLibs {
 }
 
 /**
+ * @class FabriqStack
+ * Core class to help manage requirements and determine the
+ * processing stack
+ */
+class FabriqStack {
+	// public variables
+	
+	// private variables
+	
+	/**
+	 * Requires the core code to run a Fabriq application on the client side
+	 */
+	public static function requireCore() {
+		// include core JavaScript libraries
+		Fabriq::jquery();
+		Fabriq::add_js('fabriq', 'core/');
+		Fabriq::add_css('fabriq.base', 'screen', 'core/');
+	}
+	
+	/**
+	 * Check whether or not the user is logged in
+	 */
+	public static function checkUserStatus() {
+		if (((!isset($_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_roles']) || ($_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_roles'] == ''))) && Fabriq::installed()) {
+			$role = FabriqModules::new_model('roles', 'Roles');
+			$role->getRole('unauthenticated');
+			$_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_roles'] = serialize(array(
+				$role->id,
+				$role->role
+			));
+		}
+	}
+	
+	/**
+	 * Return whether or not the given controller exists
+	 * @param string $controller
+	 * @return bool
+	 */
+	public static function controllerExists($controller) {
+		return file_exists("app/controllers/{$controller}.controller.php");
+	}
+}
+
+/**
  * @class Database
  * Core database class
  */
@@ -795,10 +835,10 @@ class Database {
 	public $insert_id;
 	public $num_rows;
 	public $total_queries = 0;
-	private $errorNo;
-	private $errorStr;
 
 	// private variables
+	private $errorNo;
+	private $errorStr;
 
 	/**
 	 * Constructor
@@ -1375,3 +1415,4 @@ class Controller {
 		return method_exists($this, $method);
 	}
 }
+
