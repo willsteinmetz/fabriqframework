@@ -1,6 +1,12 @@
 Fabriq Framework change log
   - Initiated 05/05/10 for version 0.5
 
+Version 2.1.0
+  - Templating is now always required, rendering moved to FabriqTemplate from index.php
+  - Creating utility functions and FabriqStack to clean up index.php
+  - Added FabriqModelItem class so each item in Model collection can use CRUD functions
+  - PathMap::buildPath(), CSS, and JS files output full URL now.
+
 Version 2.0.1 2012-05-28
   - Fixed a big that prevented bug fixes greater than 9 from showing up
 
