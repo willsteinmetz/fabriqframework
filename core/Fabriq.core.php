@@ -1046,6 +1046,230 @@ class Database {
 }
 
 /**
+ * @class FabriqModelItem
+ * Core class for an item in a model collection
+ */
+class FabriqModelItem {
+	// public variables
+	public $attributes = array();
+	public $db_table;
+	public $id_name;
+	public $id;
+	public $created;
+	public $updated;
+
+	// private variables
+	private $data = array();
+
+	/**
+	 * Constructor
+	 * @param array $attributes
+	 * @param string $db_table
+	 */
+	public function __construct($attributes, $db_table = null, $id_name = 'id') {
+		$this->attributes = $attributes;
+		if ($db_table != null) {
+			$this->db_table = $db_table;
+		}
+		$this->id_name = $id_name;
+	}
+	
+	/**
+	 * Getter
+	 * @param string/integer $key
+	 * @return unknown_type
+	 */
+	public function __get($key) {
+		if (isset($this->data[$key])) {
+			return $this->data[$key];
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Setter
+	 * @param string/integer $key
+	 * @param unknown_type $value
+	 * @return boolean
+	 */
+	public function __set($key, $value) {
+		if (in_array($key, $this->attributes)) {
+			$this->data[$key] = $value;
+			return true;
+		} else {
+			$this->$key = $value;
+		}
+		return false;
+	}
+	
+	/**
+	 * isset operator
+	 * @param $name
+	 */
+	public function __isset($name) {
+		return isset($this->data[$name]);
+	}
+	
+	/**
+	 * unset operator
+	 * @param $name
+	 */
+	public function __unset($name) {
+		unset($this->data[$name]);
+	}
+	
+	/**
+	 * Finds a given value or collection
+	 * @param string/integer $query
+	 * @return boolean
+	 */
+	public function find($query = 'first') {
+		global $db;
+
+		$inputs = array();
+
+		if (is_numeric($query)) {
+			$sql = "SELECT " . $this->fieldsStr() . " FROM {$this->db_table} WHERE `{$this->id_name}` = ? LIMIT 1";
+			$inputs[] = $query;
+		} else {
+			switch($query) {
+				case 'last':
+					$sql = "SELECT " . $this->fieldsStr() . " FROM {$this->db_table} ORDER BY `{$this->id_name}` DESC LIMIT 1";
+				break;
+				case 'first': all:
+					$sql = "SELECT " . $this->fieldsStr() . " FROM {$this->db_table} ORDER BY `{$this->id_name}` LIMIT 1";
+				break;
+			}
+		}
+
+		$data = $db->prepare_select($sql, $this->fields(), $inputs);
+		foreach ($data[0] as $key => $val) {
+			$this->$key = $val;
+		}
+
+		if ($db->num_rows == 0) {
+			return FALSE;
+		} else {
+			return TRUE;
+		}
+	}
+
+	/**
+	 * Destroys a given value in the database
+	 * @return integer/boolean
+	 */
+	public function destroy() {
+		global $db;
+
+		$sql = "DELETE FROM {$this->db_table} WHERE `{$this->id_name}` = ?";
+		$db->prepare_cud($sql, array($this->id));
+		return $db->affected_rows;
+	}
+
+	/**
+	 * Inserts object $this->data[$index] into the database
+	 * @return integer
+	 */
+	public function create() {
+		global $db;
+
+		$attributes = "`{$this->id_name}`, ";
+		foreach ($this->attributes as $attribute) {
+			$attributes .= "`{$attribute}`, ";
+		}
+		$attributes .= "`created`, `updated`";
+		$this->created = date('Y-m-d G:i:s');
+		$this->updated = date('Y-m-d G:i:s');
+		$valuesStr = '';
+		for ($i = 1; $i <= (count($this->attributes)); $i++) {
+			$valuesStr .= '?';
+			if ($i < (count($this->attributes))) {
+				$valuesStr .= ', ';
+			}
+		}
+		$valuesStr .= ", NOW(), NOW()";
+		if (get_magic_quotes_gpc()) {
+			foreach ($this->attributes as $attribute) {
+				if ($this->$attribute != null) {
+					$this->$attribute = stripslashes($this->$attribute);
+				}
+			}
+		}
+
+		$idField = 0;
+
+		$data = array();
+		foreach ($this->attributes as $attribute) {
+			if ($this->$attribute !== null) {
+				$data[] = $this->$attribute;
+			} else {
+				$data[] = null;
+			}
+		}
+		$sql = "INSERT INTO {$this->db_table} ({$attributes}) VALUES ({$idField}, {$valuesStr})";
+
+		if ($db->prepare_cud($sql, $data)) {
+			return $db->insert_id;
+		}
+		return FALSE;
+	}
+
+	/**
+	 * Updates the value of $this->data[$index] in the database
+	 * @return integer
+	 */
+	public function update() {
+		global $db;
+
+		$this->updated = date('Y-m-d G:i:s');
+		$valuesStr = '';
+		for ($i = 0; $i < count($this->attributes); $i++) {
+			$valuesStr .= "`{$this->attributes[$i]}` = ?, ";
+		}
+		$valuesStr .= '`created` = ?, `updated` = NOW()';
+		if (get_magic_quotes_gpc()) {
+			foreach ($this->attributes as $attribute) {
+				if ($this->$attribute != null) {
+					$this->$attribute = stripslashes($this->$attribute);
+				}
+			}
+		}
+		$data = array();
+		foreach ($this->attributes as $attribute) {
+			if ($this->$attribute !== null) {
+				$data[] = $this->$attribute;
+			} else {
+				$data[] = null;
+			}
+		}
+		$values = array_merge($data, array($this->created, $this->id));
+		$sql = "UPDATE {$this->db_table} SET {$valuesStr} WHERE `{$this->id_name}` = ?";
+
+		$db->prepare_cud($sql, $values);
+		return $db->affected_rows;
+	}
+	
+	/**
+	 * Returns the database fields for easier use of the Database::prepare_select()
+	 * function
+	 * @return array
+	 */
+	public function fields() {
+		return array_merge(array('id'), $this->attributes, array('updated', 'created'));
+	}
+
+	/**
+	 * Returns the string value of the database fields for easier use of the
+	 * Database::prepare_select() function
+	 * @return string;
+	 */
+	public function fieldsStr() {
+		return '`' . implode("`, `", $this->fields()) . '`';
+	}
+}
+
+/**
  * @class Model
  * Core Model class that all models extend
  */
@@ -1090,20 +1314,11 @@ class Model implements ArrayAccess, Iterator, Countable {
 	 */
 	public function __set($key, $value) {
 		if (count($this->data) == 0) {
-			$temp = new stdClass();
+			$temp = new FabriqModelItem($this->attributes, $this->db_table, $this->id_name);
 			$this->data[] = $temp;
 		}
-		if (in_array($key, $this->attributes)) {
-			$this->data[0]->$key = $value;
-			return true;
-		} else if ($key == $this->id_name) {
-			$this->data[0]->id = $value;
-		} else if ($key == 'updated') {
-			$this->data[0]->updated = $value;
-		} else if ($key == 'created') {
-			$this->data[0]->created = $value;
-		}
-		return false;
+		$this->data[0]->$key = $value;
+		return true;
 	}
 
 	/**
@@ -1196,31 +1411,19 @@ class Model implements ArrayAccess, Iterator, Countable {
 	public function find($query = 'all') {
 		global $db;
 
-		$inputs = array();
-
-		if (is_numeric($query)) {
-			$sql = "SELECT " . $this->fieldsStr() . " FROM {$this->db_table} WHERE `{$this->id_name}` = ? LIMIT 1";
-			$inputs[] = $query;
+		if (is_numeric($query) || ($query == 'first') || ($query == 'last')) {
+			$this->data[] = new FabriqModelItem($this->attributes, $this->db_table, $this->id_name);
+			return $this->data[(count($this->data) - 1)]->find($query);
 		} else {
-			switch($query) {
-				case 'first':
-					$sql = "SELECT " . $this->fieldsStr() . " FROM {$this->db_table} ORDER BY `{$this->id_name}` LIMIT 1";
-				break;
-				case 'last':
-					$sql = "SELECT " . $this->fieldsStr() . " FROM {$this->db_table} ORDER BY `{$this->id_name}` DESC LIMIT 1";
-				break;
-				case 'all': default:
-					$sql = "SELECT " . $this->fieldsStr() . " FROM {$this->db_table} ORDER BY `{$this->id_name}`";
-				break;
+			$inputs = array();
+			$sql = "SELECT " . $this->fieldsStr() . " FROM {$this->db_table} ORDER BY `{$this->id_name}`";
+			$this->fill($db->prepare_select($sql, $this->fields(), $inputs));
+
+			if ($db->num_rows == 0) {
+				return FALSE;
+			} else {
+				return TRUE;
 			}
-		}
-
-		$this->fill($db->prepare_select($sql, $this->fields(), $inputs));
-
-		if ($db->num_rows == 0) {
-			return FALSE;
-		} else {
-			return TRUE;
 		}
 	}
 
@@ -1230,12 +1433,8 @@ class Model implements ArrayAccess, Iterator, Countable {
 	 * @return integer/boolean
 	 */
 	public function destroy($index = 0) {
-		global $db;
-
-		$sql = "DELETE FROM {$this->db_table} WHERE `{$this->id_name}` = ?";
 		if (is_numeric($index) && ($index < count($this->data))) {
-			$db->prepare_cud($sql, array($this->data[$index]->id));
-			return $db->affected_rows;
+			return $this->data[$index]->destroy();
 		} else {
 			return false;
 		}
@@ -1247,45 +1446,8 @@ class Model implements ArrayAccess, Iterator, Countable {
 	 * @return integer
 	 */
 	public function create($index = 0) {
-		global $db;
-
-		$attributes = "`{$this->id_name}`, ";
-		foreach ($this->attributes as $attribute) {
-			$attributes .= "`{$attribute}`, ";
-		}
-		$attributes .= "`created`, `updated`";
-		$this->data[$index]->created = date('Y-m-d G:i:s');
-		$this->data[$index]->updated = date('Y-m-d G:i:s');
-		$valuesStr = '';
-		for ($i = 1; $i <= (count($this->attributes) + 2); $i++) {
-			$valuesStr .= '?';
-			if ($i < (count($this->attributes) + 2)) {
-				$valuesStr .= ', ';
-			}
-		}
-		if (get_magic_quotes_gpc()) {
-			foreach ($this->attributes as $attribute) {
-				if ($this->data[$index]->$attribute != null) {
-					$this->data[$index]->$attribute = stripslashes($this->data[$index]->$attribute);
-				}
-			}
-		}
-
-		$idField = 0;
-
-		$data = array();
-		foreach ($this->attributes as $attribute) {
-			if ($this->data[$index]->$attribute !== null) {
-				$data[] = $this->data[$index]->$attribute;
-			} else {
-				$data[] = null;
-			}
-		}
-		$values = array_merge($data, array($this->data[$index]->created, $this->data[$index]->updated));
-		$sql = "INSERT INTO {$this->db_table} ({$attributes}) VALUES ({$idField}, {$valuesStr})";
-
-		if ($db->prepare_cud($sql, $values)) {
-			return $db->insert_id;
+		if (is_numeric($index) && ($index < count($this->data))) {
+			return $this->data[$index]->create();
 		}
 		return FALSE;
 	}
@@ -1296,34 +1458,10 @@ class Model implements ArrayAccess, Iterator, Countable {
 	 * @return integer
 	 */
 	public function update($index = 0) {
-		global $db;
-
-		$this->data[$index]->updated = date('Y-m-d G:i:s');
-		$valuesStr = '';
-		for ($i = 0; $i < count($this->attributes); $i++) {
-			$valuesStr .= "`{$this->attributes[$i]}` = ?, ";
+		if (is_numeric($index) && ($index < count($this->data))) {
+			return $this->data[$index]->update();
 		}
-		$valuesStr .= '`created` = ?, `updated` = ?';
-		if (get_magic_quotes_gpc()) {
-			foreach ($this->attributes as $attribute) {
-				if ($this->data[$index]->$attribute != null) {
-					$this->data[$index]->$attribute = stripslashes($this->data[$index]->$attribute);
-				}
-			}
-		}
-		$data = array();
-		foreach ($this->attributes as $attribute) {
-			if ($this->data[$index]->$attribute !== null) {
-				$data[] = $this->data[$index]->$attribute;
-			} else {
-				$data[] = null;
-			}
-		}
-		$values = array_merge($data, array($this->data[$index]->created, $this->data[$index]->updated, $this->data[$index]->id));
-		$sql = "UPDATE {$this->db_table} SET {$valuesStr} WHERE `{$this->id_name}` = ?";
-
-		$db->prepare_cud($sql, $values);
-		return $db->affected_rows;
+		return FALSE;
 	}
 
 	/**
@@ -1333,7 +1471,8 @@ class Model implements ArrayAccess, Iterator, Countable {
 	public function fill($arr) {
 		if (is_array($arr)) {
 			for ($i = 0; $i < count($arr); $i++) {
-				$temp = new stdClass();
+				//$temp = new stdClass();
+				$temp = new FabriqModelItem($this->attributes, $this->db_table, $this->id_name);
 				foreach ($arr[$i] as $key => $val) {
 					$temp->$key = $val;
 				}
