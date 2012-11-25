@@ -301,7 +301,7 @@ abstract class FabriqModules {
 	 * @param string $ext;
 	 */
 	public static function add_css($module, $stylesheet, $media = 'screen', $path = '', $ext = '.css') {
-		self::$cssqueue[] = array('css' => $stylesheet, 'media' => $media, 'path' => "modules/{$module}/stylesheets/{$path}", 'ext' => $ext);
+		self::$cssqueue[] = array('css' => $stylesheet, 'media' => $media, 'path' => PathMap::getUrl() . "modules/{$module}/stylesheets/{$path}", 'ext' => $ext);
 	}
 
 	/**
@@ -320,7 +320,7 @@ abstract class FabriqModules {
 	 * @param string $ext
 	 */
 	public static function add_js($module, $javascript, $path = '', $ext = '.js') {
-		self::$jsqueue[] = array('js' => $javascript, 'path' => "modules/{$module}/javascripts/{$path}", 'ext' => $ext);
+		self::$jsqueue[] = array('js' => $javascript, 'path' => PathMap::getUrl() . "modules/{$module}/javascripts/{$path}", 'ext' => $ext);
 	}
 
 	/**

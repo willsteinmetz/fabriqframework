@@ -287,6 +287,16 @@ class BaseMapping {
 	private static $renderaction;
 
 	/**
+	 * Return the site's URL
+	 * @return string
+	 */
+	public static function getUrl() {
+		global $_FAPP;
+		
+		return $_FAPP['url'] . $_FAPP['apppath'];
+	}
+	
+	/**
 	 * Controller getter/setter
 	 * if NULL, return the $controller variable
 	 * @param string $c
@@ -388,7 +398,8 @@ class BaseMapping {
 			}
 		}
 		if (self::clean_urls()) {
-			return self::base_path() . $path;
+			//return self::base_path() . $path;
+			return PathMap::getUrl() . $path;
 		} else {
 			return 'index.php?q=' . $path;
 		}
@@ -481,16 +492,6 @@ class BaseMapping {
 		// resolve render controller and action
 		PathMap::render_controller(PathMap::controller());
 		PathMap::render_action(PathMap::action());
-	}
-
-	/**
-	 * Return the site's URL
-	 * @return string
-	 */
-	public static function getUrl() {
-		global $_FAPP;
-		
-		return $_FAPP['url'] . $_FAPP['apppath'];
 	}
 }
 
@@ -738,7 +739,7 @@ abstract class FabriqLibs {
 	 * @param string $ext
 	 */
 	public static function js_lib($file_name, $libdir = '', $ext = '.js') {
-		Fabriq::add_js($file_name, 'libs/javascript/' . $libdir . '/', $ext);
+		Fabriq::add_js($file_name, PathMap::getUrl() . 'libs/javascript/' . $libdir . '/', $ext);
 	}
 
 	/**
@@ -749,7 +750,7 @@ abstract class FabriqLibs {
 	 * @param string $media
 	 */
 	public static function css_lib($file_name, $libdir = '', $ext = '.css', $media = 'screen') {
-		Fabriq::add_css($file_name, $media, 'libs/css/' . $libdir . '/', $ext);
+		Fabriq::add_css($file_name, $media, PathMap::getUrl() . 'libs/css/' . $libdir . '/', $ext);
 	}
 
 	/**
