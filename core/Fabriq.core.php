@@ -1401,7 +1401,7 @@ class Model implements ArrayAccess, Iterator, Countable {
 	 * @return integer
 	 */
 	public function count() {
-	 return count($this->data);
+		return count($this->data);
 	}
 
 	/**
@@ -1414,7 +1414,13 @@ class Model implements ArrayAccess, Iterator, Countable {
 
 		if (is_numeric($query) || ($query == 'first') || ($query == 'last')) {
 			$this->data[] = new FabriqModelItem($this->attributes, $this->db_table, $this->id_name);
-			return $this->data[(count($this->data) - 1)]->find($query);
+			$this->data[(count($this->data) - 1)]->find($query);
+			if ($this->data[(count($this->data) - 1)]->id == '') {
+				unset($this->data[(count($this->data) - 1)]);
+				return FALSE;
+			} else {
+				return TRUE;
+			}
 		} else {
 			$inputs = array();
 			$sql = "SELECT " . $this->fieldsStr() . " FROM {$this->db_table} ORDER BY `{$this->id_name}`";

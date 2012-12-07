@@ -1364,7 +1364,7 @@ EMAIL;
 		}
 		return array(
 			'version' => '2.1',
-			'description' => 'Starting development branch 2.1',
+			'description' => 'Starting development branch 2.1, initial clean up of files',
 			'hasDisplay' => false
 		);
 	}
