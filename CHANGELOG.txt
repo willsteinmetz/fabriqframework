@@ -1,7 +1,7 @@
 Fabriq Framework change log
   - Initiated 05/05/10 for version 0.5
 
-Version 2.1.1
+Version 2.1.1 2012-12-30
   - Moved template initializing to FabriqTemplates from index
   - Cleaned up .htaccess file and web.config
   - Moved errors to the pathmap module
