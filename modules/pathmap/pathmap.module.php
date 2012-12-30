@@ -29,10 +29,7 @@ class pathmap_module extends FabriqModule {
 						FabriqModules::render($path->controller, $path->action);
 					}
 				} else {
-					PathMap::controller('errors');
-					PathMap::render_controller('errors');
-					PathMap::action('fourohfour');
-					PathMap::render_action('fourohfour');
+					FabriqStack::error(404);
 				}
 			break;
 			case 'page': default:
@@ -158,6 +155,30 @@ class pathmap_module extends FabriqModule {
 			'pathmap_modpage' => $modpage
 		);
 		FabriqModules::set_vars($this->name, $vars);
+	}
+	
+	/**
+	 * 403 permission denied
+	 */
+	public function _403() {
+		header("HTTP/1.0 403 Forbidden");
+		Fabriq::title('403 Forbidden');
+	}
+	
+	/**
+	 * 404 not found
+	 */
+	public function _404() {
+		header("HTTP/1.0 404 Not Found");
+		Fabriq::title('404 Not Found');
+	}
+	
+	/**
+	 * 500 server error
+	 */
+	public function _500() {
+		header("HTTP/1.0 500 Internal Server Error");
+		Fabriq::title('500 Internal Server Error');
 	}
 }
 	

@@ -621,6 +621,20 @@ abstract class FabriqTemplates {
 	private static $template = null;
 
 	/**
+	 * Initialize templating
+	 */
+	public static function init() {
+		global $_FAPP;
+		
+		if (!isset($_FAPP['templates']['default'])) {
+			$_FAPP['templates']['default'] = 'application';
+		}
+		if (trim(FabriqTemplates::template() == '')) { 
+			FabriqTemplates::template($_FAPP['templates']['default']);
+		}
+	}
+
+	/**
 	 * Adds a template variable
 	 * @param string $var
 	 * @param mixed $val
@@ -820,6 +834,15 @@ class FabriqStack {
 	 */
 	public static function controllerExists($controller) {
 		return file_exists("app/controllers/{$controller}.controller.php");
+	}
+	
+	/**
+	 * Redirect the user to the given error page
+	 * @param $error
+	 */
+	public static function error($error) {
+		header('Location: ' . PathMap::getUrl() . "{$error}");
+		exit();
 	}
 }
 

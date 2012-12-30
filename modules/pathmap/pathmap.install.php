@@ -43,5 +43,19 @@ class pathmap_install {
 	public function uninstall() {
 		// core modules cannot be uninstalled
 	}
+	
+	public function update_2_1_1() {
+		// update the module version number
+		$mod = new Modules();
+		$mod->getModuleByName('pathmap');
+		$mod->versioninstalled = '2.1.1';
+		$mod->update();
+		
+		// map paths
+		$pathmap = &FabriqModules::module('pathmap');
+		$pathmap->register_path('403', 'pathmap', '_403', 'module');
+		$pathmap->register_path('404', 'pathmap', '_404', 'module');
+		$pathmap->register_path('500', 'pathmap', '_500', 'module');
+	}
 }
 	

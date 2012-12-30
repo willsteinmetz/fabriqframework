@@ -25,17 +25,7 @@ class PathMap extends BaseMapping {
 		 *   action to read/show.
 		 */
 		switch(self::controller()) {
-			case '404':
-				self::controller('errors');
-				self::action('fourohfour');
-				self::render_controller('errors');
-				self::render_action('fourohfour');
-			break;
-			case '500':
-				self::controller('errors');
-				self::action('fiveohoh');
-				self::render_controller('errors');
-				self::render_action('fiveohoh');
+			case default:
 			break;
 		}
 	}

@@ -59,20 +59,12 @@ FabriqStack::checkUserStatus();
 PathMap::map_path();
 
 // determine which template to set initially
-if (!isset($_FAPP['templates']['default'])) {
-	$_FAPP['templates']['default'] = 'application';
-}
-if (trim(FabriqTemplates::template() == '')) { 
-	FabriqTemplates::template($_FAPP['templates']['default']);
-}
+FabriqTemplates::init();
 
 // include the controller, action, and helper files
 require_once('app/controllers/application.controller.php');
 if (!FabriqStack::controllerExists(PathMap::controller())) {
-	PathMap::controller('errors');
-	PathMap::render_controller('errors');
-	PathMap::action('fourohfour');
-	PathMap::render_action('fourohfour');
+	FabriqStack::error(404);
 }
 
 require_once("app/controllers/" . PathMap::controller() . ".controller.php");
@@ -81,16 +73,7 @@ $controller = new $c();
 $a = str_replace('.', '_', PathMap::action());
 
 if (!$controller->hasMethod($a)) {
-	$c = 'errors_controller';
-	if (PathMap::controller() != 'errors') {
-	require_once("app/controllers/errors.controller.php");
-		PathMap::controller('errors');
-		PathMap::render_controller('errors');
-	}
-	$controller = new $c();
-	$a = 'fourohfour';
-	PathMap::action('fourohfour');
-	PathMap::render_action('fourohfour');
+	FabriqStack::error(404);
 }
 
 call_user_func(array($controller, $a));
@@ -98,8 +81,7 @@ call_user_func(array($controller, $a));
 // run render controller if different from given controller
 if (PathMap::render_controller() != PathMap::controller()) {
 	if (!FabriqStack::controllerExists(PathMap::controller())) {
-		PathMap::render_controller('errors');
-		PathMap::render_action('fourohfour');
+		FabriqStack::error(404);
 	}
 	require_once("app/controllers/" . PathMap::render_controller() . ".controller.php");
 	$c = PathMap::render_controller() . '_controller';
@@ -107,10 +89,7 @@ if (PathMap::render_controller() != PathMap::controller()) {
 	
 	$a = str_replace('.', '_', PathMap::render_action());
 	if (!$controller->hasMethod($a)) {
-		$c = 'errors_controller';
-		require_once("app/controllers/errors.controller.php");
-		$controller = new $c();
-		$a = 'fourohfour';
+		FabriqStack::error(404);
 	}
 	call_user_func(array($controller, $a));
 } else {
@@ -118,10 +97,7 @@ if (PathMap::render_controller() != PathMap::controller()) {
 	if (PathMap::render_action() != PathMap::action()) {
 		$a = str_replace('.', '_', PathMap::render_action());
 		if (!$controller->hasMethod($a)) {
-			$c = 'errors_controller';
-			require_once("app/controllers/errors.controller.php");
-			$controller = new $c();
-			$a = 'fourohfour';
+			FabriqStack::error(404);
 		}
 		call_user_func(array($controller, $a));
 	}
