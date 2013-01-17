@@ -398,7 +398,6 @@ class BaseMapping {
 			}
 		}
 		if (self::clean_urls()) {
-			//return self::base_path() . $path;
 			return PathMap::getUrl() . $path;
 		} else {
 			return 'index.php?q=' . $path;
@@ -448,17 +447,20 @@ class BaseMapping {
 
 		if (count($q) > 0) {
 			if ((trim($q[0]) != '') && (file_exists("app/controllers/{$q[0]}.controller.php"))) {
-				self::controller($q[0]);
+				$controller = $q[0];
 				$mapped = true;
 			}
 			if (count($q) > 1) {
 				if (!is_numeric($q[1])) {
-					self::action($q[1]);
+					$action = $q[1];
 				} else {
-					self::action($_FAPP['adefault']);
+					$action = $_FAPP['adefault'];
 				}
 			} else {
-				self::action($_FAPP['adefault']);
+				$action = $_FAPP['adefault'];
+			}
+			if ($mapped) {
+				FabriqStack::enqueue($controller, $action);
 			}
 		}
 
@@ -470,28 +472,21 @@ class BaseMapping {
 
 		// not installed, map to the install function
 		if (!$installed) {
-			PathMap::controller('fabriqinstall');
 			PathMap::arg(0, 'fabriqinstall');
-			PathMap::action('install');
 			PathMap::arg(1, 'install');
+			FabriqStack::enqueue('fabriqinstall', 'install');
 		}
 
 		// resolve controller and action if not already declared
 		if (PathMap::controller() == '') {
 			if (count($q) == 0) {
-				PathMap::controller($_FAPP['cdefault']);
 				PathMap::arg(0, $_FAPP['cdefault']);
-				PathMap::action($_FAPP['adefault']);
 				PathMap::arg(1, $_FAPP['adefault']);
+				FabriqStack::enqueue($_FAPP['cdefault'], $_FAPP['adefault']);
 			} else if (($q[0] != '') && (!file_exists("app/controllers/{$q[0]}.controller.php"))) {
-				PathMap::controller('errors');
-				PathMap::action('fourohfour');
+				FabriqStack::error(404);
 			}
 		}
-
-		// resolve render controller and action
-		PathMap::render_controller(PathMap::controller());
-		PathMap::render_action(PathMap::action());
 	}
 }
 
@@ -619,6 +614,7 @@ class Messaging {
 abstract class FabriqTemplates {
 	private static $tplvars = array();
 	private static $template = null;
+	private static $body = "";
 
 	/**
 	 * Initialize templating
@@ -697,12 +693,7 @@ abstract class FabriqTemplates {
 			break;
 			case 'view':
 				ob_start();
-				extract(self::$tplvars);
-				if (!file_exists("app/views/" . PathMap::render_controller() . "/" . PathMap::render_action() . ".view.php")) {
-					require_once("app/views/errors/fourohfour.view.php");
-				} else {
-					require_once("app/views/" . PathMap::render_controller() . "/" . PathMap::render_action() . ".view.php");
-				}
+				FabriqTemplates::body();
 				ob_flush();
 				ob_clean();
 			break;
@@ -737,6 +728,42 @@ abstract class FabriqTemplates {
 		require_once("app/views/{$controller}/{$action}.view.php");
 		$data = ob_get_clean();
 		FabriqTemplates::set_var($var, $data);
+	}
+	
+	/**
+	 * Render the given action and put it in the body variable to print out later
+	 * @param obj $action
+	 */
+	public static function renderToBody($action) {
+		if (Fabriq::render() == 'none') {
+			return;
+		}
+		
+		ob_start();
+		extract(self::$tplvars);
+		switch($action->type) {
+			case "module":
+				
+			break;
+			case "controller":
+			default:
+				if (!file_exists("app/views/{$action->controller}/{$action->action}.view.php")) {
+					FabriqStack::error(404);
+				} else {
+					require_once("app/views/{$action->controller}/{$action->action}.view.php");
+				}
+			break;
+		}
+		self::$body .= ob_get_contents();
+		ob_end_clean();
+	}
+	
+	/**
+	 * Return what is cached in the body variable
+	 * @return string
+	 */
+	public static function body() {
+		return self::$body;
 	}
 }
 
@@ -798,10 +825,11 @@ abstract class FabriqLibs {
  * Core class to help manage requirements and determine the
  * processing stack
  */
-class FabriqStack {
+abstract class FabriqStack {
 	// public variables
 	
 	// private variables
+	private static $queue = array();
 	
 	/**
 	 * Requires the core code to run a Fabriq application on the client side
@@ -843,6 +871,77 @@ class FabriqStack {
 	public static function error($error) {
 		header('Location: ' . PathMap::getUrl() . "{$error}");
 		exit();
+	}
+	
+	/**
+	 * Add an action to execute to the queue
+	 * @param string $controller
+	 * @param string $action
+	 * @param string $type - default "controller"
+	 */
+	public static function enqueue($controller, $action, $type = "controller") {
+		$next = new stdClass();
+		$next->controller = $controller;
+		$next->action = $action;
+		$next->type = $type;
+		
+		self::$queue[] = $next;
+	}
+	
+	/**
+	 * Remove the first item in the queue
+	 */
+	public static function dequeue() {
+		if (count(self::$queue)) {
+			return array_shift(self::$queue);
+		}
+		return false;
+	}
+	
+	/**
+	 * Process everything the queue
+	 */
+	public static function processQueue() {
+		if (!count(self::$queue)) {
+			return false;
+		}
+		
+		$next = FabriqStack::dequeue();
+		while ($next->controller == '') {
+			if (!count(self::$queue)) {
+				return false;
+			}
+			$next = FabriqStack::dequeue();
+		}
+		
+		switch ($next->type) {
+			case 'module':
+				
+			break;
+			case 'controller':
+			default:
+				PathMap::controller($next->controller);
+				PathMap::render_controller($next->controller);
+				PathMap::action($next->action);
+				PathMap::render_action($next->action);
+				
+				require_once("app/controllers/{$next->controller}.controller.php");
+				$c = "{$next->controller}_controller";
+				$controller = new $c();
+				$a = str_replace('.', '_', $next->action);
+				
+				if (!$controller->hasMethod($a)) {
+					FabriqStack::error(404);
+				}
+				
+				call_user_func(array($controller, $a));
+				FabriqTemplates::renderToBody($next);
+			break;
+		}
+		
+		if (count(self::$queue)) {
+			FabriqStack::processQueue();
+		}
 	}
 }
 

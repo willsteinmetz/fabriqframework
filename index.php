@@ -4,7 +4,7 @@
  * The index.php file includes the core required files for running a Fabriq based app:
  * @author Will Steinmetz
  * 
- * Copyright (c)2012, Ralivue.com
+ * Copyright (c)2013, Ralivue.com
  * Licensed under the BSD license.
  * http://fabriqframework.com/license
  */
@@ -61,47 +61,10 @@ PathMap::map_path();
 // determine which template to set initially
 FabriqTemplates::init();
 
-// include the controller, action, and helper files
+// include the controller and action files
 require_once('app/controllers/application.controller.php');
-if (!FabriqStack::controllerExists(PathMap::controller())) {
-	FabriqStack::error(404);
-}
 
-require_once("app/controllers/" . PathMap::controller() . ".controller.php");
-$c = PathMap::controller() . '_controller';
-$controller = new $c();
-$a = str_replace('.', '_', PathMap::action());
-
-if (!$controller->hasMethod($a)) {
-	FabriqStack::error(404);
-}
-
-call_user_func(array($controller, $a));
-
-// run render controller if different from given controller
-if (PathMap::render_controller() != PathMap::controller()) {
-	if (!FabriqStack::controllerExists(PathMap::controller())) {
-		FabriqStack::error(404);
-	}
-	require_once("app/controllers/" . PathMap::render_controller() . ".controller.php");
-	$c = PathMap::render_controller() . '_controller';
-	$controller = new $c();
-	
-	$a = str_replace('.', '_', PathMap::render_action());
-	if (!$controller->hasMethod($a)) {
-		FabriqStack::error(404);
-	}
-	call_user_func(array($controller, $a));
-} else {
-	// run render action if different from given action
-	if (PathMap::render_action() != PathMap::action()) {
-		$a = str_replace('.', '_', PathMap::render_action());
-		if (!$controller->hasMethod($a)) {
-			FabriqStack::error(404);
-		}
-		call_user_func(array($controller, $a));
-	}
-}
+FabriqStack::processQueue();
 
 FabriqTemplates::render();
 

@@ -40,7 +40,7 @@ jQuery.extend(Fabriq.settings, {"basePath": "<?php echo PathMap::base_path(); ?>
 </head>
 <body>
 
-<?php require_once("app/views/" . PathMap::render_controller() . "/" . PathMap::render_action() . ".view.php"); ?>
+<?php echo FabriqTemplates::body(); ?>
 
 </body>
 </html>
