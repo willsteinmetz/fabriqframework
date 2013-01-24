@@ -1,0 +1,9 @@
+{
+	"module": "fabriqmodules",
+	"version": "2.1.2",
+	"author": "Will Steinmetz",
+	"description": "",
+	"dependsOn": [],
+	"configs": [],
+	"configDefaults": []
+}
