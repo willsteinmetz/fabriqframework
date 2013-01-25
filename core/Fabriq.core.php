@@ -444,7 +444,7 @@ class BaseMapping {
 				}
 			}
 		}
-
+		
 		if (count($q) > 0) {
 			if ((trim($q[0]) != '') && (file_exists("app/controllers/{$q[0]}.controller.php"))) {
 				$controller = $q[0];
@@ -467,7 +467,7 @@ class BaseMapping {
 		// try to map path with pathmap module if enabled and necessary
 		if ($installed && FabriqModules::enabled('pathmap') && !$mapped) {
 			$pathmap = &FabriqModules::module('pathmap');
-			$pathmap->redirect($_GET['q']);
+			$mapped = $pathmap->redirect($_GET['q']);
 		}
 
 		// not installed, map to the install function
@@ -478,7 +478,7 @@ class BaseMapping {
 		}
 
 		// resolve controller and action if not already declared
-		if (PathMap::controller() == '') {
+		if (!$mapped) {
 			if (count($q) == 0) {
 				PathMap::arg(0, $_FAPP['cdefault']);
 				PathMap::arg(1, $_FAPP['adefault']);
@@ -951,7 +951,6 @@ abstract class FabriqStack {
 				FabriqTemplates::renderToBody($next);
 			break;
 		}
-		
 		if (count(self::$queue)) {
 			FabriqStack::processQueue();
 		}

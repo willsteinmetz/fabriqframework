@@ -249,8 +249,8 @@ abstract class FabriqModules {
 	 * @param string $module
 	 * @param string $action
 	 */
-	/*public static function render($module, $action) {
-		$file = "app/views/modules/{$module}/{$action}.view.php";
+	public static function render($module, $action) {
+		/*$file = "app/views/modules/{$module}/{$action}.view.php";
 		if (!file_exists($file)) {
 			$file = "modules/{$module}/views/{$action}.view.php";
 			if (!file_exists($file)) {
@@ -260,8 +260,14 @@ abstract class FabriqModules {
 		ob_start();
 		extract(self::$module_vars[$module]);
 		require($file);
-		self::$body .= ob_get_clean();
-	}*/
+		self::$body .= ob_get_clean();*/
+		$render = new stdClass();
+		$render->controller = $module;
+		$render->action = $action;
+		$render->type = 'module';
+		
+		FabriqTemplates::renderToBody($render);
+	}
 
 	/**
 	 * Returns the rendered module content

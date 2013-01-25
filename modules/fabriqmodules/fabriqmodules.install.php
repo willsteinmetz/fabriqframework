@@ -28,6 +28,14 @@ class fabriqmodules_install {
 		$pathmap->register_path('fabriqmodules/install/!#', 'fabriqmodules', 'index', 'module', null, 2);
 		$pathmap->register_path('fabriqmodules/uninstall/!#', 'fabriqmodules', 'index', 'module', null, 2);
 		
+		// give administrators the ability to manage modules
+		$adminPerm = FabriqModules::new_model('roles', 'ModulePerms');
+		$adminPerm->permission = $perm_ids[0];
+		$adminRole = FabriqModules::new_model('roles', 'Roles');
+		$adminRole->getRole('administrator');
+		$adminPerm->role = $adminRole->id;
+		$adminPerm->id = $adminPerm->create();
+		
 		// set module as installed
 		$mod->installed = 1;
 		$mod->update();
