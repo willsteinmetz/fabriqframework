@@ -740,13 +740,21 @@ abstract class FabriqTemplates {
 		}
 		
 		ob_start();
-		extract(self::$tplvars);
 		switch($action->type) {
 			case "module":
-				
+				$file = "app/views/modules/{$action->controller}/{$action->action}.view.php";
+				if (!file_exists($file)) {
+					$file = "modules/{$action->controller}/views/{$action->action}.view.php";
+					if (!file_exists($file)) {
+						throw new Exception("View for {$action->controller}'s {$action->action} action does not exist");
+					}
+				}
+				extract(FabriqModules::get_vars($action->controller));
+				require($file);
 			break;
 			case "controller":
 			default:
+				extract(self::$tplvars);
 				if (!file_exists("app/views/{$action->controller}/{$action->action}.view.php")) {
 					FabriqStack::error(404);
 				} else {
@@ -879,11 +887,12 @@ abstract class FabriqStack {
 	 * @param string $action
 	 * @param string $type - default "controller"
 	 */
-	public static function enqueue($controller, $action, $type = "controller") {
+	public static function enqueue($controller, $action, $type = "controller", $extra = null) {
 		$next = new stdClass();
 		$next->controller = $controller;
 		$next->action = $action;
 		$next->type = $type;
+		$next->extra = $extra;
 		
 		self::$queue[] = $next;
 	}
@@ -911,12 +920,16 @@ abstract class FabriqStack {
 			if (!count(self::$queue)) {
 				return false;
 			}
-			$next = FabriqStack::dequeue();
+			FabriqStack::processQueue();
 		}
 		
 		switch ($next->type) {
 			case 'module':
-				
+				$module = &FabriqModules::module($next->controller);
+				call_user_func_array(array($module, $next->action), $next->extra);
+				if ((Fabriq::render() != 'none') && FabriqModules::has_permission() && (!FabriqModules::stopMappedRender())) {
+					FabriqTemplates::renderToBody($next);
+				}
 			break;
 			case 'controller':
 			default:

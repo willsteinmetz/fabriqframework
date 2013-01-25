@@ -10,7 +10,7 @@
  */
 
 class fabriqinstall_controller extends Controller {
-	protected $installVersion = '2.1';
+	protected $installVersion = '2.1.2';
 	
 	function __construct() {
 		global $installed;
@@ -372,6 +372,13 @@ class fabriqinstall_controller extends Controller {
 			$module->enabled = 1;
 			$module->update();
 			Messaging::message('Installed sitemenus module', 'success');
+			FabriqModules::register_module('fabriqmodules');
+			FabriqModules::install('fabriqmodules');
+			$module = new Modules();
+			$module->getModuleByName('fabriqmodules');
+			$module->enabled = 1;
+			$module->update();
+			Messaging::message('Installed fabriqmodules module', 'success');
 			
 			// get admin role and give it all perms so that the admin can actually set
 			// things up
@@ -1390,6 +1397,38 @@ EMAIL;
 		return array(
 			'version' => '2.1.1',
 			'description' => 'Cleaned up .htaccess file, moved errors to pathmap module',
+			'hasDisplay' => false
+		);
+	}
+	
+	protected function update_2_1_2() {
+		if (isset($_POST['submit'])) {
+			global $db;
+			$installed = unserialize($_SESSION['FAB_UPDATES']);
+			if (!is_array($installed)) {
+				$installed = array();
+			}
+			if (!isset($installed['2.1.2']) || !$installed['2.1.2']) {
+				FabriqModules::register_module('fabriqmodules');
+				FabriqModules::install('fabriqmodules');
+				$module = new Modules();
+				$module->getModuleByName('fabriqmodules');
+				$module->enabled = 1;
+				$module->update();
+				
+				// mark the update as done
+				$installed['2.1.2'] = true;
+				$_SESSION['FAB_UPDATES'] = serialize($installed);
+				$query = "INSERT INTO `fabriq_config`
+					(`version`, `installed`)
+					VALUES
+					(?, ?)";
+				$db->prepare_cud($query, array('2.1.2', date('Y-m-d H:i:s')));
+			}
+		}
+		return array(
+			'version' => '2.1.2',
+			'description' => 'Cleaned up rendering and revamped module execution',
 			'hasDisplay' => false
 		);
 	}

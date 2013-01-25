@@ -239,7 +239,7 @@ abstract class FabriqModules {
 		if (array_key_exists($module, self::$module_vars)) {
 			return self::$module_vars[$module];
 		}
-		return false;
+		return array();
 	}
 
 	/**
@@ -249,7 +249,7 @@ abstract class FabriqModules {
 	 * @param string $module
 	 * @param string $action
 	 */
-	public static function render($module, $action) {
+	/*public static function render($module, $action) {
 		$file = "app/views/modules/{$module}/{$action}.view.php";
 		if (!file_exists($file)) {
 			$file = "modules/{$module}/views/{$action}.view.php";
@@ -261,15 +261,15 @@ abstract class FabriqModules {
 		extract(self::$module_vars[$module]);
 		require($file);
 		self::$body .= ob_get_clean();
-	}
+	}*/
 
 	/**
 	 * Returns the rendered module content
 	 * @return string
 	 */
-	public static function body() {
+	/*public static function body() {
 		return self::$body;
-	}
+	}*/
 
 	/**
 	 * Renders the module action's view content and returns it to be added at
@@ -278,7 +278,7 @@ abstract class FabriqModules {
 	 * @param string $action
 	 */
 	public static function render_now($module, $action) {
-		$file = "app/views/modules/{$module}/{$action}.view.php";
+		/*$file = "app/views/modules/{$module}/{$action}.view.php";
 		if (!file_exists($file)) {
 			$file = "modules/{$module}/views/{$action}.view.php";
 			if (!file_exists($file)) {
@@ -289,7 +289,12 @@ abstract class FabriqModules {
 		ob_start();
 		extract(self::$module_vars[$module]);
 		require($file);
-		return ob_get_clean();
+		return ob_get_clean();*/
+		$next = new stdClass();
+		$next->controller = $module;
+		$next->action = $action;
+		$next->type = 'module';
+		FabriqTemplates::renderToBody($next);
 	}
 
 	/**

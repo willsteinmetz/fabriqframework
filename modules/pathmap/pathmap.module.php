@@ -16,15 +16,21 @@ class pathmap_module extends FabriqModule {
 		switch ($path->modpage) {
 			case 'module':
 				if (FabriqModules::enabled($path->controller)) {
-					PathMap::arg(0, 'fabriqmodules');
-					PathMap::arg(1, 'index');
-					FabriqStack::enqueue('fabriqmodules', 'index');
-					$mod = &FabriqModules::module($path->controller);
+					//PathMap::arg(0, 'fabriqmodules');
+					//PathMap::arg(1, 'index');
+					//FabriqStack::enqueue('fabriqmodules', 'index');
+					//$mod = &FabriqModules::module($path->controller);
 					$extra = explode('/', $path->extra);
-					call_user_func_array(array($mod, $path->action), $extra);
+					PathMap::arg(0, $path->controller);
+					PathMap::arg(1, $path->action);
+					for ($i = 0; $i < count($extra); $i++) {
+						PathMap::arg($i + 2, $extra[$i]);
+					}
+					/*call_user_func_array(array($mod, $path->action), $extra);
 					if ((Fabriq::render() != 'none') && FabriqModules::has_permission() && (!FabriqModules::stopMappedRender())) {
 						FabriqModules::render($path->controller, $path->action);
-					}
+					}*/
+					FabriqStack::enqueue($path->conroller, $path->action, 'module', $extra);
 				} else {
 					FabriqStack::error(404);
 				}

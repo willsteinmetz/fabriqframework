@@ -50,6 +50,17 @@ To UPDATE TO VERSION 2.1.x from version 2.0.x
    - If you have created a custom 403 error file, add a custom _403.view.php file
      to /app/views/modules/pathmap
 
+For version 2.1.2, if the following haven't been done yet:
+ - Remove the following files and directories
+   - /app/controllers/fabriqmodules.controller.php
+   - /app/views/fabriqmodules
+   - /app/scripts/fabriqmodules.script.js
+  
+ - In your template replace the following:
+   <?php require_once("app/views/" . PathMap::render_controller() . "/" . PathMap::render_action() . ".view.php"); ?>
+   with the following:
+   <?php echo FabriqTemplates::body(); ?>
+
 To UPDATE TO VERSION 2.0.x from version 1.3.x through 1.7.x
 
  - Expand the downloaded archive (.zip or .tar.gz file)
