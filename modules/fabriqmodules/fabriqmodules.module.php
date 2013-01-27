@@ -12,7 +12,6 @@ class fabriqmodules_module extends FabriqModule {
 	public function manage() {
 		if (FabriqModules::module('roles')->requiresPermission('manage modules', $this->name)) {
 			Fabriq::title('Admin | Manage modules');
-			//Fabriq::page_js_on();
 			FabriqModules::add_js($this->name, $this->name);
 			Fabriq::fabriq_ui_on();
 			
@@ -30,10 +29,7 @@ class fabriqmodules_module extends FabriqModule {
 			$modules = new Modules();
 			$modules->getAll();
 			
-			/*if ($_FAPP['templating']) {
-				FabriqTemplates::set_var('modules', $modules);
-			}*/
-			FabriqModules::set_var($this->name, 'modules', $module);
+			FabriqModules::set_var($this->name, 'modules', $modules);
 		}
 	}
 	
@@ -113,10 +109,7 @@ class fabriqmodules_module extends FabriqModule {
 	
 	public function configure() {
 		Fabriq::render('view');
-		/*global $_FAPP;
-		if (!$_FAPP['templating']) {
-			global $module;
-		}*/
+		
 		$module = new Modules(PathMap::arg(2));
 		$install_file = "modules/{$module->module}/{$module->module}.install.php";
 		if (!file_exists($install_file)) {
@@ -125,10 +118,8 @@ class fabriqmodules_module extends FabriqModule {
 		require_once($install_file);
 		eval("\$installer = new {$module->module}_install();");
 		$installer->configure();
-		/*if ($_FAPP['templating']) {
-			FabriqTemplates::set_var('module', $module);
-		}*/
-		FabriqModules::set_var($this->name, $module, $module);
+		
+		FabriqModules::set_var($this->name, 'module', $module);
 	}
 	
 	private function scan_modules() {

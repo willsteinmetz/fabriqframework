@@ -25,8 +25,8 @@ class fabriqmodules_install {
 		$pathmap->register_path('fabriqmodules/configure/!#', 'fabriqmodules', 'configure', 'module', null, 2);
 		$pathmap->register_path('fabriqmodules/disable/!#', 'fabriqmodules', 'disable', 'module', null, 2);
 		$pathmap->register_path('fabriqmodules/enable/!#', 'fabriqmodules', 'enable', 'module', null, 2);
-		$pathmap->register_path('fabriqmodules/install/!#', 'fabriqmodules', 'index', 'module', null, 2);
-		$pathmap->register_path('fabriqmodules/uninstall/!#', 'fabriqmodules', 'index', 'module', null, 2);
+		$pathmap->register_path('fabriqmodules/install/!#', 'fabriqmodules', 'install', 'module', null, 2);
+		$pathmap->register_path('fabriqmodules/uninstall/!#', 'fabriqmodules', 'uninstall', 'module', null, 2);
 		
 		// give administrators the ability to manage modules
 		$adminPerm = FabriqModules::new_model('roles', 'ModulePerms');
@@ -42,25 +42,7 @@ class fabriqmodules_install {
 	}
 	
 	public function uninstall() {
-		$mod = new Modules();
-		$mod->getModuleByName('fabriqmodules');
-		
-		// remove perms
-		FabriqModules::remove_perms($mod->id);
-		
-		// remove paths
-		$pathmap = &FabriqModules::module('pathmap');
-		$pathmap->remove_path('fabriqmodules');
-		$pathmap->remove_path('fabriqmodules/manage');
-		$pathmap->remove_path('fabriqmodules/configure/!#');
-		$pathmap->remove_path('fabriqmodules/disable/!#');
-		$pathmap->remove_path('fabriqmodules/enable/!#');
-		$pathmap->remove_path('fabriqmodules/install/!#');
-		$pathmap->remove_path('fabriqmodules/uninstall/!#');
-		
-		// set module as not installed
-		$mod->installed = 0;
-		$mod->update();
+		// core modules cannot be uninstalled
 	}
 }
 	

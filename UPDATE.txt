@@ -19,16 +19,15 @@ To UPDATE TO VERSION 2.1.x from version 2.0.x
   
  - Copy the following files to /app/controllers
    - /app/controllers/fabriqinstall.controller.php
-   - /app/controllers/fabriqmodules.controller.php
 
  - Copy the following views directories to /app/views
    - /app/views/fabriqinstall
-   - /app/views/fabriqmodules
  
  - Copy the following files to /app/scripts
    - /app/scripts/fabriqmodules.script.js
    
  - Copy the following from /modules to your application's /modules directory to update
+   - /modules/fabriqmodules
    - /modules/fabriqupdates
    - /modules/pathpath
    - /modules/roles

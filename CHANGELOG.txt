@@ -5,6 +5,8 @@ Version 2.1.2
   - Cleaned up the Fabriq rendering process with FabriqStack
   - Minimized the index.php file
   - Rewrote module execution functionality
+  - Replaced fabriqmodules controller with fabriqmodules module to make updating version
+    easier for the future
 
 Version 2.1.1 2012-12-30
   - Moved template initializing to FabriqTemplates from index

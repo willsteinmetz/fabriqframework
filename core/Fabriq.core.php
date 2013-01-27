@@ -693,7 +693,7 @@ abstract class FabriqTemplates {
 			break;
 			case 'view':
 				ob_start();
-				FabriqTemplates::body();
+				echo FabriqTemplates::body();
 				ob_flush();
 				ob_clean();
 			break;
