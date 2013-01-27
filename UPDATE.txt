@@ -41,20 +41,22 @@ To UPDATE TO VERSION 2.1.x from version 2.0.x
    - /libs/javascript/handlebars
    - /libs/javascript/jquery
  
- - Delete the /app/controllers/errors.controller.php file
+ - Delete the following controller files
+   - /app/controllers/errors.controller.php
+   - /app/controllers/fabriqmodules.controller.php
  
- - Delete the /app/views/errors directory
+ - Delete the views directories
+   - /app/views/errors
+   - /app/views/fabriqmodules
+   
+ - Delete the following script files
+   - /app/scripts/fabriqmodules.script.js
  
  - Remove overrides from /app/PathMap.class.php for 404 and 500 error
    - If you have created a custom 403 error file, add a custom _403.view.php file
      to /app/views/modules/pathmap
 
 For version 2.1.2, if the following haven't been done yet:
- - Remove the following files and directories
-   - /app/controllers/fabriqmodules.controller.php
-   - /app/views/fabriqmodules
-   - /app/scripts/fabriqmodules.script.js
-  
  - In your template replace the following:
    <?php require_once("app/views/" . PathMap::render_controller() . "/" . PathMap::render_action() . ".view.php"); ?>
    with the following:
