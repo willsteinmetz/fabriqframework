@@ -835,6 +835,7 @@ abstract class FabriqLibs {
  */
 abstract class FabriqStack {
 	// public variables
+	private static $processing = null;
 	
 	// private variables
 	private static $queue = array();
@@ -923,6 +924,8 @@ abstract class FabriqStack {
 			FabriqStack::processQueue();
 		}
 		
+		self::$processing = $next;
+		
 		switch ($next->type) {
 			case 'module':
 				$module = &FabriqModules::module($next->controller);
@@ -954,6 +957,13 @@ abstract class FabriqStack {
 		if (count(self::$queue)) {
 			FabriqStack::processQueue();
 		}
+	}
+
+	/**
+	 * Getter for the processing variable
+	 */
+	public static function processing() {
+		return self::$processing ? self::$processing: false;
 	}
 }
 

@@ -54,7 +54,7 @@ To UPDATE TO VERSION 2.1.x from version 2.0.x
  
  - Remove overrides from /app/PathMap.class.php for 404 and 500 error
    - If you have created a custom 403 error file, add a custom _403.view.php file
-     to /app/views/modules/pathmap
+     to /app/views/modules/pathmap and remove the check from the PathMap class.
 
 For version 2.1.2, if the following haven't been done yet:
  - In your template replace the following:

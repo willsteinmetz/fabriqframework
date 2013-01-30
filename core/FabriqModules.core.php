@@ -250,17 +250,6 @@ abstract class FabriqModules {
 	 * @param string $action
 	 */
 	public static function render($module, $action) {
-		/*$file = "app/views/modules/{$module}/{$action}.view.php";
-		if (!file_exists($file)) {
-			$file = "modules/{$module}/views/{$action}.view.php";
-			if (!file_exists($file)) {
-				throw new Exception("View for {$module}'s {$action} action does not exist");
-			}
-		}
-		ob_start();
-		extract(self::$module_vars[$module]);
-		require($file);
-		self::$body .= ob_get_clean();*/
 		$render = new stdClass();
 		$render->controller = $module;
 		$render->action = $action;
@@ -270,32 +259,12 @@ abstract class FabriqModules {
 	}
 
 	/**
-	 * Returns the rendered module content
-	 * @return string
-	 */
-	/*public static function body() {
-		return self::$body;
-	}*/
-
-	/**
 	 * Renders the module action's view content and returns it to be added at
 	 * a specific place
 	 * @param string $module
 	 * @param string $action
 	 */
 	public static function render_now($module, $action) {
-		/*$file = "app/views/modules/{$module}/{$action}.view.php";
-		if (!file_exists($file)) {
-			$file = "modules/{$module}/views/{$action}.view.php";
-			if (!file_exists($file)) {
-				throw new Exception("View for {$module}'s {$action} action does not exist");
-			}
-		}
-		self::$render_positions[] = $module;
-		ob_start();
-		extract(self::$module_vars[$module]);
-		require($file);
-		return ob_get_clean();*/
 		$next = new stdClass();
 		$next->controller = $module;
 		$next->action = $action;
