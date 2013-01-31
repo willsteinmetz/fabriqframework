@@ -297,59 +297,67 @@ class BaseMapping {
 	}
 	
 	/**
+	 * DEPRECATED - will be removed in 3.0 release candidate
 	 * Controller getter/setter
 	 * if NULL, return the $controller variable
 	 * @param string $c
 	 * @return string
 	 */
-	public static function controller($c = NULL) {
-		if ($c != NULL) {
+	public static function controller(/*$c = NULL*/) {
+		/*if ($c != NULL) {
 			self::$controller = $c;
 		} else {
 			return self::$controller;
-		}
+		}*/
+		return FabriqStack::processing()->controller;
 	}
 
 	/**
+	 * DEPRECATED - will be removed in 3.0 release candidate
 	 * Render controller getter/setter
 	 * if NULL, return the $rendercontroller variable
 	 * @param string $controller
 	 * @return string
 	 */
-	public static function render_controller($c = NULL) {
-		if ($c != NULL) {
+	public static function render_controller(/*$c = NULL*/) {
+		/*if ($c != NULL) {
 			self::$rendercontroller = $c;
 		} else {
 			return self::$rendercontroller;
-		}
+		}*/
+		return FabriqStack::processing()->controller;
 	}
 
 	/**
+	 * DEPRECATED - will be removed in 3.0 release candidate
 	 * Action getter/setter
 	 * if NULL, return the $action variable
 	 * @param string $a
 	 * @return string
 	 */
-	public static function action($a = NULL) {
-		if ($a != NULL) {
+	public static function action(/*$a = NULL*/) {
+		/*if ($a != NULL) {
 			self::$action = $a;
 		} else {
 			return self::$action;
-		}
+		}*/
+		return FabriqStack::processing()->action;
 	}
 
 	/**
+	 * DEPRECATED - will be removed in 3.0 release candidate
 	 * Render action getter/setter
 	 * if NULL, return the $renderaction variable
 	 * @param string $action
 	 * @return string
 	 */
-	public static function render_action($a = NULL) {
-		if ($a != NULL) {
+	public static function render_action(/*$a = NULL*/) {
+		/*if ($a != NULL) {
 			self::$renderaction = $a;
 		} else {
 			return self::$renderaction;
-		}
+		}*/
+		return FabriqStack::processing()->action;
 	}
 
 	/**
