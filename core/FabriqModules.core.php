@@ -425,6 +425,35 @@ abstract class FabriqModules {
 			}
 		}
 	}
+	
+	/**
+	 * Check that the given module is installed
+	 * @param string $module
+	 * @return boolean
+	 */
+	public static function installed($module) {
+		global $db;
+		
+		$query = "SELECT COUNT(*) AS num FROM `fabmods_modules` WHERE module =? AND installed = ?";
+		$data = $db->prepare_select($query, array('num'), array($module, 1));
+		return ($data[0]['num'] > 0) ? true : false;
+	}
+	
+	/**
+	 * Check that the fabriqinstall module is installed
+	 */
+	public static function fabriqinstallReady() {
+		// check that the fabriqinstall module is installed
+		if (!FabriqModules::installed('fabriqinstall')) {
+			FabriqModules::register_module('fabriqinstall');
+			FabriqModules::install('fabriqinstall');
+			$module = new Modules();
+			$module->getModuleByName('fabriqinstall');
+			$module->enabled = 1;
+			$module->update();
+			Messaging::message('Installed fabriqinstall module', 'success');
+		}
+	}
 }
 
 /**

@@ -297,7 +297,7 @@ class BaseMapping {
 	}
 	
 	/**
-	 * DEPRECATED - will be removed in 3.0 release candidate
+	 * @DEPRECATED - will be removed in 3.0 release candidate
 	 * Controller getter/setter
 	 * if NULL, return the $controller variable
 	 * @param string $c
@@ -313,7 +313,7 @@ class BaseMapping {
 	}
 
 	/**
-	 * DEPRECATED - will be removed in 3.0 release candidate
+	 * @DEPRECATED - will be removed in 3.0 release candidate
 	 * Render controller getter/setter
 	 * if NULL, return the $rendercontroller variable
 	 * @param string $controller
@@ -329,7 +329,7 @@ class BaseMapping {
 	}
 
 	/**
-	 * DEPRECATED - will be removed in 3.0 release candidate
+	 * @DEPRECATED - will be removed in 3.0 release candidate
 	 * Action getter/setter
 	 * if NULL, return the $action variable
 	 * @param string $a
@@ -345,7 +345,7 @@ class BaseMapping {
 	}
 
 	/**
-	 * DEPRECATED - will be removed in 3.0 release candidate
+	 * @DEPRECATED - will be removed in 3.0 release candidate
 	 * Render action getter/setter
 	 * if NULL, return the $renderaction variable
 	 * @param string $action
@@ -405,11 +405,11 @@ class BaseMapping {
 				$path .= '/';
 			}
 		}
-		if (self::clean_urls()) {
+		//if (self::clean_urls()) {
 			return PathMap::getUrl() . $path;
-		} else {
+		/*} else {
 			return 'index.php?q=' . $path;
-		}
+		}*/
 	}
 
 	/**
@@ -471,20 +471,21 @@ class BaseMapping {
 				FabriqStack::enqueue($controller, $action);
 			}
 		}
-
+		
 		// try to map path with pathmap module if enabled and necessary
 		if ($installed && FabriqModules::enabled('pathmap') && !$mapped) {
 			$pathmap = &FabriqModules::module('pathmap');
 			$mapped = $pathmap->redirect($_GET['q']);
 		}
-
+		
 		// not installed, map to the install function
 		if (!$installed) {
 			PathMap::arg(0, 'fabriqinstall');
 			PathMap::arg(1, 'install');
-			FabriqStack::enqueue('fabriqinstall', 'install');
+			FabriqStack::enqueue('fabriqinstall', 'install', 'module');
+			$mapped = true;
 		}
-
+		
 		// resolve controller and action if not already declared
 		if (!$mapped) {
 			if (count($q) == 0) {
@@ -896,7 +897,7 @@ abstract class FabriqStack {
 	 * @param string $action
 	 * @param string $type - default "controller"
 	 */
-	public static function enqueue($controller, $action, $type = "controller", $extra = null) {
+	public static function enqueue($controller, $action, $type = "controller", $extra = array()) {
 		$next = new stdClass();
 		$next->controller = $controller;
 		$next->action = $action;

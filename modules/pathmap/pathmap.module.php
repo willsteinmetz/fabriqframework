@@ -13,48 +13,51 @@ class pathmap_module extends FabriqModule {
 		$path = FabriqModules::new_model('pathmap', 'Paths');
 		$path->get_by_path($p);
 		
-		switch ($path->modpage) {
-			case 'module':
-				if (FabriqModules::enabled($path->controller)) {
-					$extra = explode('/', $path->extra);
-					if (count($extra) == 1) {
-						if ($extra[0] == '') {
-							unset($extra[0]);
+		if (count($path)) {
+			switch ($path->modpage) {
+				case 'module':
+					if (FabriqModules::enabled($path->controller)) {
+						$extra = explode('/', $path->extra);
+						if (count($extra) == 1) {
+							if ($extra[0] == '') {
+								unset($extra[0]);
+							}
 						}
+						PathMap::arg(0, $path->controller);
+						PathMap::arg(1, $path->action);
+						for ($i = 0; $i < count($extra); $i++) {
+							PathMap::arg($i + 2, $extra[$i]);
+						}
+						FabriqStack::enqueue($path->controller, $path->action, 'module', $extra);
+						return true;
+					} else {
+						FabriqStack::error(404);
 					}
+				break;
+				case 'page': default:
 					PathMap::arg(0, $path->controller);
 					PathMap::arg(1, $path->action);
-					for ($i = 0; $i < count($extra); $i++) {
-						PathMap::arg($i + 2, $extra[$i]);
+					FabriqStack::enqueue($path->controller, $path->action);
+					if ($path->extra != '') {
+						$extra = explode('/', $path->extra);
+						if ($path->wildcard) {
+							$p = explode('/', $_GET['q']);
+							array_unshift($extra, $p[$path->wildcard]);
+						}
+						for ($i = 0; $i < count($extra); $i++) {
+							PathMap::arg(($i + 2), $extra[$i]);
+						}
+					} else {
+						if ($path->wildcard) {
+							$p = explode('/', $_GET['q']);
+							PathMap::arg(2, $p[$path->wildcard]);
+						}
 					}
-					FabriqStack::enqueue($path->controller, $path->action, 'module', $extra);
 					return true;
-				} else {
-					FabriqStack::error(404);
-				}
-			break;
-			case 'page': default:
-				PathMap::arg(0, $path->controller);
-				PathMap::arg(1, $path->action);
-				FabriqStack::enqueue($path->controller, $path->action);
-				if ($path->extra != '') {
-					$extra = explode('/', $path->extra);
-					if ($path->wildcard) {
-						$p = explode('/', $_GET['q']);
-						array_unshift($extra, $p[$path->wildcard]);
-					}
-					for ($i = 0; $i < count($extra); $i++) {
-						PathMap::arg(($i + 2), $extra[$i]);
-					}
-				} else {
-					if ($path->wildcard) {
-						$p = explode('/', $_GET['q']);
-						PathMap::arg(2, $p[$path->wildcard]);
-					}
-				}
-				return true;
-			break;
+				break;
+			}
 		}
+		return false;
 	}
 	
 	public function register_path($path, $controller, $action, $modpage = 'page', $extra = null, $wildcard = null) {

@@ -35,20 +35,33 @@ require_once('app/PathMap.class.php');
 // require the core files
 FabriqStack::requireCore();
 
+// query variable
+$q = explode('/', $_GET['q']);
+if (trim($q[0]) == '') {
+	array_shift($q);
+}
+
 // initialize database
 if ($installed) {
 	$db = new Database($_FDB['default']);
 	// get module handlers
 	FabriqModules::get_handlers();
+	// check fabriqinstall
+	FabriqModules::fabriqinstallReady();
 } else {
 	$_FAPP = array();
 	$_FAPP['templates']['default'] = 'fabriqinstall';
-}
-
-// query variable
-$q = explode('/', $_GET['q']);
-if (trim($q[0]) == '') {
-	array_shift($q);
+	$appPath = '/';
+	$aPath = substr($_SERVER['REQUEST_URI'], 1);
+	$aPath = str_replace('index.php?q=', '', $aPath);
+	$aPath = explode('/', $aPath);
+	$i = 0;
+	while (($aPath[$i] != 'fabriqinstall') && ($i < count($aPath))) {
+		$appPath .= $aPath[$i] . '/';
+		$i++;
+	}
+	$_FAPP['url'] = "http://{$_SERVER['HTTP_HOST']}";
+	$_FAPP['apppath'] = str_replace('//', '/', $appPath);
 }
 
 // check if user is logged in and if not give viewer

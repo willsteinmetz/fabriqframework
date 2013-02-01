@@ -57,5 +57,13 @@ class pathmap_install {
 		$pathmap->register_path('404', 'pathmap', '_404', 'module');
 		$pathmap->register_path('500', 'pathmap', '_500', 'module');
 	}
+	
+	public function update_2_1_3() {
+		// update the module version number
+		$mod = new Modules();
+		$mod->getModuleByName('pathmap');
+		$mod->versioninstalled = '2.1.3';
+		$mod->update();
+	}
 }
 	

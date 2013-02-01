@@ -25,7 +25,7 @@ class PathMap extends BaseMapping {
 		 *   action to read/show.
 		 */
 		switch(self::controller()) {
-			case default:
+			default:
 			break;
 		}
 	}
