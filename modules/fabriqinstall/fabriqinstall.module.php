@@ -92,6 +92,7 @@ class fabriqinstall_module extends FabriqModule {
 			break;
 			case 1: default:
 				$this->install_step1();
+				PathMap::arg(2, 1);
 			break;
 		}
 	}
