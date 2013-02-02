@@ -13,6 +13,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
 <title>Fabriq Framework | <?php echo Fabriq::title(); ?></title>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700' rel='stylesheet' type='text/css'>
 <?php
 // process css queue
 foreach (Fabriq::cssqueue() as $css) {

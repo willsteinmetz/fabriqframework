@@ -69,7 +69,7 @@ class fabriqinstall_module extends FabriqModule {
 		
 		// set up display elements
 		Fabriq::empty_css_queue();
-		Fabriq::add_css('fabriqinstall', 'screen', 'core/');
+		FabriqModules::add_css('fabriqinstall', 'fabriqinstall');
 		FabriqTemplates::template('fabriqinstall');
 	}
 
