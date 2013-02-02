@@ -144,7 +144,7 @@ class fabriqinstall_module extends FabriqModule {
 				}
 			}
 			
-			FabriqTemplates::set_var('submitted', true);
+			FabriqModules::set_var('fabriqinstall', 'submitted', true);
 		}
 	}
 
@@ -393,7 +393,7 @@ class fabriqinstall_module extends FabriqModule {
 				}
 			}
 			
-			FabriqTemplates::set_var('submitted', true);
+			FabriqModules::set_var('fabriqinstall', 'submitted', true);
 		}
 	}
 	
@@ -470,7 +470,7 @@ EMAIL;
 				}
 			}
 			
-			FabriqTemplates::set_var('submitted', true);
+			FabriqModules::set_var('fabriqinstall', 'submitted', true);
 		}
 	}
 	
@@ -526,28 +526,17 @@ EMAIL;
 		Fabriq::title('Framework updates');
 		
 		// get the list of updates
-		$methods = get_class_methods('fabriqinstall_controller');
+		$methods = get_class_methods('fabriqinstall_module');
 		$available = array();
-		$currentVersion = explode('.', $this->version);
 		foreach ($methods as $method) {
 			if ((substr($method, 0, 7) == 'update_') && (substr($method, 0, 11) != 'update_step') || ($this->version == null)) {
-				$version = explode('_', str_replace('update_', '', $method));
-				foreach ($version as &$v) {
-					$v = $v * 1;
-				}
-				if ($version[0] > $currentVersion[0]) {
+				$version = str_replace('_', '.', str_replace('update_', '', $method));
+				if ($version > $this->version) {
 					$available[] = $method;
-				} else if ($version[0] == $currentVersion[0]) {
-					if ($version[1] > $currentVersion[1]) {
-						$available[] = $method;
-					} else if ($version[1] == $currentVersion[1]) {
-						if ($version[2] > $currentVersion[2]) {
-							$available[] = $method;
-						}
-					}
 				}
 			}
 		}
+		
 		$toInstall = array();
 		for ($i = 0; $i < count($available); $i++) {
 			$toInstall[] = $this->{$available[$i]}();
@@ -564,8 +553,8 @@ EMAIL;
 				$submitted = true;
 			}
 		}
-		FabriqTemplates::set_var('toInstall', $toInstall);
-		FabriqTemplates::set_var('submitted', $submitted);
+		FabriqModules::set_var('fabriqinstall', 'toInstall', $toInstall);
+		FabriqModules::set_var('fabriqinstall', 'submitted', $submitted);
 	}
 
 	/**
@@ -615,8 +604,8 @@ EMAIL;
 				exit();
 			}
 		} else {
-			FabriqTemplates::set_var('installed', $installed);
-			FabriqTemplates::set_var('available', $available);
+			FabriqModules::set_var('fabriqinstall', 'installed', $installed);
+			FabriqModules::set_var('fabriqinstall', 'available', $available);
 		}
 	}
 	

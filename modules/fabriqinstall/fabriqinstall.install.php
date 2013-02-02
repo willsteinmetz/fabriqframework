@@ -21,7 +21,7 @@ class fabriqinstall_install {
 		$pathmap->register_path('fabriqinstall/install', 'fabriqinstall', 'install', 'module');
 		$pathmap->register_path('fabriqinstall/install/!#', 'fabriqinstall', 'install', 'module', null, 2);
 		$pathmap->register_path('fabriqinstall/update', 'fabriqinstall', 'update', 'module');
-		$pathmap->register_path('fabriqinstall/update/!#', 'fabriqinstalll', 'update', 'module', null, 2);
+		$pathmap->register_path('fabriqinstall/update/!#', 'fabriqinstall', 'update', 'module', null, 2);
 		
 		// give administrators the ability to update the framework
 		$adminPerm = FabriqModules::new_model('roles', 'ModulePerms');
