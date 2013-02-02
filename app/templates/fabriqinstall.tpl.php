@@ -3,7 +3,7 @@
  * @file Fabriq install template
  * @author Will Steinmetz
  * 
- * Copyright (c)2011, Ralivue.com
+ * Copyright (c)2013, Ralivue.com
  * Licensed under the BSD license.
  * http://fabriqframework.com/license
  */
@@ -39,26 +39,19 @@ jQuery.extend(Fabriq.settings, {"basePath": "<?php echo PathMap::base_path(); ?>
 <header>
 	<section id="header">
 		<img src="http://fabriqframework.com/public/images/Fabriqx60.png" title="Fabriq Framework" id="fabriq-icon" alt="F" style="margin: 5px; float: left;" />
-		<div id="site-name">Fabriq Framework</div>
+		<div id="site-name">Fabriq - <?php if (PathMap::action() == 'install') { echo 'Install'; } else { echo 'Update'; } ?></div>
 	</section>
 </header>
 <?php if (PathMap::action() == 'install'): ?>
 <nav id="default-nav">
+
 	<section class="nav">
 		<ul>
-			<li>Install</li>
-		</ul>
-		<div class="clearbox">&nbsp;</div>
-	</section>
-</nav>
-<nav id="admin-nav">
-	<section class="nav">
-		<ul>
-			<li>Start</li>
-			<li>Site configuration</li>
-			<li>Database configuration</li>
-			<li>Module installation</li>
-			<li>Finish</li>
+			<li<?php if (PathMap::arg(2) == 1) { echo ' class="current"'; } ?>>Start</li>
+			<li<?php if (PathMap::arg(2) == 2) { echo ' class="current"'; } ?>>Site configuration</li>
+			<li<?php if (PathMap::arg(2) == 3) { echo ' class="current"'; } ?>>Database configuration</li>
+			<li<?php if (PathMap::arg(2) == 4) { echo ' class="current"'; } ?>>Module installation</li>
+			<li<?php if (PathMap::arg(2) == 5) { echo ' class="current"'; } ?>>Finish</li>
 		</ul>
 		<div class="clearbox">&nbsp;</div>
 	</section>
@@ -67,18 +60,10 @@ jQuery.extend(Fabriq.settings, {"basePath": "<?php echo PathMap::base_path(); ?>
 <nav id="default-nav">
 	<section class="nav">
 		<ul>
-			<li>Update</li>
-		</ul>
-		<div class="clearbox">&nbsp;</div>
-	</section>
-</nav>
-<nav id="admin-nav">
-	<section class="nav">
-		<ul>
-			<li>Start</li>
-			<li>Framework updates</li>
-			<li>Module updates</li>
-			<li>Finish</li>
+			<li<?php if (PathMap::arg(2) == 1) { echo ' class="current"'; } ?>>Start</li>
+			<li<?php if (PathMap::arg(2) == 2) { echo ' class="current"'; } ?>>Framework updates</li>
+			<li<?php if (PathMap::arg(2) == 3) { echo ' class="current"'; } ?>>Module updates</li>
+			<li<?php if (PathMap::arg(2) == 4) { echo ' class="current"'; } ?>>Finish</li>
 		</ul>
 		<div class="clearbox">&nbsp;</div>
 	</section>

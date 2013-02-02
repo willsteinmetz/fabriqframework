@@ -9,13 +9,13 @@ To UPDATE TO VERSION 2.1.x from version 2.0.x
  
  - Copy the .htaccess or web.config to your site/applications root directory depending on
    your platform
- 
+
+ - Copy the index.php file from the expanded archive to the / (root) directory
+   of your Fabriq web application(s)/website(s)
+
  - Copy the core class files into /core
    - /core/Fabriq.core.php
    - /core/FabriqModules.core.php
-   
- - Copy the index.php file from the expanded archive to the / (root) directory
-   of your Fabriq web application(s)/website(s)
    
  - Copy the following from /modules to your application's /modules directory to update
    - /modules/fabriqinstall
@@ -32,6 +32,9 @@ To UPDATE TO VERSION 2.1.x from version 2.0.x
  - Copy the following from /libs/javascript to your application's /libs/javascript directory to update
    - /libs/javascript/handlebars
    - /libs/javascript/jquery
+
+ - Copy the following from /app/templates to your application's /app/templates directory to update
+   - /app/templates/fabriqinstall.tpl.php
  
  - Delete the following controller files
    - /app/controllers/errors.controller.php

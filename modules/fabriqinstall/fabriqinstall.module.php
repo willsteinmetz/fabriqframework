@@ -59,8 +59,8 @@ class fabriqinstall_module extends FabriqModule {
 		$this->installVersion = '0.0';
 		$updates = get_class_methods('fabriqinstall_module');
 		foreach ($updates as $method) {
-			if (substr($method, 0, 6) == 'update') {
-				$version = str_replace('update_', '', str_replace('_', '.', $method));
+			if ((substr($method, 0, 7) == 'update_') && (substr($method, 0, 11) != 'update_step')) {
+				$version = str_replace('_', '.', str_replace('update_', '', $method));
 				if ($version > $this->installVersion) {
 					$this->installVersion = $version;
 				}
@@ -506,6 +506,7 @@ EMAIL;
 				break;
 				case 1: default:
 					$this->update_step1();
+					PathMap::arg(2, 1);
 				break;
 			}
 		}
