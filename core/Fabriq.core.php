@@ -255,7 +255,10 @@ abstract class Fabriq {
 	 * created yet
 	 */
 	public static function installed() {
-		if (file_exists('config/config.inc.php')) {
+		if (file_exists('sites/' . FabriqStack::site() . '/config/config.inc.php')) {
+			return true;
+		}
+		if ((file_exists('config/config.inc.php')) && (FabriqStack::site() == 'default')) {
 			return true;
 		}
 		return false;
@@ -300,15 +303,9 @@ class BaseMapping {
 	 * @DEPRECATED - will be removed in 3.0 release candidate
 	 * Controller getter/setter
 	 * if NULL, return the $controller variable
-	 * @param string $c
 	 * @return string
 	 */
-	public static function controller(/*$c = NULL*/) {
-		/*if ($c != NULL) {
-			self::$controller = $c;
-		} else {
-			return self::$controller;
-		}*/
+	public static function controller() {
 		return FabriqStack::processing()->controller;
 	}
 
@@ -316,15 +313,9 @@ class BaseMapping {
 	 * @DEPRECATED - will be removed in 3.0 release candidate
 	 * Render controller getter/setter
 	 * if NULL, return the $rendercontroller variable
-	 * @param string $controller
 	 * @return string
 	 */
-	public static function render_controller(/*$c = NULL*/) {
-		/*if ($c != NULL) {
-			self::$rendercontroller = $c;
-		} else {
-			return self::$rendercontroller;
-		}*/
+	public static function render_controller() {
 		return FabriqStack::processing()->controller;
 	}
 
@@ -332,15 +323,9 @@ class BaseMapping {
 	 * @DEPRECATED - will be removed in 3.0 release candidate
 	 * Action getter/setter
 	 * if NULL, return the $action variable
-	 * @param string $a
 	 * @return string
 	 */
-	public static function action(/*$a = NULL*/) {
-		/*if ($a != NULL) {
-			self::$action = $a;
-		} else {
-			return self::$action;
-		}*/
+	public static function action() {
 		return FabriqStack::processing()->action;
 	}
 
@@ -348,15 +333,9 @@ class BaseMapping {
 	 * @DEPRECATED - will be removed in 3.0 release candidate
 	 * Render action getter/setter
 	 * if NULL, return the $renderaction variable
-	 * @param string $action
 	 * @return string
 	 */
-	public static function render_action(/*$a = NULL*/) {
-		/*if ($a != NULL) {
-			self::$renderaction = $a;
-		} else {
-			return self::$renderaction;
-		}*/
+	public static function render_action() {
 		return FabriqStack::processing()->action;
 	}
 
@@ -405,11 +384,11 @@ class BaseMapping {
 				$path .= '/';
 			}
 		}
-		//if (self::clean_urls()) {
+		if (self::clean_urls()) {
 			return PathMap::getUrl() . $path;
-		/*} else {
+		} else {
 			return 'index.php?q=' . $path;
-		}*/
+		}
 	}
 
 	/**
@@ -989,9 +968,9 @@ abstract class FabriqStack {
 		}
 		rsort($sites);
 		if (count($sites)) {
-			$url = str_replace('/', '_', str_replace('http://', '', str_replace('https://', '', $_SERVER['HTTP_HOST'])));
+			$url = str_replace('/', '_', str_replace('http://', '', str_replace('https://', '', $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'])));
 			foreach($sites as $s) {
-				if (strpos($url, $s) > -1) {
+				if (strpos($url, $s) !== FALSE) {
 					self::$site = $s;
 					break;
 				}

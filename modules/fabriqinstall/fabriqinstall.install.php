@@ -39,5 +39,13 @@ class fabriqinstall_install {
 	public function uninstall() {
 		// core modules cannot be uninstalled
 	}
+	
+	public function update_2_1_4() {
+		// update the module version number
+		$mod = new Modules();
+		$mod->getModuleByName('pathmap');
+		$mod->versioninstalled = '2.1.4';
+		$mod->update();
+	}
 }
 	

@@ -35,9 +35,6 @@ if ($installed) {
 require_once('core/FabriqModules.core.php');
 require_once('app/PathMap.class.php');
 
-// require the core files
-FabriqStack::requireCore();
-
 // query variable
 $q = explode('/', $_GET['q']);
 if (trim($q[0]) == '') {
@@ -66,6 +63,9 @@ if ($installed) {
 	$_FAPP['url'] = "http://{$_SERVER['HTTP_HOST']}";
 	$_FAPP['apppath'] = str_replace('//', '/', $appPath);
 }
+
+// require the core files
+FabriqStack::requireCore();
 
 // check if user is logged in and if not give viewer
 // unathenticated role
