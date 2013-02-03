@@ -1,0 +1,1 @@
+javascript files that are not part of a library (those are stored in /libs/javascript) or controller javascript (those are stored in /app/scripts) should be stored here

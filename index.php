@@ -19,6 +19,9 @@ session_start();
 // require core Fabriq base classes
 require_once('core/Fabriq.core.php');
 
+// determine which site should be servied
+FabriqStack::determineSite();
+
 // check to make sure application has been configured
 $installed = Fabriq::installed();
 

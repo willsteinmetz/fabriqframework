@@ -1,0 +1,1 @@
+this directory is used to store javascript libraries to use with your Fabriq app. each library should be given it's own sub-directory under this one. feel free to delete this file after adding a javascript library.

@@ -845,6 +845,7 @@ abstract class FabriqLibs {
 abstract class FabriqStack {
 	// public variables
 	private static $processing = null;
+	private static $site = 'default';
 	
 	// private variables
 	private static $queue = array();
@@ -973,6 +974,37 @@ abstract class FabriqStack {
 	 */
 	public static function processing() {
 		return self::$processing ? self::$processing: false;
+	}
+	
+	/**
+	 * Determine what site is currently being served
+	 */
+	public static function determineSite() {
+		$availableSites = scandir('sites');
+		$sites = array();
+		foreach ($availableSites as $site) {
+			if (($site != '.') && ($site != '..') && ($site != 'skeleton') && ($site != 'default') && ($site != 'README.txt')) {
+				$sites[] = $site;
+			}
+		}
+		rsort($sites);
+		if (count($sites)) {
+			$url = str_replace('/', '_', str_replace('http://', '', str_replace('https://', '', $_SERVER['HTTP_HOST'])));
+			foreach($sites as $s) {
+				if (strpos($url, $s) > -1) {
+					self::$site = $s;
+					break;
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Return the name of the site that is currently being used
+	 * @return string
+	 */
+	public static function site() {
+		return self::$site;
 	}
 }
 
