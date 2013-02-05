@@ -17,14 +17,22 @@ function fabriq_default_autoload($class) {
 	// include module install file
 	if (strpos($class, '_install') !== FALSE) {
 		$module = str_replace('_install', '', $class);
-		require_once("modules/{$module}/{$module}.install.php");
+		// see if the site has a version of this module to use instead
+		if (file_exists('sites/' . FabriqStack::site() . "/modules/{$module}/{$module}.install.php")) {
+			require_once('sites/' . FabriqStack::site() . "modules/{$module}/{$module}.install.php");
+		} else {
+			require_once("modules/{$module}/{$module}.install.php");
+		}
 	// initialize module core
 	} else if (trim($class) == 'FabriqModules') {
 		Fabriq::init_module_core();
 	// autoload model
 	} else {
+		// see if the site had the model
 		$model = "app/models/{$class}.model.php";
-		if (file_exists($model)) {
+		if (file_exists('sites/' . FabriqStack::site() . "/{$model}")) {
+			require_once('sites/' . FabriqStack::site() . "/{$model}");
+		} else if (file_exists($model)) {
 			require_once($model);
 		}
 	}
@@ -968,7 +976,8 @@ abstract class FabriqStack {
 		}
 		rsort($sites);
 		if (count($sites)) {
-			$url = str_replace('/', '_', str_replace('http://', '', str_replace('https://', '', $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'])));
+			//$url = str_replace('/', '_', str_replace('http://', '', str_replace('https://', '', $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'])));
+			$url = str_replace('http://', '', str_replace('https://', '', $_SERVER['HTTP_HOST']));
 			foreach($sites as $s) {
 				if (strpos($url, $s) !== FALSE) {
 					self::$site = $s;

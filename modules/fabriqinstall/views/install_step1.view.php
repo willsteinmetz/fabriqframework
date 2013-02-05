@@ -1,6 +1,12 @@
 <h1>Welcome to Fabriq Framework</h1>
-<p>Before moving on to the next step, make sure of the following:</p>
+<p>Before starting the installation, make sure of the following:</p>
 <ul>
+	<li>
+		If you are setting up a site other than the default site, be sure to read the /sites/README.txt file
+		<ul>
+			<li>If you have to create a new site's directory, refresh this page after creating the directory</li>
+		</ul>
+	</li>
 	<li>Be sure that <code>sites/<?php echo FabriqStack::site(); ?>/config</code> directory has write permissions</li>
 	<li>
 		Be sure to have the following details about the database you are using available:

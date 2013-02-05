@@ -30,7 +30,11 @@ spl_autoload_register('fabriq_default_autoload');
 
 // include core files
 if ($installed) {
-	require_once('config/config.inc.php');
+	if ((file_exists('config/config.inc.php')) && (FabriqStack::site() == 'default')) {
+		require_once('config/config.inc.php');
+	} else {
+		require_once('sites/' . FabriqStack::site() . '/config/config.inc.php');
+	}
 }
 require_once('core/FabriqModules.core.php');
 require_once('app/PathMap.class.php');
@@ -78,7 +82,11 @@ PathMap::map_path();
 FabriqTemplates::init();
 
 // include the controller and action files
-require_once('app/controllers/application.controller.php');
+if (file_exists('sites/' . FabriqStack::site() . '/app/controllers/application.controller.php')) {
+	require_once('sites/' . FabriqStack::site() . '/app/controllers/application.controller.php');
+} else {
+	require_once('app/controllers/application.controller.php');
+}
 
 FabriqStack::processQueue();
 

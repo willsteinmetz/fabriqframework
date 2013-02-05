@@ -10,9 +10,6 @@ To UPDATE TO VERSION 2.1.x from version 2.0.x
  - Copy the .htaccess or web.config to your site/applications root directory depending on
    your platform
 
- - Copy the index.php file from the expanded archive to the / (root) directory
-   of your Fabriq web application(s)/website(s)
-
  - Copy the core class files into /core
    - /core/Fabriq.core.php
    - /core/FabriqModules.core.php
@@ -35,6 +32,8 @@ To UPDATE TO VERSION 2.1.x from version 2.0.x
 
  - Copy the following from /app/templates to your application's /app/templates directory to update
    - /app/templates/fabriqinstall.tpl.php
+   
+ - Copy the /sites directory to your application's root directory
  
  - Delete the following controller files
    - /app/controllers/errors.controller.php
@@ -56,73 +55,20 @@ To UPDATE TO VERSION 2.1.x from version 2.0.x
    - If you have created a custom 403 error file, add a custom _403.view.php file
      to /app/views/modules/pathmap and remove the check from the PathMap class.
 
-For version 2.1.2, if the following haven't been done yet:
+For version 2.1.2+, if the following haven't been done yet:
  - In your template replace the following:
    <?php require_once("app/views/" . PathMap::render_controller() . "/" . PathMap::render_action() . ".view.php"); ?>
    with the following:
    <?php echo FabriqTemplates::body(); ?>
-
-To UPDATE TO VERSION 2.0.x from version 1.3.x through 1.7.x
-
- - Expand the downloaded archive (.zip or .tar.gz file)
- 
- - Copy the index.php to your site/applications root directory
- 
- - Copy the .htaccess or web.config to your site/applications root directory depending on
-   your platform
- 
- - Remove the core PHP classes (*.class.php) files from the /core directory
-   in your site/application
- 
- - Remove the directory /core/modules
- 
- - Copy the new combined core class files into /core
-   - /core/Fabriq.core.php
-   - /core/FabriqModules.core.php
    
- - Copy the index.php file from the expanded archive to the / (root) directory
-   of your Fabriq web application(s)/website(s)
-  
- - Copy the following files to /app/controllers
-   - /app/controllers/fabriqinstall.controller.php
-   - /app/controllers/fabriqmodules.controller.php
-
- - Copy the following views directories to /app/views
-   - /app/views/fabriqinstall
-   - /app/views/fabriqmodules
- 
- - Copy the following files to /app/scripts
-   - /app/scripts/fabriqmodules.script.js
-   
- - Copy the following from /modules to your application's /modules directory to update
-   - /modules/fabriqupdates
-   - /modules/pathpath
-   - /modules/roles
-   - /modules/sitemenus
-   - /modules/users
- 
- - Copy the following from /libs/css to your application's /libs/css directory to update
-   - /libs/css/pie
-   
- - Copy the following from /libs/javascript to your application's /libs/javascript directory to update
-   - /libs/javascript/handlebars
-   - /libs/javascript/jquery
+For version 2.1.4+, if the following haven't been done yet
+ - Move your config.inc.php file from /config to /sites/default/config
 
 NOTES (READ CAREFULLY FOR FURTHER DETAILS ON UPDATING):
  - When referencing mapping functions, the PathMap class should be referenced and
    not the BaseMapping class. The PathMap class extends the BaseMapping class and
    therefore has inherits all of the BaseMapping class' functionality.
-   
- - With the release of version 1.3, helper files have been deprecated. You should move any functions
-   inside of helper files to their respective controllers. If the functions are for use only in
-   the controller, they should be marked as private. Version 1.7 is a release candidate for version 2.0
-   and all code marked as deprecated in the core has been removed. Code depending on the removed
-   functionality will no longer function.
-   
- - Please note that starting with the release of version 1.0, all odd numbered minor versions
-   (the minor version is the first number after the decimal point starting from the left) are
-   development versions (example: version 1.1 is a development version) and all even numbered minor
-   versions are stable releases (example: versions 1.0 and 1.2 are stable versions). If you are not
-   sure whether or not to use a development version, wait for the stable release. Stable releases generally
-   come within a week or two of development version but may take longer in cases where major updates
-   are introduced to the framework.
+
+ - Updates can only be made from version 2.0.0. If your installed version of Fabriq
+   is older than that, please download the 2.0 tag and update to that first. After updating
+   to version 2.0, you can then update to the latest version.

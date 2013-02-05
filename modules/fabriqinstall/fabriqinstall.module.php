@@ -194,7 +194,7 @@ class fabriqinstall_module extends FabriqModule {
 				
 				// write out configuration file
 				$siteConfig = unserialize($_SESSION['FAB_INSTALL_site']);
-				$confFile = 'config/config.inc.php';
+				$confFile = 'sites/' . FabriqStack::site() . '/config/config.inc.php';
 				$fh = fopen($confFile, 'w');
 				fwrite($fh, "<?php\n");
 				fwrite($fh, "/**\n");
@@ -225,7 +225,7 @@ class fabriqinstall_module extends FabriqModule {
 				// write default controller if the file isn't already there
 				// file may exist from being created in a dev environment or this is
 				// a distributed web app
-				$contFile = "app/controllers/homepage.controller.php";
+				$contFile = 'sites/' . FabriqStack::site() . "app/controllers/homepage.controller.php";
 				if (!file_exists($contFile)) {
 					$fh = fopen($contFile, 'w');
 					fwrite($fh, "<?php\n");
@@ -240,10 +240,10 @@ class fabriqinstall_module extends FabriqModule {
 				// write default action if it doesn't already exist
 				// may already exist from being created in a dev environmentor this is
 				// a distributed web app
-				if (!is_dir("app/views/homepage")) {
-					mkdir("app/views/homepage");
+				if (!is_dir('sites/' . FabriqStack::site() . "app/views/homepage")) {
+					mkdir('sites/' . FabriqStack::site() . "app/views/homepage");
 				}
-				$actionFile = "app/views/homepage/index.view.php";
+				$actionFile = 'sites/' . FabriqStack::site() . "app/views/homepage/index.view.php";
 				if (!file_exists($actionFile)) {
 					$fh = fopen($actionFile, 'w');
 					fwrite($fh, "<h1>homepage#index</h1>\n");
@@ -748,6 +748,31 @@ EMAIL;
 		return array(
 			'version' => '2.1.3',
 			'description' => 'Fabriq install and update now a module, fixed a rendering bug',
+			'hasDisplay' => false
+		);
+	}
+	
+	protected function update_2_1_4() {
+		if (isset($_POST['submit'])) {
+			global $db;
+			$installed = unserialize($_SESSION['FAB_UPDATES']);
+			if (!is_array($installed)) {
+				$installed = array();
+			}
+			if (!isset($installed['2.1.4']) || !$installed['2.1.4']) {
+				// mark the update as done
+				$installed['2.1.4'] = true;
+				$_SESSION['FAB_UPDATES'] = serialize($installed);
+				$query = "INSERT INTO `fabriq_config`
+					(`version`, `installed`)
+					VALUES
+					(?, ?)";
+				$db->prepare_cud($query, array('2.1.4', date('Y-m-d H:i:s')));
+			}
+		}
+		return array(
+			'version' => '2.1.4',
+			'description' => 'Multiple sites on one install',
 			'hasDisplay' => false
 		);
 	}
