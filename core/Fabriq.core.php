@@ -57,7 +57,11 @@ abstract class Fabriq {
 	 */
 	public static function add_css($stylesheet, $media = 'screen', $path = 'public/stylesheets/', $ext = '.css') {
 		if (substr($path, 0, 4) != 'http') {
-			$path = PathMap::getUrl() . $path;
+			if (file_exists('sites/' . FabriqStack::site() . "/{$path}/{$stylesheet}.{$ext}")) {
+				$path = PathMap::getUrl() . 'sites/' . FabriqStack::site() . "/" . $path;
+			} else {
+				$path = PathMap::getUrl() . $path;
+			}
 		}
 		self::$cssqueue[] = array('css' => $stylesheet, 'media' => $media, 'path' => $path, 'ext' => $ext);
 	}
@@ -118,9 +122,11 @@ abstract class Fabriq {
 	 * @param string $ext
 	 */
 	public static function add_js($javascript, $path = 'public/javascripts/', $ext = '.js') {
-		if (substr($path, 0, 4) != 'http') {
-			$path = PathMap::getUrl() . $path;
-		}
+		if (file_exists('sites/' . FabriqStack::site() . "/{$path}/{$javascript}.{$ext}")) {
+				$path = PathMap::getUrl() . 'sites/' . FabriqStack::site() . "/" . $path;
+			} else {
+				$path = PathMap::getUrl() . $path;
+			}
 		self::$jsqueue[] = array('js' => $javascript, 'path' => $path, 'ext' => $ext);
 	}
 
@@ -134,6 +140,7 @@ abstract class Fabriq {
 	}
 
 	/**
+	 * @DEPRECATED will be removed for 3.0
 	 * Creates a link to another page in the application
 	 * @param string $linktext
 	 * @param string $controller
@@ -222,6 +229,7 @@ abstract class Fabriq {
 	}
 
 	/**
+	 * @DEPRECATED will be removed for 3.0
 	 * layout file getter/setter
 	 * if NULL, return the $layout variable
 	 * @param string $layout
@@ -247,7 +255,12 @@ abstract class Fabriq {
 	 * turn on page javascript include
 	 */
 	public static function page_js_on() {
-		Fabriq::add_js(PathMap::render_controller() . '.script', 'app/scripts/');
+		$processing = FabriqStack::processing();
+		if (file_exists('sites/' . FabriqStack::site() . "/app/scripts/{$processing->controller}.script.js")) {
+			Fabriq::add_js("{$processing->controller}.script", 'sites/' . FabriqStack::site() . '/app/scripts');
+		} else {
+			Fabriq::add_js($processing->controller . '.script', 'app/scripts/');
+		}
 	}
 
 	/**
@@ -408,7 +421,7 @@ class BaseMapping {
 	public static function arg($index, $val = NULL) {
 		global $q;
 
-		if ($val == NULL) {
+		if (is_null($val)) {
 			if (count($q) > $index) {
 				return $q[$index];
 			} else {
@@ -479,7 +492,7 @@ class BaseMapping {
 				PathMap::arg(0, $_FAPP['cdefault']);
 				PathMap::arg(1, $_FAPP['adefault']);
 				FabriqStack::enqueue($_FAPP['cdefault'], $_FAPP['adefault']);
-			} else if (($q[0] != '') && (!file_exists("app/controllers/{$q[0]}.controller.php"))) {
+			} else if (($q[0] != '') && (!file_exists("app/controllers/{$q[0]}.controller.php")) && (!file_exists('sites/' . FabriqStack::site() . "/app/controllers/{$q[0]}.controller.php"))) {
 				FabriqStack::error(404);
 			}
 		}
@@ -697,14 +710,17 @@ abstract class FabriqTemplates {
 				ob_start();
 				extract(self::$tplvars);
 				$tmpl = "app/templates/" . self::$template . ".tmpl.php";
-				if (!file_exists($tmpl)) {
-					$tpl = "app/templates/" . self::$template . ".tpl.php";
-					if (!file_exists($tpl)) {
-						throw new Exception('Template ' . self::$template . ' could not be loaded');
-					}
+				$tpl = "app/templates/" . self::$template . ".tpl.php";
+				if (file_exists('sites/' . FabriqStack::site() . "/{$tmpl}")) {
+					require_once('sites/' . FabriqStack::site() . "/{$tmpl}");
+				} else if (file_exists('sites/' . FabriqStack::site() . "/{$tpl}")) {
+					require_once('sites/' . FabriqStack::site() . "/{$tpl}");
+				} else if (file_exists($tmpl)) {
+					require_once($tmpl);
+				} else if (file_exists($tpl)) {
 					require_once($tpl);
 				} else {
-					require_once($tmpl);
+					throw new Exception('Template ' . self::$template . ' could not be loaded');
 				}
 				ob_flush();
 				ob_clean();
@@ -721,7 +737,11 @@ abstract class FabriqTemplates {
 	public static function render_to_var($controller, $action, $var) {
 		ob_start();
 		extract(self::$tplvars);
-		require_once("app/views/{$controller}/{$action}.view.php");
+		if (file_exists('sites/' . FabriqStack::site() . "/app/views/{$controller}/{$action}.view.php")) {
+			require_once('sites/' . FabriqStack::site() . "/app/views/{$controller}/{$action}.view.php");
+		} else {
+			require_once("app/views/{$controller}/{$action}.view.php");
+		}
 		$data = ob_get_clean();
 		FabriqTemplates::set_var($var, $data);
 	}
@@ -738,12 +758,18 @@ abstract class FabriqTemplates {
 		ob_start();
 		switch($action->type) {
 			case "module":
-				$file = "app/views/modules/{$action->controller}/{$action->action}.view.php";
-				if (!file_exists($file)) {
-					$file = "modules/{$action->controller}/views/{$action->action}.view.php";
-					if (!file_exists($file)) {
-						throw new Exception("View for {$action->controller}'s {$action->action} action does not exist");
-					}
+				$custom = "app/views/modules/{$action->controller}/{$action->action}.view.php";
+				$module = "modules/{$action->controller}/views/{$action->action}.view.php";
+				if (file_exists('sites/' . FabriqStack::site() . "/{$custom}")) {
+					$file = 'sites/' . FabriqStack::site() . "/{$custom}";
+				} else if (file_exists($custom)) {
+					$file = $custom;
+				} else if (file_exists('sites/' . FabriqStack::site() . "/$module")) {
+					$file = 'sites/' . FabriqStack::site() . "/$module";
+				} else if (file_exists($module)) {
+					$file = $module;
+				} else {
+					throw new Exception("View for {$action->controller}'s {$action->action} action does not exist");
 				}
 				extract(FabriqModules::get_vars($action->controller));
 				require($file);
@@ -751,10 +777,15 @@ abstract class FabriqTemplates {
 			case "controller":
 			default:
 				extract(self::$tplvars);
-				if (!file_exists("app/views/{$action->controller}/{$action->action}.view.php")) {
+				$view = "app/views/{$action->controller}/{$action->action}.view.php";
+				if (!file_exists($view) && !file_exists('sites/' . FabriqStack::site() . "/{$view}")) {
 					FabriqStack::error(404);
 				} else {
-					require_once("app/views/{$action->controller}/{$action->action}.view.php");
+					if (file_exists('sites/' . FabriqStack::site() . "/{$view}")) {
+						require_once('sites/' . FabriqStack::site() . "/{$view}");
+					} else {
+						require_once($view);
+					}
 				}
 			break;
 		}
@@ -784,7 +815,11 @@ abstract class FabriqLibs {
 	 * @param string $ext
 	 */
 	public static function js_lib($file_name, $libdir = '', $ext = '.js') {
-		Fabriq::add_js($file_name, PathMap::getUrl() . 'libs/javascript/' . $libdir . '/', $ext);
+		if (file_exists('sites/' . FabriqStack::site() . "/libs/javascript/{$libdir}/{$file_name}.{$ext}")) {
+			Fabriq::add_js($file_name, PathMap::getUrl() . 'sites/' . FabriqStack::site() . "/libs/javascript/{$libdir}/", $ext);
+		} else {
+			Fabriq::add_js($file_name, PathMap::getUrl() . "libs/javascript/{$libdir}/", $ext);
+		}
 	}
 
 	/**
