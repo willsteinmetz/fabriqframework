@@ -830,7 +830,11 @@ abstract class FabriqLibs {
 	 * @param string $media
 	 */
 	public static function css_lib($file_name, $libdir = '', $ext = '.css', $media = 'screen') {
-		Fabriq::add_css($file_name, $media, PathMap::getUrl() . 'libs/css/' . $libdir . '/', $ext);
+		if (file_exists('sites/' . FabriqStack::site() . "/libs/javascript/{$libdir}/{$file_name}.{$ext}")) {
+			Fabriq::add_css($file_name, $media, PathMap::getUrl() . 'sites/' . FabriqStack::site() . "/libs/css/{$libdir}/", $ext);
+		} else {
+			Fabriq::add_css($file_name, $media, PathMap::getUrl() . 'libs/css/' . $libdir . '/', $ext);
+		}
 	}
 
 	/**
@@ -855,7 +859,12 @@ abstract class FabriqLibs {
 	 * @param unknown_type $libdir
 	 */
 	public static function php_lib($file_name, $libdir = '') {
-		self::$phpqueue[] = 'libs/php/' . $libdir . '/' . $file_name;
+		$file = "libs/php/{$libdir}/{$file_name}";
+		if (file_exists('sites/' . FabriqStack::site() . "/{$file}")) {
+			self::$phpqueue[] = 'sites/' . FabriqStack::site() . "/{$file}";
+		} else {
+			self::$phpqueue[] = $file;
+		}
 	}
 }
 
@@ -902,7 +911,11 @@ abstract class FabriqStack {
 	 * @return bool
 	 */
 	public static function controllerExists($controller) {
-		return file_exists("app/controllers/{$controller}.controller.php");
+		$file = "app/controllers/{$controller}.controller.php";
+		if (file_exists('sites/' . FabriqStack::site() . "/{$file}")) {
+			return true;
+		}
+		return file_exists($file);
 	}
 	
 	/**
