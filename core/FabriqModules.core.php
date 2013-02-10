@@ -4,7 +4,7 @@
 * @author Will Steinmetz
 * This file contains functions and classes used throughout Fabriq modules - DO NOT EDIT
 * 
-* Copyright (c)2012, Ralivue.com
+* Copyright (c)2013, Ralivue.com
 * Licensed under the BSD license.
 * http://fabriqframework.com/license
 */
@@ -34,10 +34,13 @@ abstract class FabriqModules {
 	public static function install($module) {
 		// find the installer file
 		$install = "modules/{$module}/{$module}.install.php";
-		if (!file_exists($install)) {
+		if (file_exists('sites/' . FabriqStack::site() . "/{$install}")) {
+			require_once('sites/' . FabriqStack::site() . "/{$install}");
+		} else if (file_exists($install)) {
+			require_once($install);
+		} else {
 			throw new Exception("Module {$module} install file could not be found");
 		}
-		require_once($install);
 		eval('$installer = new ' . $module . '_install();');
 		return $installer->install();
 	}
@@ -51,11 +54,15 @@ abstract class FabriqModules {
 		$mod->getModuleByName($module);
 		if ($mod->count() == 0) {
 			$file = "modules/{$module}/{$module}.info.json";
-			if (!file_exists($file)) {
+			if (file_exists('sites/' . FabriqStack::site() . "/{$file}")) {
+				ob_start();
+				readfile('sites/' . FabriqStack::site() . "/{$file}");
+			} else if (file_exists($file)) {
+				ob_start();
+				readfile($file);
+			} else {
 				throw new Exception("Module {$module}'s information file does not exist");
 			}
-			ob_start();
-			readfile($file);
 			$info = ob_get_clean();
 			$info = json_decode($info, true);
 			$mod->module = $module;
@@ -120,10 +127,13 @@ abstract class FabriqModules {
 	public static function uninstall($module) {
 		// find the installer file
 		$uninstall = "modules/{$module}/{$module}.install.php";
-		if (!file_exists($uninstall)) {
+		if (file_exists('sites/' . FabriqStack::site() . "/{$uninstall}")) {
+			require_once('sites/' . FabriqStack::site() . "/{$uninstall}");
+		} else if (file_exists($uninstall)) {
+			require_once($uninstall);
+		} else {
 			throw new Exception("Module {$module} install file could not be found");
 		}
-		require_once($uninstall);
 		eval('$installer = new ' . $module . '_install();');
 		return $installer->uninstall();
 	}
@@ -150,10 +160,13 @@ abstract class FabriqModules {
 		}
 		// try to load the module file
 		$modfile = "modules/{$module}/{$module}.module.php";
-		if (!file_exists($modfile)) {
+		if (file_exists('sites/' . FabriqStack::site() . "/{$modfile}")) {
+			require_once('sites/' . FabriqStack::site() . "/{$modfile}");
+		} else if (file_exists($modfile)) {
+			require_once($modfile);
+		} else {
 			throw new Exception("Module {$module} could not be loaded");
 		}
-		require_once($modfile);
 		eval('$mod = new ' . $module . '_module();');
 		self::$modules[$module] = $mod;
 		self::$module_vars[$module] = array();
@@ -281,7 +294,11 @@ abstract class FabriqModules {
 	 * @param string $ext;
 	 */
 	public static function add_css($module, $stylesheet, $media = 'screen', $path = '', $ext = '.css') {
-		self::$cssqueue[] = array('css' => $stylesheet, 'media' => $media, 'path' => PathMap::getUrl() . "modules/{$module}/stylesheets/{$path}", 'ext' => $ext);
+		if (file_exists('site/' . FabriqStack::site() . "/modules/{$module}/stylesheets/{$path}/{$stylesheet}.{$ext}")) {
+			self::$cssqueue[] = array('css' => $stylesheet, 'media' => $media, 'path' => Pathmap::getUrl() . "sites/" . FabriqStack::site() . "/modules/{$module}/stylesheets/{$path}", 'ext' => $ext);
+		} else {
+			self::$cssqueue[] = array('css' => $stylesheet, 'media' => $media, 'path' => PathMap::getUrl() . "modules/{$module}/stylesheets/{$path}", 'ext' => $ext);
+		}
 	}
 
 	/**
@@ -300,7 +317,11 @@ abstract class FabriqModules {
 	 * @param string $ext
 	 */
 	public static function add_js($module, $javascript, $path = '', $ext = '.js') {
-		self::$jsqueue[] = array('js' => $javascript, 'path' => PathMap::getUrl() . "modules/{$module}/javascripts/{$path}", 'ext' => $ext);
+		if (file_exists('site/' . FabriqStack::site() . "/modules/{$module}/javascrips/{$path}/{$javascript}.{$ext}")) {
+			self::$jsqueue[] = array('js' => $javascript, 'path' => Pathmap::getUrl() . "sites/" . FabriqStack::site() . "/modules/{$module}/javascripts/{$path}", 'ext' => $ext);
+		} else {
+			self::$jsqueue[] = array('js' => $javascript, 'path' => "modules/{$module}/javascripts/{$path}", 'ext' => $ext);
+		}
 	}
 
 	/**
@@ -333,7 +354,12 @@ abstract class FabriqModules {
 	public static function new_model($module, $model) {
 		$class = "{$module}_{$model}";
 		if (!class_exists($class)) {
-			require_once("modules/{$module}/models/{$model}.model.php");
+			$model = "modules/{$module}/models/{$model}.model.php";
+			if (file_exists('sites/' . FabriqStack::site() . "/{$model}")) {
+				require_once('sites/' . FabriqStack::site() . "/{$model}");
+			} else {
+				require_once($model);
+			}
 		}
 		eval("\$item = new {$class}();");
 		return $item;

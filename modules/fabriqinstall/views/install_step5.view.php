@@ -7,4 +7,4 @@
 	<li><code>/app/views</code></li>
 </ul>
 <p>Now that your Fabriq app is installed, you can delete the .txt files from the root directory of your project.</p>
-<p><a href="index.php">Return to the Fabriq app's homepage</a></p>
+<p><a href="<?php echo PathMap::build_path(); ?>">Return to the Fabriq app's homepage</a></p>

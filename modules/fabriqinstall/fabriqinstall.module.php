@@ -225,7 +225,7 @@ class fabriqinstall_module extends FabriqModule {
 				// write default controller if the file isn't already there
 				// file may exist from being created in a dev environment or this is
 				// a distributed web app
-				$contFile = 'sites/' . FabriqStack::site() . "app/controllers/homepage.controller.php";
+				$contFile = 'sites/' . FabriqStack::site() . "/app/controllers/homepage.controller.php";
 				if (!file_exists($contFile)) {
 					$fh = fopen($contFile, 'w');
 					fwrite($fh, "<?php\n");
@@ -240,10 +240,10 @@ class fabriqinstall_module extends FabriqModule {
 				// write default action if it doesn't already exist
 				// may already exist from being created in a dev environmentor this is
 				// a distributed web app
-				if (!is_dir('sites/' . FabriqStack::site() . "app/views/homepage")) {
-					mkdir('sites/' . FabriqStack::site() . "app/views/homepage");
+				if (!is_dir('sites/' . FabriqStack::site() . "/app/views/homepage")) {
+					mkdir('sites/' . FabriqStack::site() . "/app/views/homepage");
 				}
-				$actionFile = 'sites/' . FabriqStack::site() . "app/views/homepage/index.view.php";
+				$actionFile = 'sites/' . FabriqStack::site() . "/app/views/homepage/index.view.php";
 				if (!file_exists($actionFile)) {
 					$fh = fopen($actionFile, 'w');
 					fwrite($fh, "<h1>homepage#index</h1>\n");

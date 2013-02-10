@@ -816,9 +816,9 @@ abstract class FabriqLibs {
 	 */
 	public static function js_lib($file_name, $libdir = '', $ext = '.js') {
 		if (file_exists('sites/' . FabriqStack::site() . "/libs/javascript/{$libdir}/{$file_name}.{$ext}")) {
-			Fabriq::add_js($file_name, PathMap::getUrl() . 'sites/' . FabriqStack::site() . "/libs/javascript/{$libdir}/", $ext);
+			Fabriq::add_js($file_name, 'sites/' . FabriqStack::site() . "/libs/javascript/{$libdir}/", $ext);
 		} else {
-			Fabriq::add_js($file_name, PathMap::getUrl() . "libs/javascript/{$libdir}/", $ext);
+			Fabriq::add_js($file_name, "libs/javascript/{$libdir}/", $ext);
 		}
 	}
 
@@ -831,9 +831,9 @@ abstract class FabriqLibs {
 	 */
 	public static function css_lib($file_name, $libdir = '', $ext = '.css', $media = 'screen') {
 		if (file_exists('sites/' . FabriqStack::site() . "/libs/javascript/{$libdir}/{$file_name}.{$ext}")) {
-			Fabriq::add_css($file_name, $media, PathMap::getUrl() . 'sites/' . FabriqStack::site() . "/libs/css/{$libdir}/", $ext);
+			Fabriq::add_css($file_name, $media, 'sites/' . FabriqStack::site() . "/libs/css/{$libdir}/", $ext);
 		} else {
-			Fabriq::add_css($file_name, $media, PathMap::getUrl() . 'libs/css/' . $libdir . '/', $ext);
+			Fabriq::add_css($file_name, $media, 'libs/css/' . $libdir . '/', $ext);
 		}
 	}
 
@@ -986,7 +986,12 @@ abstract class FabriqStack {
 				PathMap::action($next->action);
 				PathMap::render_action($next->action);
 				
-				require_once("app/controllers/{$next->controller}.controller.php");
+				$file = "app/controllers/{$next->controller}.controller.php";
+				if (file_exists('sites/' . FabriqStack::site() . "/{$file}")) {
+					require_once('sites/' . FabriqStack::site() . "/{$file}");
+				} else {
+					require_once($file);
+				}
 				$c = "{$next->controller}_controller";
 				$controller = new $c();
 				$a = str_replace('.', '_', $next->action);
