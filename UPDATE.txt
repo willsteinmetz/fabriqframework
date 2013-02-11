@@ -63,6 +63,7 @@ For version 2.1.2+, if the following haven't been done yet:
    
 For version 2.1.4+, if the following haven't been done yet
  - Move your config.inc.php file from /config to /sites/default/config
+ - copy the /sites directory to your app's root directory
 
 NOTES (READ CAREFULLY FOR FURTHER DETAILS ON UPDATING):
  - When referencing mapping functions, the PathMap class should be referenced and

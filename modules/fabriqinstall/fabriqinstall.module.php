@@ -772,7 +772,7 @@ EMAIL;
 		}
 		return array(
 			'version' => '2.1.4',
-			'description' => 'Multiple sites on one install',
+			'description' => 'Multiple sites on one Fabriq codebase',
 			'hasDisplay' => false
 		);
 	}
