@@ -776,5 +776,30 @@ EMAIL;
 			'hasDisplay' => false
 		);
 	}
+	
+	protected function update_2_1_5() {
+		if (isset($_POST['submit'])) {
+			global $db;
+			$installed = unserialize($_SESSION['FAB_UPDATES']);
+			if (!is_array($installed)) {
+				$installed = array();
+			}
+			if (!isset($installed['2.1.5']) || !$installed['2.1.5']) {
+				// mark the update as done
+				$installed['2.1.5'] = true;
+				$_SESSION['FAB_UPDATES'] = serialize($installed);
+				$query = "INSERT INTO `fabriq_config`
+					(`version`, `installed`)
+					VALUES
+					(?, ?)";
+				$db->prepare_cud($query, array('2.1.5', date('Y-m-d H:i:s')));
+			}
+		}
+		return array(
+			'version' => '2.1.5',
+			'description' => 'Fixing missing paths for the pathmap module',
+			'hasDisplay' => false
+		);
+	}
 }
 	

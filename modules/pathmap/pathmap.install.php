@@ -35,6 +35,12 @@ class pathmap_install {
 		) ENGINE=INNODB;";
 		$db->query($sql);
 		
+		// map paths
+		$pathmap = &FabriqModules::module('pathmap');
+		$pathmap->register_path('403', 'pathmap', '_403', 'module');
+		$pathmap->register_path('404', 'pathmap', '_404', 'module');
+		$pathmap->register_path('500', 'pathmap', '_500', 'module');
+		
 		// set module as installed
 		$mod->installed = 1;
 		$mod->update();

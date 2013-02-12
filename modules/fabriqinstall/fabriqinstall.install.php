@@ -43,7 +43,7 @@ class fabriqinstall_install {
 	public function update_2_1_4() {
 		// update the module version number
 		$mod = new Modules();
-		$mod->getModuleByName('pathmap');
+		$mod->getModuleByName('fabriqinstall');
 		$mod->versioninstalled = '2.1.4';
 		$mod->update();
 	}
