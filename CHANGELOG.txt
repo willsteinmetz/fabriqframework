@@ -1,6 +1,9 @@
 Fabriq Framework change log
   - Initiated 05/05/10 for version 0.5
 
+Version 2.1.6 2013-02-12
+  - Fixing a bug for script and stylesheet includes
+
 Version 2.1.5 2013-02-11
   - Fixing bug that caused not all of pathmap paths to be installed
 

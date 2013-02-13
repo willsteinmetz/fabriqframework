@@ -57,7 +57,7 @@ abstract class Fabriq {
 	 */
 	public static function add_css($stylesheet, $media = 'screen', $path = 'public/stylesheets/', $ext = '.css') {
 		if (substr($path, 0, 4) != 'http') {
-			if (file_exists('sites/' . FabriqStack::site() . "/{$path}/{$stylesheet}.{$ext}")) {
+			if (file_exists('sites/' . FabriqStack::site() . "/{$path}{$stylesheet}{$ext}")) {
 				$path = PathMap::getUrl() . 'sites/' . FabriqStack::site() . "/" . $path;
 			} else {
 				$path = PathMap::getUrl() . $path;
@@ -122,7 +122,7 @@ abstract class Fabriq {
 	 * @param string $ext
 	 */
 	public static function add_js($javascript, $path = 'public/javascripts/', $ext = '.js') {
-		if (file_exists('sites/' . FabriqStack::site() . "/{$path}/{$javascript}.{$ext}")) {
+		if (file_exists('sites/' . FabriqStack::site() . "/{$path}{$javascript}{$ext}")) {
 				$path = PathMap::getUrl() . 'sites/' . FabriqStack::site() . "/" . $path;
 			} else {
 				$path = PathMap::getUrl() . $path;
@@ -815,7 +815,7 @@ abstract class FabriqLibs {
 	 * @param string $ext
 	 */
 	public static function js_lib($file_name, $libdir = '', $ext = '.js') {
-		if (file_exists('sites/' . FabriqStack::site() . "/libs/javascript/{$libdir}/{$file_name}.{$ext}")) {
+		if (file_exists('sites/' . FabriqStack::site() . "/libs/javascript/{$libdir}/{$file_name}{$ext}")) {
 			Fabriq::add_js($file_name, 'sites/' . FabriqStack::site() . "/libs/javascript/{$libdir}/", $ext);
 		} else {
 			Fabriq::add_js($file_name, "libs/javascript/{$libdir}/", $ext);
@@ -830,7 +830,7 @@ abstract class FabriqLibs {
 	 * @param string $media
 	 */
 	public static function css_lib($file_name, $libdir = '', $ext = '.css', $media = 'screen') {
-		if (file_exists('sites/' . FabriqStack::site() . "/libs/javascript/{$libdir}/{$file_name}.{$ext}")) {
+		if (file_exists('sites/' . FabriqStack::site() . "/libs/javascript/{$libdir}/{$file_name}{$ext}")) {
 			Fabriq::add_css($file_name, $media, 'sites/' . FabriqStack::site() . "/libs/css/{$libdir}/", $ext);
 		} else {
 			Fabriq::add_css($file_name, $media, 'libs/css/' . $libdir . '/', $ext);
