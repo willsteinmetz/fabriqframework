@@ -454,7 +454,7 @@ class BaseMapping {
 		}
 		
 		if (count($q) > 0) {
-			if ((trim($q[0]) != '') && (file_exists("app/controllers/{$q[0]}.controller.php"))) {
+			if ((trim($q[0]) != '') && (file_exists("app/controllers/{$q[0]}.controller.php") || file_exists('sites/' . FabriqStack::site() . "/app/controllers/{$q[0]}.controller.php"))) {
 				$controller = $q[0];
 				$mapped = true;
 			}

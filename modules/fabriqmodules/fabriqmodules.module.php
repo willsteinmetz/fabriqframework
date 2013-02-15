@@ -112,7 +112,9 @@ class fabriqmodules_module extends FabriqModule {
 		
 		$module = new Modules(PathMap::arg(2));
 		$install_file = "modules/{$module->module}/{$module->module}.install.php";
-		if (!file_exists($install_file)) {
+		if (file_exists('sites/' . FabriqStack::site() . "/{$install_file}")) {
+			$install_file = 'sites/' . FabriqStack::site() . "/{$install_file}";
+		} else if (!file_exists($install_file)) {
 			throw new Exception("Module {$module->module} install file could not be found");
 		}
 		require_once($install_file);
@@ -124,15 +126,25 @@ class fabriqmodules_module extends FabriqModule {
 	
 	private function scan_modules() {
 		$modules = array();
-		if ($handle = opendir('modules')) {
+		// scan the site's modules directory
+		if ($handle = opendir('sites/' . FabriqStack::site() .'/modules')) {
 			while (false !== ($file = readdir($handle))) {
-				if ((strpos($file, '.') === FALSE) && is_dir('modules/' . $file)) {
+				if ((strpos($file, '.') === FALSE) && is_dir('sites/' . FabriqStack::site() .'/modules/' . $file)) {
 					$modules[] = $file;
 				}
 			}
 			closedir($handle);
-		} else {
-			throw new Exception('Modules directory could not be found/read');
+		}
+		// scan the common modules directory
+		if ($handle = opendir('modules')) {
+			while (false !== ($file = readdir($handle))) {
+				if ((strpos($file, '.') === FALSE) && is_dir('modules/' . $file)) {
+					if (!in_array($file, $modules)) {
+						$modules[] = $file;
+					}
+				}
+			}
+			closedir($handle);
 		}
 		return $modules;
 	}

@@ -320,7 +320,7 @@ abstract class FabriqModules {
 		if (file_exists('site/' . FabriqStack::site() . "/modules/{$module}/javascrips/{$path}/{$javascript}.{$ext}")) {
 			self::$jsqueue[] = array('js' => $javascript, 'path' => Pathmap::getUrl() . "sites/" . FabriqStack::site() . "/modules/{$module}/javascripts/{$path}", 'ext' => $ext);
 		} else {
-			self::$jsqueue[] = array('js' => $javascript, 'path' => "modules/{$module}/javascripts/{$path}", 'ext' => $ext);
+			self::$jsqueue[] = array('js' => $javascript, 'path' => Pathmap::getUrl() . "modules/{$module}/javascripts/{$path}", 'ext' => $ext);
 		}
 	}
 

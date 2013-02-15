@@ -1,6 +1,10 @@
 Fabriq Framework change log
   - Initiated 05/05/10 for version 0.5
 
+Version 2.1.7 2013-02-15
+  - Fixing a bug in fabriqmodules that didn't scan sites
+  - Fixing a bug that didn't check for a site specific controller when mapping a path
+
 Version 2.1.6 2013-02-12
   - Fixing a bug for script and stylesheet includes
 

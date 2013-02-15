@@ -37,7 +37,11 @@ if ($installed) {
 	}
 }
 require_once('core/FabriqModules.core.php');
-require_once('app/PathMap.class.php');
+if (file_exists('sites/' . FabriqStack::site() . '/app/PathMap.class.php')) {
+	require_once('sites/' . FabriqStack::site() . '/app/PathMap.class.php');
+} else {
+	require_once('app/PathMap.class.php');
+}
 
 // query variable
 $q = explode('/', $_GET['q']);

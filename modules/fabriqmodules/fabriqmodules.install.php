@@ -40,6 +40,14 @@ class fabriqmodules_install {
 		$mod->installed = 1;
 		$mod->update();
 	}
+
+	public function update_2_1_7() {
+		// update the module version number
+		$mod = new Modules();
+		$mod->getModuleByName('fabriqmodules');
+		$mod->versioninstalled = '2.1.7';
+		$mod->update();
+	}
 	
 	public function uninstall() {
 		// core modules cannot be uninstalled
