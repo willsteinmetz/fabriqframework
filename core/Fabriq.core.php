@@ -1047,6 +1047,28 @@ abstract class FabriqStack {
 	public static function site() {
 		return self::$site;
 	}
+	
+	/**
+	 * return the last item added to the queue
+	 * @return object
+	 */
+	public static function latest() {
+		if (!count(self::$queue)) {
+			return false;
+		}
+		return self::$queue[(count(self::$queue) - 1)];
+	}
+	
+	/**
+	 * return the first item added to the queue
+	 * @return object
+	 */
+	public static function first() {
+		if (!count(self::$queue)) {
+			return false;
+		}
+		return self::$queue[0];
+	}
 }
 
 /**

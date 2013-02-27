@@ -278,11 +278,22 @@ abstract class FabriqModules {
 	 * @param string $action
 	 */
 	public static function render_now($module, $action) {
-		$next = new stdClass();
-		$next->controller = $module;
-		$next->action = $action;
-		$next->type = 'module';
-		FabriqTemplates::renderToBody($next);
+		if (file_exists('sites/' . FabriqStack::site() . "/app/views/modules/{$module}/{$action}.view.php")) {
+			$file = 'sites/' . FabriqStack::site() . "/app/views/modules/{$module}/{$action}.view.php";
+		} else if (file_exists("app/views/modules/{$module}/{$action}.view.php")) {
+			$file = "app/views/modules/{$module}/{$action}.view.php";
+		} else if (file_exists('sites/' . FabriqStack::site() . "/modules/{$module}/views/{$action}.view.php")) {
+			$file = "modules/{$module}/views/{$action}.view.php";
+		} else if (file_exists("modules/{$module}/views/{$action}.view.php")) {
+			$file = "modules/{$module}/views/{$action}.view.php";
+		} else {
+			throw new Exception("View for {$module}'s {$action} action does not exist");
+		}
+		self::$render_positions[] = $module;
+		ob_start();
+		extract(self::$module_vars[$module]);
+		require($file);
+		return ob_get_clean();
 	}
 
 	/**

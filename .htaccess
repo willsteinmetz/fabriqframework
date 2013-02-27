@@ -3,8 +3,9 @@
 #
 
 # We need protect files and directories
-<FilesMatch "\.(app|config|core|libs|modules)$|^(\..*)$">
+<FilesMatch "\.(app|config|core|libs|modules|sites|inc\.php|tpl\.php|tmpl\.php|view\.php|model\.php|controller\.php)$|^(\..*)$">
   Order allow,deny
+  Deny from all
 </FilesMatch>
 
 # Allow sym links to be followed
@@ -14,9 +15,9 @@ Options +FollowSymLinks
 Options -Indexes
 
 # Make sure Fabriq handles errors.
-ErrorDocument 403 index.php
-ErrorDocument 404 index.php
-ErrorDocument 500 index.php
+ErrorDocument 403 /index.php?q=403
+ErrorDocument 404 /index.php?q=404
+ErrorDocument 500 /index.php?q=500
 
 # Set up the default handler files
 DirectoryIndex index.php index.html index.htm

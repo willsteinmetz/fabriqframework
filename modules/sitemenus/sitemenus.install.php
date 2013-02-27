@@ -84,5 +84,13 @@ class sitemenus_install {
 		$mod->installed = 0;
 		$mod->update();
 	}
+	
+	public function update_2_1_8() {
+		// update the module version number
+		$mod = new Modules();
+		$mod->getModuleByName('users');
+		$mod->versioninstalled = '2.1.8';
+		$mod->update();
+	}
 }
 	

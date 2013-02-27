@@ -27,8 +27,6 @@ class sitemenus_Menus extends ModuleModel {
 	 * Build this menu
 	 */
 	public function buildMenu() {
-		//$this->items = FabriqModules::new_model('sitemenus', 'MenuItems');
-		//$this->items->getMenuItems($this->id);
 		$this->items = FabriqModules::new_model('sitemenus', 'MenuItems')->getMenuItems($this->id);
 		
 		// flesh out all of the menu children

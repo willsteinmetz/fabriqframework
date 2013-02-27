@@ -44,7 +44,7 @@ class sitemenus_MenuItems extends ModuleModel {
 	/**
 	 * Override for the destroy function
 	 */
-	public function destroy() {
+	public function destroy($index = 0) {
 		$this->children = null;
 		$this->getChildren();
 					
@@ -68,7 +68,7 @@ class sitemenus_MenuItems extends ModuleModel {
 		$query = "SELECT *
 			FROM `{$this->db_table}`
 			WHERE `menu` = ?
-			AND `parentItem` IS NULL
+			AND (`parentItem` IS NULL OR `parentItem` = '')
 			ORDER BY `weight`, `itemName`;";
 		$data = $db->prepare_select($query, $this->fields(), array($menu));
 		
