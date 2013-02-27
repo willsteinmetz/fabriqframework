@@ -1,6 +1,9 @@
 Fabriq Framework change log
   - Initiated 05/05/10 for version 0.5
 
+Version 2.1.9 2013-02-26
+  - Adding in missing update function
+
 Version 2.1.8 2013-02-26
   - Fixing warning in sitemenus module
   - Fixed bug in render now

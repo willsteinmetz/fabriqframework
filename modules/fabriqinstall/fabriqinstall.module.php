@@ -851,5 +851,55 @@ EMAIL;
 			'hasDisplay' => false
 		);
 	}
+	
+	protected function update_2_1_8() {
+		if (isset($_POST['submit'])) {
+			global $db;
+			$installed = unserialize($_SESSION['FAB_UPDATES']);
+			if (!is_array($installed)) {
+				$installed = array();
+			}
+			if (!isset($installed['2.1.8']) || !$installed['2.1.8']) {
+				// mark the update as done
+				$installed['2.1.8'] = true;
+				$_SESSION['FAB_UPDATES'] = serialize($installed);
+				$query = "INSERT INTO `fabriq_config`
+					(`version`, `installed`)
+					VALUES
+					(?, ?)";
+				$db->prepare_cud($query, array('2.1.8', date('Y-m-d H:i:s')));
+			}
+		}
+		return array(
+			'version' => '2.1.8',
+			'description' => 'Bug fixes',
+			'hasDisplay' => false
+		);
+	}
+	
+	protected function update_2_1_9() {
+		if (isset($_POST['submit'])) {
+			global $db;
+			$installed = unserialize($_SESSION['FAB_UPDATES']);
+			if (!is_array($installed)) {
+				$installed = array();
+			}
+			if (!isset($installed['2.1.9']) || !$installed['2.1.9']) {
+				// mark the update as done
+				$installed['2.1.9'] = true;
+				$_SESSION['FAB_UPDATES'] = serialize($installed);
+				$query = "INSERT INTO `fabriq_config`
+					(`version`, `installed`)
+					VALUES
+					(?, ?)";
+				$db->prepare_cud($query, array('2.1.9', date('Y-m-d H:i:s')));
+			}
+		}
+		return array(
+			'version' => '2.1.9',
+			'description' => 'Bug fixes',
+			'hasDisplay' => false
+		);
+	}
 }
 	
