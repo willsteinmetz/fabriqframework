@@ -926,5 +926,30 @@ EMAIL;
 			'hasDisplay' => false
 		);
     }
+	
+	protected function update_2_3() {
+	   if (isset($_POST['submit'])) {
+			global $db;
+			$installed = unserialize($_SESSION['FAB_UPDATES']);
+			if (!is_array($installed)) {
+				$installed = array();
+			}
+			if (!isset($installed['2.3']) || !$installed['2.3']) {
+				// mark the update as done
+				$installed['2.3'] = true;
+				$_SESSION['FAB_UPDATES'] = serialize($installed);
+				$query = "INSERT INTO `fabriq_config`
+					(`version`, `installed`)
+					VALUES
+					(?, ?)";
+				$db->prepare_cud($query, array('2.3', date('Y-m-d H:i:s')));
+			}
+		}
+		return array(
+			'version' => '2.3',
+			'description' => 'Partial templates now working',
+			'hasDisplay' => false
+		);
+    }
 }
 	

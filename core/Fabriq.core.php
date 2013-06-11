@@ -843,6 +843,40 @@ abstract class FabriqTemplates {
 		}
 		
 		// make sure that the partial exists
+		if (substr($partial, 0, 1) != '_') {
+			$partial = "_{$partial}";
+		}
+		if ($location == 'templates') {
+			$tmpl = "app/templates/{$partial}.partial.php";
+		} else {
+			$tmpl = "app/views/{$location}/{$partial}.partial.php";
+		}
+		if (!file_exists('sites/' . FabriqStack::site() . "/{$tmpl}") && !file_exists($tmpl)) {
+			throw new Exception('Partial template ' . $partial . ' could not be loaded');
+		}
+		
+		// render the template
+		if (!is_null($collection)) {
+			$data = '';
+			foreach ($collection as $item) {
+				ob_start();
+				if (file_exists('sites/' . FabriqStack::site() . "/{$tmpl}")) {
+					require('sites/' . FabriqStack::site() . "/{$tmpl}");
+				} else {
+					require("{$tmpl}");
+				}
+				$data .= ob_get_clean();
+			}
+		} else {
+			ob_start();
+			if (file_exists('sites/' . FabriqStack::site() . "/{$tmpl}")) {
+				require('sites/' . FabriqStack::site() . "/{$tmpl}");
+			} else {
+				require("{$tmpl}");
+			}
+			$data = ob_get_clean();
+		}
+		echo $data;
 	}
 }
 
