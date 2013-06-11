@@ -800,6 +800,50 @@ abstract class FabriqTemplates {
 	public static function body() {
 		return self::$body;
 	}
+	
+	/**
+	 * Render the given partial
+	 * @param string $partial
+	 * @param mixed $location
+	 * @param mixed $collection
+	 * 
+	 * possible uses:
+	 * FabriqTemplates::partial('partial');
+	 * FabriqTemplates::partial('location/partial');
+	 * FabriqTemplates::partial('partial', 'location');
+	 * FabriqTemplates::partial('partial', 'location', $collection);
+	 * FabriqTemplates::partial('partial', $collection);
+	 * FabriqTemplates::partial('location/partial', $collection);
+	 */
+	public static function partial($partial, $location = null, $collection = null) {
+		// determine if partial has a location
+		if (strpos($partial, '/') !== FALSE) {
+			if (!is_null($location) && !is_array($location)) {
+				throw new Exception("Location for partial cannot be passed in partial name and location");
+			}
+			if (is_array($location)) {
+				$collection = $location;
+			}
+			$temp = explode('/', $partial);
+			$partial = $temp[1];
+			$location = $temp[0];
+		} else {
+			if (is_null($location) || is_array($location)) {
+				if (is_array($location)) {
+					$collection = $location;
+					$location = 'templates';
+				} else {
+					$location = 'templates';
+				}
+			}
+		}
+		// double-check that if something is passed in for collection that it's an array
+		if (!is_null($collection) && !is_array($collection)) {
+			throw new Exception("A collection for a partial must be an array");
+		}
+		
+		// make sure that the partial exists
+	}
 }
 
 /**
