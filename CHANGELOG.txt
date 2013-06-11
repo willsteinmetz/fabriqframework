@@ -1,6 +1,9 @@
 Fabriq Framework change log
   - Initiated 05/05/10 for version 0.5
 
+Version 2.2 2013-06-10
+  - Stable version release
+
 Version 2.1.9 2013-02-26
   - Adding in missing update function
 

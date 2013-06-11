@@ -901,5 +901,30 @@ EMAIL;
 			'hasDisplay' => false
 		);
 	}
+	
+	protected function update_2_2() {
+	   if (isset($_POST['submit'])) {
+			global $db;
+			$installed = unserialize($_SESSION['FAB_UPDATES']);
+			if (!is_array($installed)) {
+				$installed = array();
+			}
+			if (!isset($installed['2.2']) || !$installed['2.2']) {
+				// mark the update as done
+				$installed['2.2'] = true;
+				$_SESSION['FAB_UPDATES'] = serialize($installed);
+				$query = "INSERT INTO `fabriq_config`
+					(`version`, `installed`)
+					VALUES
+					(?, ?)";
+				$db->prepare_cud($query, array('2.2', date('Y-m-d H:i:s')));
+			}
+		}
+		return array(
+			'version' => '2.2',
+			'description' => 'Stable release',
+			'hasDisplay' => false
+		);
+    }
 }
 	
