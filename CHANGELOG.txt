@@ -1,6 +1,9 @@
 Fabriq Framework change log
   - Initiated 05/05/10 for version 0.5
 
+Version 2.3.1 2013-06-22
+  - Merged functionality from fabriqupdates module into fabriqinstall module
+
 Version 2.3 2013-06-11
   - Partial templates now working. Name files _[name].partial.php See core/Fabriq.core.php for usage.
 

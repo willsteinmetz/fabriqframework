@@ -1,6 +1,41 @@
 NOTE: This version of Fabriq is a development release and may still contain bugs. If you are not 
 sure whether or not to use this version, wait for the next stable release.
 
+To UPDATE TO VERSION 2.3.x from version 2.2.x
+
+ - Expand the downloaded archive (.zip or .tar.gz file)
+ 
+ - Copy the index.php to your site/applications root directory
+ 
+ - Copy the .htaccess or web.config to your site/applications root directory depending on
+   your platform
+
+ - Copy the core class files into /core
+   - /core/Fabriq.core.php
+   - /core/FabriqModules.core.php
+   
+ - Copy the following from /modules to your application's /modules directory to update
+   - /modules/fabriqinstall
+   - /modules/fabriqmodules
+   - /modules/pathpath
+   - /modules/roles
+   - /modules/sitemenus
+   - /modules/users
+ 
+ - Copy the following from /libs/css to your application's /libs/css directory to update
+   - /libs/css/pie
+   
+ - Copy the following from /libs/javascript to your application's /libs/javascript directory to update
+   - /libs/javascript/handlebars
+   - /libs/javascript/jquery
+   
+ - Copy the /sites directory to your application's root directory
+
+For version 2.3.1+, if the following haven't been done yet:
+ - Delete the following module directories
+   - /modules/fabriqupdate
+
+
 To UPDATE TO VERSION 2.1.x from version 2.0.x
 
  - Expand the downloaded archive (.zip or .tar.gz file)
