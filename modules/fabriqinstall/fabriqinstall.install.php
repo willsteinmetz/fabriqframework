@@ -47,5 +47,18 @@ class fabriqinstall_install {
 		$mod->versioninstalled = '2.1.4';
 		$mod->update();
 	}
+	
+	public function update_2_3_1() {
+		// update the path(s) for the fabriqupdate module to point to the proper actions
+		$pathmap = &FabriqModules::module('pathmap');
+		$pathmap->remove_path('fabriqupdates');
+		$pathmap->register_path('fabriqupdates', 'fabriqinstall', 'fetchUpdates', 'module');
+		
+		// update the module version number
+		$mod = new Modules();
+		$mod->getModuleByName('fabriqinstall');
+		$mod->versioninstalled = '2.3.1';
+		$mod->update();
+	}
 }
 	

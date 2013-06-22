@@ -1,6 +1,0 @@
-{
-	"module": "fabriqupdates",
-	"version": "1.5",
-	"author": "Will Steinmetz",
-	"description": "This module checks to determine where or not updates for the Fabriq framework are available"
-}

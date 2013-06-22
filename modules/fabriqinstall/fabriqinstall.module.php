@@ -15,6 +15,10 @@ class fabriqinstall_module extends FabriqModule {
 		
 		$processing = FabriqStack::processing();
 		
+		if ($processing->action == 'fetchUpdates') {
+			return;
+		}
+		
 		// make sure that we're good to run the requested action
 		if (($processing->action == 'install') && $installed && (PathMap::arg(2) < 4)) {
 			header("Location: " . PathMap::build_path($_FAPP['cdefault'], $_FAPP['adefault']));
@@ -620,6 +624,75 @@ EMAIL;
 		unset($_SESSION['FAB_UPDATES']);
 	}
 	
+	/**
+	 * Install the given update number into the database
+	 * @param string $version
+	 */
+	private function installUpdate($version) {
+		global $db;
+		$installed = unserialize($_SESSION['FAB_UPDATES']);
+		if (!is_array($installed)) {
+			$installed = array();
+		}
+		if (!isset($installed[$version]) || !$installed[$version]) {
+			// mark the update as done
+			$installed[$version] = true;
+			$_SESSION['FAB_UPDATES'] = serialize($installed);
+			$query = "INSERT INTO `fabriq_config`
+				(`version`, `installed`)
+				VALUES
+				(?, ?)";
+			$db->prepare_cud($query, array($version, date('Y-m-d H:i:s')));
+		}
+		$_SESSION['FAB_UPDATES'] = serialize($installed);
+	}
+	
+	/**
+	 * Fetch the list of updates
+	 */
+	public function fetchUpdates() {
+		if (FabriqModules::module('roles')->hasRole('administrator')) {
+			global $db;
+			
+			Fabriq::title('Fabriq Updates');
+			
+			// get the currently installed version
+			$query = "SELECT version FROM fabriq_config ORDER BY installed DESC, version DESC LIMIT 1";
+			$db->query($query);
+			$data = mysqli_fetch_array($db->result);
+			$installedVersion = $data['version'];
+			FabriqModules::set_var('fabriqinstall', 'installedVersion', $installedVersion);
+			
+			// get the list of updates from the site
+			try {
+				$versions = json_decode(file_get_contents('http://fabriqframework.com/changelog/json'), TRUE);
+				
+				$available = array();
+				$upToDate = false;
+				if (is_array($versions) && (count($versions) > 0)) {
+					foreach ($versions as $version => $info) {
+						if ($version > $installedVersion) {
+							$available[$version] = $info;
+						}
+					}
+					
+					if (count($available) == 0) {
+						$upToDate = true;
+					}
+					
+					FabriqModules::set_var('fabriqinstall', 'available', $available);
+					FabriqModules::set_var('fabriqinstall', 'connected', true);
+				} else {
+					FabriqModules::set_var('fabriqinstall', 'connected', false);
+				}
+				FabriqModules::set_var('fabriqinstall', 'upToDate', $upToDate);
+				
+			} catch (Exception $e) {
+				FabriqModules::set_var('fabriqinstall', 'connected', false);
+			}
+		}
+	}
+	
 	protected function update_2_0_1() {
 		if (isset($_POST['submit'])) {
 			global $db;
@@ -951,5 +1024,27 @@ EMAIL;
 			'hasDisplay' => false
 		);
     }
-}
 	
+	/**
+	 * Install version 2.3.1
+	 */
+	protected function update_2_3_1() {
+		if (isset($_POST['submit'])) {
+			// remove the fabriqupdates module
+			$mod = new Modules();
+			$mod->getModuleByName('fabriqupdates');
+			$mod->destroy();
+	
+			// remove perms
+			FabriqModules::remove_perms($mod->id);
+			
+			// install the update
+			$this->installUpdate('2.3.1');
+		}
+		return array(
+			'version' => '2.3.1',
+			'description' => 'This update moves the functionality of the fabriqupdate module into fabriqinstall',
+			'hasDisplay' => false
+		);
+	}
+}
