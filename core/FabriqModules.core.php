@@ -53,18 +53,35 @@ abstract class FabriqModules {
 		$mod = new Modules();
 		$mod->getModuleByName($module);
 		if ($mod->count() == 0) {
-			$file = "modules/{$module}/{$module}.info.json";
+			// load the installer file
+			$file = "modules/{$module}/{$module}.installer.php";
 			if (file_exists('sites/' . FabriqStack::site() . "/{$file}")) {
-				ob_start();
-				readfile('sites/' . FabriqStack::site() . "/{$file}");
+				require_once('sites/' . FabriqStack::site() . "/{$file}");
 			} else if (file_exists($file)) {
-				ob_start();
-				readfile($file);
+				require_once($file);
 			} else {
-				throw new Exception("Module {$module}'s information file does not exist");
+				throw new Exception("Module {$module} could not be found");
 			}
-			$info = ob_get_clean();
-			$info = json_decode($info, true);
+			eval('$installer = new ' . $module . '_install();');
+			if (method_exists($installer, 'info')) {
+				$info = $installer->info();
+			}
+			// @DEPRECATED - will be removed for version 3.0
+			// load the info file
+			else {
+				$file = "modules/{$module}/{$module}.info.json";
+				if (file_exists('sites/' . FabriqStack::site() . "/{$file}")) {
+					ob_start();
+					readfile('sites/' . FabriqStack::site() . "/{$file}");
+				} else if (file_exists($file)) {
+					ob_start();
+					readfile($file);
+				} else {
+					throw new Exception("Module {$module}'s information file does not exist");
+				}
+				$info = ob_get_clean();
+				$info = json_decode($info, true);
+			}
 			$mod->module = $module;
 			$mod->enabled = 0;
 			$mod->installed = 0;
@@ -688,6 +705,27 @@ class FabriqModule extends Controller {
 	function __construct() {
 		$this->name = str_replace('_module', '', get_class($this));
 		self::$mname = $this->name;
+	}
+}
+
+/**
+ * @class FabriqModuleInstall
+ * Core module class for use with installer classes
+ */
+class FabriqModuleInstall {
+	public function getLatestUpdate() {
+		$latestVersion = '0.0';
+		$updates = get_class_methods($this);
+		foreach ($updates as $method) {
+			if (substr($method, 0, 7) == 'update_') {
+				$version = str_replace('_', '.', str_replace('update_', '', $method));
+				if ($version > $latestVersion) {
+					$latestVersion = $version;
+				}
+			}
+		}
+		
+		return $latestVersion;
 	}
 }
 

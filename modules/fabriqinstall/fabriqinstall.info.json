@@ -1,6 +1,0 @@
-{
-	"module": "fabriqinstall",
-	"version": "2.1.3",
-	"author": "Will Steinmetz",
-	"description": "This module manages installing and updating Fabriq."
-}

@@ -5,7 +5,16 @@
  * fabriqinstall install file
  */
 
-class fabriqinstall_install {
+class fabriqinstall_install extends FabriqModuleInstall {
+	public function info() {
+		return array(
+			"module" => "fabriqinstall",
+			"version" => $this->getLatestUpdate(),
+			"author" => "Will Steinmetz",
+			"description" => "This module manages installing and updating Fabriq."
+		);
+	}
+	
 	public function install() {
 		$mod = new Modules();
 		$mod->getModuleByName('fabriqinstall');
