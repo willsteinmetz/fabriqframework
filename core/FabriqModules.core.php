@@ -54,7 +54,7 @@ abstract class FabriqModules {
 		$mod->getModuleByName($module);
 		if ($mod->count() == 0) {
 			// load the installer file
-			$file = "modules/{$module}/{$module}.installer.php";
+			$file = "modules/{$module}/{$module}.install.php";
 			if (file_exists('sites/' . FabriqStack::site() . "/{$file}")) {
 				require_once('sites/' . FabriqStack::site() . "/{$file}");
 			} else if (file_exists($file)) {

@@ -1,6 +1,9 @@
 Fabriq Framework change log
   - Initiated 05/05/10 for version 0.5
 
+Version 2.3.2 2013-06-23
+  - This update provides the updated method for module info and removing the need for info.json files
+
 Version 2.3.1 2013-06-22
   - Merged functionality from fabriqupdates module into fabriqinstall module
 

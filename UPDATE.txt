@@ -35,6 +35,15 @@ For version 2.3.1+, if the following haven't been done yet:
  - Delete the following module directories
    - /modules/fabriqupdate
 
+For version 2.3.2+, if the following haven't been done yet:
+ - Delete the following files
+   - /modules/fabriqinstall/fabriqinstall.info.json
+   - /modules/fabriqinstall/fabriqmodules.info.json
+   - /modules/fabriqinstall/pathmap.info.json
+   - /modules/fabriqinstall/roles.info.json
+   - /modules/fabriqinstall/sitemenus.info.json
+   - /modules/fabriqinstall/user.info.json
+
 
 To UPDATE TO VERSION 2.1.x from version 2.0.x
 

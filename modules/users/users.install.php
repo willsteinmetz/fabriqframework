@@ -1,6 +1,25 @@
 <?php
 
-class users_install {
+class users_install extends FabriqModuleInstall {
+	public function info() {
+		return array(
+			"module" => "users",
+			"version" => $this->getLatestUpdate(),
+			"author" => "Will Steinmetz",
+			"description" => "Manages users including creation, updating, banning, enabling, logging in, and logging out of users.",
+			"dependsOn" => array(
+				"pathmap",
+				"roles"
+			),
+			"configs" => array(
+				"anyoneCanRegister"
+			),
+			"configDefaults" => array(
+				"anyoneCanRegister" => 0
+			)
+		);
+	}
+	
 	public function install() {
 		$mod = new Modules();
 		$mod->getModuleByName('users');

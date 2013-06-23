@@ -326,7 +326,6 @@ class fabriqinstall_module extends FabriqModule {
 					FabriqModules::register_module('pathmap');
 					FabriqModules::register_module('roles');
 					FabriqModules::register_module('users');
-					FabriqModules::register_module('fabriqupdates');
 					FabriqModules::register_module('sitemenus');
 					FabriqModules::register_module('fabriqmodules');
 					FabriqModules::register_module('fabriqinstall');
@@ -348,12 +347,6 @@ class fabriqinstall_module extends FabriqModule {
 					$module->enabled = 1;
 					$module->update();
 					Messaging::message('Installed users module', 'success');
-					FabriqModules::install('fabriqupdates');
-					$module = new Modules();
-					$module->getModuleByName('fabriqupdates');
-					$module->enabled = 1;
-					$module->update();
-					Messaging::message('Installed fabriqupdates module', 'success');
 					FabriqModules::register_module('sitemenus');
 					FabriqModules::install('sitemenus');
 					$module = new Modules();
@@ -1044,6 +1037,21 @@ EMAIL;
 		return array(
 			'version' => '2.3.1',
 			'description' => 'This update moves the functionality of the fabriqupdate module into fabriqinstall',
+			'hasDisplay' => false
+		);
+	}
+	
+	/**
+	 * Install version 2.3.2
+	 */
+	protected function update_2_3_2() {
+		if (isset($_POST['submit'])) {
+			// install the update
+			$this->installUpdate('2.3.2');
+		}
+		return array(
+			'version' => '2.3.2',
+			'description' => 'This update provides the updated method for module info and removing the need for info.json files',
 			'hasDisplay' => false
 		);
 	}

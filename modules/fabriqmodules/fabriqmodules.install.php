@@ -8,7 +8,16 @@
  * http://fabriqframework.com/license
  */
 
-class fabriqmodules_install {
+class fabriqmodules_install extends FabriqModuleInstall {
+	public function info() {
+		return array(
+			"module" => "fabriqmodules",
+			"version" => $this->getLatestUpdate(),
+			"author" => "Will Steinmetz",
+			"description" => "This module manages installing and updating Fabriq modules."
+		);
+	}
+	
 	public function install() {
 		$mod = new Modules();
 		$mod->getModuleByName('fabriqmodules');

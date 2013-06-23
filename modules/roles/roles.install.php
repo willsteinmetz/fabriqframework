@@ -1,6 +1,19 @@
 <?php
 
-class roles_install {
+class roles_install extends FabriqModuleInstall {
+	public function info() {
+		return array(
+			"module" => "roles",
+			"version" => $this->getLatestUpdate(),
+			"author" => "Will Steinmetz",
+			"description" => "Manage user roles. This module installs the roles authenticated, unathenticated, and administrator upon install.",
+			"dependsOn"=> array(
+				"pathmap",
+				"users"
+			)
+		);
+	}
+	
 	public function install() {
 		$mod = new Modules();
 		$mod->getModuleByName('roles');

@@ -1,6 +1,15 @@
 <?php
 
-class sitemenus_install {
+class sitemenus_install extends FabriqModuleInstall {
+	public function info() {
+		return array(
+			"module" => "sitemenus",
+			"version" => $this->getLatestUpdate(),
+			"author" => "Will Steinmetz",
+			"description" => "Module used for organizing and displaying menus"
+		);
+	}
+	
 	public function install() {
 		$mod = new Modules();
 		$mod->getModuleByName('sitemenus');

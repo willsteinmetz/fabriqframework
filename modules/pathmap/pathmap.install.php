@@ -8,7 +8,16 @@
  * http://fabriqframework.com/license
  */
  
-class pathmap_install {
+class pathmap_install extends FabriqModuleInstall {
+	public function info() {
+		return array(
+			"module" => "pathmap",
+			"version" => $this->getLatestUpdate(),
+			"author" => "Will Steinmetz",
+			"description" => "pathmap enables developers to create custom paths to different pages on their website. Ex: creating a custom path to a blog entry \"http://mysite.com/blog/read/123\" could be \"http://mysite.com/myblogentry\""
+		);
+	}
+	
 	public function install() {
 		$mod = new Modules();
 		$mod->getModuleByName('pathmap');
