@@ -1,6 +1,9 @@
 Fabriq Framework change log
   - Initiated 05/05/10 for version 0.5
 
+Version 2.2.1 2013-07-27
+  - Fixed bug in FabriqModelItem
+
 Version 2.2 2013-06-10
   - Stable version release
 
