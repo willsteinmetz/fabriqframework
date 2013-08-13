@@ -1,6 +1,9 @@
 Fabriq Framework change log
   - Initiated 05/05/10 for version 0.5
 
+Version 2.3.3 2013-08-12
+  - Fixed bug in FabriqModelItem (merged in changes from release 2.2.1)
+
 Version 2.3.2 2013-06-23
   - This update provides the updated method for module info and removing the need for info.json files
 

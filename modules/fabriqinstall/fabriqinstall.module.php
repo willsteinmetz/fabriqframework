@@ -1080,4 +1080,16 @@ EMAIL;
 			'hasDisplay' => false
 		);
 	}
+
+	protected function update_2_3_3() {
+	   if (isset($_POST['submit'])) {
+			// install the update
+			$this->installUpdate('2.3.3');
+		}
+		return array(
+			'version' => '2.3.3',
+			'description' => 'Fix for flaw in ModelItem returning false instead of null when not found',
+			'hasDisplay' => false
+		);
+    }
 }
