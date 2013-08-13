@@ -1,7 +1,7 @@
 NOTE: This version of Fabriq is a development release and may still contain bugs. If you are not 
 sure whether or not to use this version, wait for the next stable release.
 
-To UPDATE TO VERSION 2.3.x from version 2.2.x
+To UPDATE TO VERSION 2.4.x from version 2.2.x
 
  - Expand the downloaded archive (.zip or .tar.gz file)
  

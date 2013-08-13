@@ -1092,4 +1092,19 @@ EMAIL;
 			'hasDisplay' => false
 		);
     }
+	
+	/**
+	 * Install version 2.4
+	 */
+	protected function update_2_4() {
+	   if (isset($_POST['submit'])) {
+			// install the update
+			$this->installUpdate('2.4');
+		}
+		return array(
+			'version' => '2.4',
+			'description' => 'Last stable release line in the 2.x line',
+			'hasDisplay' => false
+		);
+    }
 }
