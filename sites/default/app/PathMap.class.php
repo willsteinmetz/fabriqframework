@@ -24,7 +24,7 @@ class PathMap extends BaseMapping {
 		 *   so to set the 3rd argument of the arg parameter to username and the
 		 *   action to read/show.
 		 */
-		switch(self::controller()) {
+		switch(FabriqStack::latest()->controller) {
 			default:
 			break;
 		}
