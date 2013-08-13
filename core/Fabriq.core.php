@@ -140,47 +140,6 @@ abstract class Fabriq {
 	}
 
 	/**
-	 * @DEPRECATED will be removed for 3.0
-	 * Creates a link to another page in the application
-	 * @param string $linktext
-	 * @param string $controller
-	 * @param string $action
-	 * @param array $queries
-	 * @param boolean $blank
-	 */
-	public static function link_to($linktext, $controller, $action = NULL, $queries = false, $blank = false, $title = NULL) {
-		global $_FAPP;
-
-		echo "<a href=\"";
-		if (!$_FAPP['cleanurls']) {
-			echo "index.php?q=";
-		} else {
-			echo $_FAPP['apppath'];
-		}
-		echo "{$controller}";
-		if ($action != NULL) {
-			echo "/{$action}";
-		}
-		if ($queries != false) {
-			foreach($queries as $key => $val) {
-				echo "/{$val}";
-			}
-		}
-		echo "\"";
-		if ($blank) {
-			echo " target=\"_blank\"";
-		}
-		echo " title=\"";
-		if ($title) {
-			echo strip_tags($title);
-		} else {
-			echo strip_tags($linktext);
-		}
-
-		echo "\">{$linktext}</a>";
-	}
-
-	/**
 	 * page title getter/setter
 	 * if NULL, return the page title
 	 * @param string $title
@@ -214,32 +173,14 @@ abstract class Fabriq {
 			switch($r) {
 				case 'none':
 					self::$render = 'none';
-					break;
+				break;
 				case 'template':
-				case 'layout':// @DEPRECATED, will be removed for 3.0
-					self::$render = 'template';
-					break;
 				case 'view': default:
 					self::$render = 'view';
-					break;
+				break;
 			}
 		} else {
 			return self::$render;
-		}
-	}
-
-	/**
-	 * @DEPRECATED will be removed for 3.0
-	 * layout file getter/setter
-	 * if NULL, return the $layout variable
-	 * @param string $layout
-	 * @return string
-	 */
-	public static function layout($l = NULL) {
-		if ($l != NULL) {
-			self::$layout = $l;
-		} else {
-			return self::$layout;
 		}
 	}
 
@@ -318,46 +259,6 @@ class BaseMapping {
 		global $_FAPP;
 		
 		return $_FAPP['url'] . $_FAPP['apppath'];
-	}
-	
-	/**
-	 * @DEPRECATED - will be removed in 3.0 release candidate
-	 * Controller getter/setter
-	 * if NULL, return the $controller variable
-	 * @return string
-	 */
-	public static function controller() {
-		return FabriqStack::processing()->controller;
-	}
-
-	/**
-	 * @DEPRECATED - will be removed in 3.0 release candidate
-	 * Render controller getter/setter
-	 * if NULL, return the $rendercontroller variable
-	 * @return string
-	 */
-	public static function render_controller() {
-		return FabriqStack::processing()->controller;
-	}
-
-	/**
-	 * @DEPRECATED - will be removed in 3.0 release candidate
-	 * Action getter/setter
-	 * if NULL, return the $action variable
-	 * @return string
-	 */
-	public static function action() {
-		return FabriqStack::processing()->action;
-	}
-
-	/**
-	 * @DEPRECATED - will be removed in 3.0 release candidate
-	 * Render action getter/setter
-	 * if NULL, return the $renderaction variable
-	 * @return string
-	 */
-	public static function render_action() {
-		return FabriqStack::processing()->action;
 	}
 
 	/**

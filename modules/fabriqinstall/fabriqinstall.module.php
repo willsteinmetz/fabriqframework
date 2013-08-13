@@ -1107,4 +1107,19 @@ EMAIL;
 			'hasDisplay' => false
 		);
     }
+
+	/**
+	 * Install version 2.5
+	 */
+	protected function update_2_5() {
+	   if (isset($_POST['submit'])) {
+			// install the update
+			$this->installUpdate('2.5');
+		}
+		return array(
+			'version' => '2.5',
+			'description' => 'Removed functions that are deprecated for version 3.0',
+			'hasDisplay' => false
+		);
+    }
 }

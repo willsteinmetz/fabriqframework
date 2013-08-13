@@ -63,25 +63,9 @@ abstract class FabriqModules {
 				throw new Exception("Module {$module} could not be found");
 			}
 			eval('$installer = new ' . $module . '_install();');
-			if (method_exists($installer, 'info')) {
-				$info = $installer->info();
-			}
-			// @DEPRECATED - will be removed for version 3.0
-			// load the info file
-			else {
-				$file = "modules/{$module}/{$module}.info.json";
-				if (file_exists('sites/' . FabriqStack::site() . "/{$file}")) {
-					ob_start();
-					readfile('sites/' . FabriqStack::site() . "/{$file}");
-				} else if (file_exists($file)) {
-					ob_start();
-					readfile($file);
-				} else {
-					throw new Exception("Module {$module}'s information file does not exist");
-				}
-				$info = ob_get_clean();
-				$info = json_decode($info, true);
-			}
+			
+			$info = $installer->info();
+
 			$mod->module = $module;
 			$mod->enabled = 0;
 			$mod->installed = 0;
