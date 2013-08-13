@@ -246,11 +246,6 @@ abstract class Fabriq {
  * Core class that contains the base path mapping functionality
  */
 class BaseMapping {
-	private static $controller;
-	private static $rendercontroller;
-	private static $action;
-	private static $renderaction;
-
 	/**
 	 * Return the site's URL
 	 * @return string
