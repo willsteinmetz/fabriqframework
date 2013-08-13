@@ -255,6 +255,24 @@ class BaseMapping {
 		
 		return $_FAPP['url'] . $_FAPP['apppath'];
 	}
+	
+	/**
+	 * Controller getter/setter
+	 * if NULL, return the $controller variable
+	 * @return string
+	 */
+	public static function controller() {
+		return FabriqStack::processing()->controller;
+	}
+
+	/**
+	 * Action getter/setter
+	 * if NULL, return the $action variable
+	 * @return string
+	 */
+	public static function action() {
+		return FabriqStack::processing()->action;
+	}
 
 	/**
 	 * getter for the base path for the application
