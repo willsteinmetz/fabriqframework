@@ -1410,7 +1410,7 @@ class FabriqModelItem {
 		if (isset($this->data[$key])) {
 			return $this->data[$key];
 		} else {
-			return false;
+			return null;
 		}
 	}
 
@@ -1510,7 +1510,11 @@ class FabriqModelItem {
 		$this->updated = date('Y-m-d G:i:s');
 		$valuesStr = '';
 		for ($i = 1; $i <= (count($this->attributes)); $i++) {
-			$valuesStr .= '?';
+			if ($this->{$this->attributes[$i - 1]} !== null) {
+				$valuesStr .= '?';
+			} else {
+				$valuesStr .= "NULL";
+			}
 			if ($i < (count($this->attributes))) {
 				$valuesStr .= ', ';
 			}
@@ -1530,8 +1534,6 @@ class FabriqModelItem {
 		foreach ($this->attributes as $attribute) {
 			if ($this->$attribute !== null) {
 				$data[] = $this->$attribute;
-			} else {
-				$data[] = null;
 			}
 		}
 		$sql = "INSERT INTO {$this->db_table} ({$attributes}) VALUES ({$idField}, {$valuesStr})";
@@ -1552,9 +1554,16 @@ class FabriqModelItem {
 		$this->updated = date('Y-m-d G:i:s');
 		$valuesStr = '';
 		for ($i = 0; $i < count($this->attributes); $i++) {
-			$valuesStr .= "`{$this->attributes[$i]}` = ?, ";
+			if ($this->{$this->attributes[$i]} !== null) {
+				$valuesStr .= "`{$this->attributes[$i]}` = ?";
+			} else {
+				$valuesStr .= "`{$this->attributes[$i]}` = NULL";
+			}
+			if ($i < (count($this->attributes) - 1)) {
+				$valuesStr .= ", ";
+			}
 		}
-		$valuesStr .= '`created` = ?, `updated` = NOW()';
+		$valuesStr .= ', `created` = ?, `updated` = NOW()';
 		if (get_magic_quotes_gpc()) {
 			foreach ($this->attributes as $attribute) {
 				if ($this->$attribute != null) {
@@ -1566,8 +1575,6 @@ class FabriqModelItem {
 		foreach ($this->attributes as $attribute) {
 			if ($this->$attribute !== null) {
 				$data[] = $this->$attribute;
-			} else {
-				$data[] = null;
 			}
 		}
 		$values = array_merge($data, array($this->created, $this->id));

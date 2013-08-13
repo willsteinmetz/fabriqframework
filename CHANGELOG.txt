@@ -10,6 +10,9 @@ Version 2.3.1 2013-06-22
 Version 2.3 2013-06-11
   - Partial templates now working. Name files _[name].partial.php See core/Fabriq.core.php for usage.
 
+Version 2.2.1 2013-07-27
+  - Fixed bug in FabriqModelItem
+
 Version 2.2 2013-06-10
   - Stable version release
 
