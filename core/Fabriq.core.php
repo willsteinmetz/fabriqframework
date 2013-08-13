@@ -347,8 +347,7 @@ class BaseMapping {
 	}
 
 	/**
-	 * Determines the path and sets the $controller, $action,
-	 * $render_controller, and $render_action variables. This function
+	 * Determines the path and enques what to render. This function
 	 * can be extended in the /app/PathMap.class.php file to add custom
 	 * functionality.
 	 */
@@ -974,9 +973,7 @@ abstract class FabriqStack {
 			case 'controller':
 			default:
 				PathMap::controller($next->controller);
-				PathMap::render_controller($next->controller);
 				PathMap::action($next->action);
-				PathMap::render_action($next->action);
 				
 				$file = "app/controllers/{$next->controller}.controller.php";
 				if (file_exists('sites/' . FabriqStack::site() . "/{$file}")) {
