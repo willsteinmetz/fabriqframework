@@ -1,7 +1,7 @@
 <h1>My Account</h1>
-<h3>Welcome, <?php echo $_SESSION['FABMOD_USERS_displayname']; ?></h3>
+<h3>Welcome, <?php echo $_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_displayname']; ?></h3>
 <ul>
-	<li><?php Fabriq::link_to('Change password', 'users', 'changePassword'); ?></li>
-	<li><?php Fabriq::link_to('Update account', 'users', 'updateAccount'); ?></li>
-	<li><?php Fabriq::link_to('Log out', 'users', 'logout'); ?></li>
+	<li><a href="<?php echo PathMap::build_path('users', 'changePassword'); ?>">Change password</a></li>
+	<li><a href="<?php echo PathMap::build_path('users', 'updateAccount'); ?>">Update account</a></li>
+	<li><a href="<?php echo PathMap::build_path('users', 'logout'); ?>">Log out</a></li>
 </ul>

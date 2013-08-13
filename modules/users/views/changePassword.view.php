@@ -38,6 +38,6 @@ if ($_GET['q'] != 'users/changePassword'): ?>
 	</div>
 </form>
 <p>
-	<?php Fabriq::link_to('Update account', 'users', 'updateAccount'); ?> | 
-	<?php Fabriq::link_to('My account', 'users', 'myAccount'); ?>
+	<a href="<?php echo PathMap::build_path('users', 'updateAccount'); ?>">Update account</a> | 
+	<a href="<?php echo PathMap::build_path('users', 'myAccount'); ?>">My account</a>
 </p>

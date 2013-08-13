@@ -1,3 +1,3 @@
 <h1>Access Denied</h1>
 <p><strong>You do not have permission to view this page.</strong></p>
-<p><strong><?php Fabriq::link_to('Return to homepage', $controller, $action); ?></strong></p>
+<p><strong><a href="<?php echo PathMap::build_path($controller, $action); ?>">Return to homepage</a></strong></p>

@@ -40,5 +40,5 @@ if (!$submitted || ($submitted && Messaging::has_messages())):
 	</div>
 </form>
 <?php else: ?>
-	<p>Your account has been created. You can now <?php Fabriq::link_to('log in', 'users', 'login'); ?>.</p>
+	<p>Your account has been created. You can now <a href="<?php echo PathMap::build_path('users', 'login'); ?>">log in</a>.</p>
 <?php endif; ?>

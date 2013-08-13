@@ -12,5 +12,5 @@ if (!$submitted || ($submitted && Messaging::has_messages())):
 </form>
 <?php else: ?>
 <p>A new password has been generated and sent the e-mail address associated with your account. You will be asked to change your password the next time you log in.</p>
-<p><?php Fabriq::link_to('Return to log in page', 'users', 'login'); ?></p>
+<p><a href="<?php echo PathMap::build_path('users', 'login'); ?>">Return to log in page</a></p>
 <?php endif; ?>

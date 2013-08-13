@@ -29,6 +29,6 @@ if ($submitted && Messaging::has_messages('successes')) {
 	</div>
 </form>
 <p>
-	<?php Fabriq::link_to('Change password', 'users', 'changePassword'); ?> | 
-	<?php Fabriq::link_to('My account', 'users', 'myAccount'); ?>
+	<a href="<?php echo PathMap::build_path('users', 'changePassword'); ?>">Change password</a> | 
+	<a href="<?php echo PathMap::build_path('users', 'myAccount'); ?>">My account</a>
 </p>
