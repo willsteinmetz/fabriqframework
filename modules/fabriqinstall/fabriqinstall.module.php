@@ -1122,4 +1122,19 @@ EMAIL;
 			'hasDisplay' => false
 		);
     }
+
+	/**
+	 * Install version 3.0
+	 */
+	protected function update_3_0() {
+		if (isset($_POST['submit'])) {
+			// install the update
+			$this->installUpdate('3.0');
+		}
+		return array(
+			'version' => '3.0',
+			'description' => 'Release for version 3.0',
+			'hasDisplay' => false
+		);
+	}
 }
