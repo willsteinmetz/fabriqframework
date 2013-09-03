@@ -1,7 +1,7 @@
 NOTE: This version of Fabriq is a development release and may still contain bugs. If you are not 
 sure whether or not to use this version, wait for the next stable release.
 
-To UPDATE TO VERSION 3.0 from version 2.2.x
+To UPDATE TO VERSION 3.1.x from version 3.0.x
 
  - Expand the downloaded archive (.zip or .tar.gz file)
  
@@ -21,99 +21,19 @@ To UPDATE TO VERSION 3.0 from version 2.2.x
    - /modules/roles
    - /modules/sitemenus
    - /modules/users
- 
- - Copy the following from /libs/css to your application's /libs/css directory to update
-   - /libs/css/pie
-   
- - Copy the following from /libs/javascript to your application's /libs/javascript directory to update
-   - /libs/javascript/handlebars
-   - /libs/javascript/jquery
-   
- - Copy the /sites directory to your application's root directory
-
-For version 2.3.1+, if the following haven't been done yet:
- - Delete the following module directories
-   - /modules/fabriqupdate
-
-For version 2.3.2+, if the following haven't been done yet:
- - Delete the following files
-   - /modules/fabriqinstall/fabriqinstall.info.json
-   - /modules/fabriqinstall/fabriqmodules.info.json
-   - /modules/fabriqinstall/pathmap.info.json
-   - /modules/fabriqinstall/roles.info.json
-   - /modules/fabriqinstall/sitemenus.info.json
-   - /modules/fabriqinstall/user.info.json
-
-
-To UPDATE TO VERSION 2.1.x from version 2.0.x
-
- - Expand the downloaded archive (.zip or .tar.gz file)
- 
- - Copy the index.php to your site/applications root directory
- 
- - Copy the .htaccess or web.config to your site/applications root directory depending on
-   your platform
-
- - Copy the core class files into /core
-   - /core/Fabriq.core.php
-   - /core/FabriqModules.core.php
-   
- - Copy the following from /modules to your application's /modules directory to update
-   - /modules/fabriqinstall
-   - /modules/fabriqmodules
-   - /modules/fabriqupdates
-   - /modules/pathpath
-   - /modules/roles
-   - /modules/sitemenus
-   - /modules/users
- 
- - Copy the following from /libs/css to your application's /libs/css directory to update
-   - /libs/css/pie
    
  - Copy the following from /libs/javascript to your application's /libs/javascript directory to update
    - /libs/javascript/handlebars
    - /libs/javascript/jquery
 
- - Copy the following from /app/templates to your application's /app/templates directory to update
-   - /app/templates/fabriqinstall.tpl.php
-   
- - Copy the /sites directory to your application's root directory
- 
- - Delete the following controller files
-   - /app/controllers/errors.controller.php
-   - /app/controllers/fabriqinstall.controller.php
-   - /app/controllers/fabriqmodules.controller.php
- 
- - Delete the views directories
-   - /app/views/errors
-   - /app/views/fabriqinstall
-   - /app/views/fabriqmodules
-   
- - Delete the following script files
-   - /app/scripts/fabriqmodules.script.js
-   
- - Delete the following CSS files
-   - /core/fabriqinstall.css
- 
- - Remove overrides from /app/PathMap.class.php for 404 and 500 error
-   - If you have created a custom 403 error file, add a custom _403.view.php file
-     to /app/views/modules/pathmap and remove the check from the PathMap class.
-
-For version 2.1.2+, if the following haven't been done yet:
- - In your template replace the following:
-   <?php require_once("app/views/" . PathMap::render_controller() . "/" . PathMap::render_action() . ".view.php"); ?>
-   with the following:
-   <?php echo FabriqTemplates::body(); ?>
-   
-For version 2.1.4+, if the following haven't been done yet
- - Move your config.inc.php file from /config to /sites/default/config
- - copy the /sites directory to your app's root directory
+For version 3.1+, if the following haven't been done yet:
+ - Delete /libs/css/pie
 
 NOTES (READ CAREFULLY FOR FURTHER DETAILS ON UPDATING):
  - When referencing mapping functions, the PathMap class should be referenced and
    not the BaseMapping class. The PathMap class extends the BaseMapping class and
    therefore has inherits all of the BaseMapping class' functionality.
 
- - Updates can only be made from version 2.0.0. If your installed version of Fabriq
-   is older than that, please download the 2.0 tag and update to that first. After updating
-   to version 2.0, you can then update to the latest version.
+ - Updates can only be made from version 3.0. If your installed version of Fabriq
+   is older than that, please download the 3.0 tag and update to that first. After updating
+   to version 3.0, you can then update to the latest version.
