@@ -1,6 +1,15 @@
 Fabriq Framework change log
   - Initiated 05/05/10 for version 0.5
 
+Version 3.1.1 2014-03-11
+  - Fixed password encryption bug. Will need to reset all passwords.
+
+Version 3.1.1 2014-03-11
+  - Fixed password encryption bug. Will need to reset all passwords.
+
+Version 3.1 2013-09-03
+  - Release for version 3.1 dev line
+
 Version 3.0.1 2013-09-03
   - Release for version 3.0.1. Requires version 3.0 or newer
 

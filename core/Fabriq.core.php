@@ -198,7 +198,7 @@ abstract class Fabriq {
 	public static function page_js_on() {
 		$processing = FabriqStack::processing();
 		if (file_exists('sites/' . FabriqStack::site() . "/app/scripts/{$processing->controller}.script.js")) {
-			Fabriq::add_js("{$processing->controller}.script", 'sites/' . FabriqStack::site() . '/app/scripts');
+			Fabriq::add_js("{$processing->controller}.script", 'sites/' . FabriqStack::site() . '/app/scripts/');
 		} else {
 			Fabriq::add_js($processing->controller . '.script', 'app/scripts/');
 		}
@@ -1382,8 +1382,10 @@ class FabriqModelItem {
 		}
 
 		$data = $db->prepare_select($sql, $this->fields(), $inputs);
-		foreach ($data[0] as $key => $val) {
-			$this->$key = $val;
+		if ($data[0] && count($data[0])) {
+			foreach ($data[0] as $key => $val) {
+				$this->$key = $val;
+			}
 		}
 
 		if ($db->num_rows == 0) {

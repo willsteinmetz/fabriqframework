@@ -701,4 +701,49 @@ EMAIL;
 			'hasDisplay' => false
 		);
 	}
+	
+	/**
+	 * Install version 3.1
+	 */
+	protected function update_3_1() {
+		if (isset($_POST['submit'])) {
+			// install the update
+			$this->installUpdate('3.1');
+		}
+		return array(
+			'version' => '3.1',
+			'description' => 'Release for dev line 3.1.x',
+			'hasDisplay' => false
+		);
+	}
+	
+	/**
+	 * Install version 3.1.1
+	 */
+	protected function update_3_1_1() {
+		if (isset($_POST['submit'])) {
+			// install the update
+			$this->installUpdate('3.1.1');
+		}
+		return array(
+			'version' => '3.1.1',
+			'description' => 'Fixed password encryption bug. Will need to reset all passwords.',
+			'hasDisplay' => false
+		);
+	}
+	
+	/**
+	 * Install version 3.1.2
+	 */
+	protected function update_3_1_2() {
+		if (isset($_POST['submit'])) {
+			// install the update
+			$this->installUpdate('3.1.2');
+		}
+		return array(
+			'version' => '3.1.2',
+			'description' => 'Fixed password encryption bug. Will need to reset all passwords.',
+			'hasDisplay' => false
+		);
+	}
 }

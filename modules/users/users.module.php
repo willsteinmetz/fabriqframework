@@ -45,7 +45,7 @@ class users_module extends FabriqModule {
 				$user->getByDisplayEmail($_POST['user']);
 				if ($user->count() == 1) {
 					if ($user->banned == 0) {
-						if (crypt($_POST['pwd'], $user->id) == $user->encpwd) {
+						if (crypt($_POST['pwd'], sha1($user->id)) == $user->encpwd) {
 							$_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_displayname'] = $user->display;
 							$_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_email'] = $user->email;
 							$_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_userid'] = $user->id;
@@ -146,7 +146,7 @@ class users_module extends FabriqModule {
 				$user->banned = 0;
 				$user->forcepwdreset = 1;
 				$user->id = $user->create();
-				$user->encpwd = crypt($user->encpwd, $user->id);
+				$user->encpwd = crypt($user->encpwd, sha1($user->id));
 				$user->update();
 				
 				// get add user roles
@@ -237,7 +237,10 @@ EMAIL;
 				$roles = array();
 				for ($i = 0; $i < $r->count(); $i++) {
 					if (($r[$i]->role != 'unauthenticated') && ($r[$i]->role != 'authenticated')) {
-						$roles[] = $r[$i];
+						$roles[] = array(
+							'id' => $r[$i]->id,
+							'role' => $r[$i]->role
+						);
 					}
 				}
 				if (isset($_POST['submit'])) {
@@ -415,7 +418,7 @@ EMAIL;
 						for ($i = 0; $i < 8; $i++) {
 							$str .= chr(rand(97, 122));
 						}
-						$user->encpwd = crypt($str, $user->id);
+						$user->encpwd = crypt($str, sha1($user->id));
 						$user->forcepwdreset = 1;
 						$user->update();
 						$url = $_FAPP['url'] . PathMap::build_path('users', 'login');
@@ -493,7 +496,7 @@ EMAIL;
 					$user->banned = 0;
 					$user->forcepwdreset = 0;
 					$user->id = $user->create();
-					$user->encpwd = crypt($user->encpwd, $user->id);
+					$user->encpwd = crypt($user->encpwd, sha1($user->id));
 					$user->update();
 					
 					global $_FAPP;
@@ -544,18 +547,21 @@ EMAIL;
 		}
 		
 		if (isset($_POST['submit'])) {
-			if ($user->encpwd != crypt($_POST['currpwd'], $user->id)) {
+			if ($user->encpwd != crypt($_POST['currpwd'], sha1($user->id))) {
 				Messaging::message('Current password is incorrect');
 			}
-			if ((strlen($_POST['newpwd']) < 8) || ($_POST['currpwd'] == $user->display) || ($_POST['currpwd'] == $user->email)) {
+			if ((strlen($_POST['newpwd']) < 8) || ($_POST['newpwd'] == $user->display) || ($_POST['newpwd'] == $user->email)) {
 				Messaging::message('New password is invalid');
+			}
+			if (crypt($_POST['newpwd'], sha1($user->id)) == $user->encpwd) {
+				Messaging::message('New password is the same as the current password');
 			}
 			if ($_POST['newpwd'] != $_POST['comfnewpwd']) {
 				Messaging::message('New password and confirmation do not match');
 			}
 
 			if (!Messaging::has_messages()) {
-				$user->encpwd = crypt($_POST['newpwd'], $user->id);
+				$user->encpwd = crypt($_POST['newpwd'], sha1($user->id));
 				$user->forcepwdreset = 0;
 				$user->update();
 				$_SESSION[Fabriq::siteTitle()]['FABMOD_USERS_forcepwdreset'] = null;
@@ -664,7 +670,10 @@ EMAIL;
 			$roles = array();
 			for ($i = 0; $i < $r->count(); $i++) {
 				if (($r[$i]->role != 'unauthenticated') && ($r[$i]->role != 'authenticated')) {
-					$roles[] = $r[$i];
+					$roles[] = array(
+						'id' => $r[$i]->id,
+						'role' => $r[$i]->role
+					);
 				}
 			}
 			echo json_encode(array('roles' => $roles));
@@ -684,4 +693,3 @@ EMAIL;
 		return $roles;
 	}
 }
-	
