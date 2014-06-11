@@ -9,15 +9,19 @@
  * http://fabriqframework.com/license
  */
 
-// set error displaying for testing purposes
-ini_set('display_errors', 1);
-error_reporting(E_ALL & ~E_NOTICE);
-
-// start sessions
-session_start();
+// // set error displaying for testing purposes
+// ini_set('display_errors', 1);
+// error_reporting(E_ALL & ~E_NOTICE);
+// 
+// // start sessions
+// session_start();
 
 // require core Fabriq base classes
 require_once('core/Fabriq.core.php');
+
+// include bootstrap to get started
+require_once('core/bootstrap.class.php');
+Fabriq\Core\Bootstrap::init();
 
 // determine which site should be servied
 FabriqStack::determineSite();
@@ -26,7 +30,7 @@ FabriqStack::determineSite();
 $installed = Fabriq::installed();
 
 // register default __autoload function
-spl_autoload_register('fabriq_default_autoload');
+// spl_autoload_register('fabriq_default_autoload');
 
 // include core files
 if ($installed) {
