@@ -198,7 +198,7 @@ class fabriqinstall_module extends FabriqModule {
 				
 				// write out configuration file
 				$siteConfig = unserialize($_SESSION['FAB_INSTALL_site']);
-				$confFile = 'sites/' . FabriqStack::site() . '/config/config.inc.php';
+				$confFile = 'config/config.inc.php';
 				$fh = fopen($confFile, 'w');
 				fwrite($fh, "<?php\n");
 				fwrite($fh, "/**\n");

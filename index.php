@@ -9,13 +9,6 @@
  * http://fabriqframework.com/license
  */
 
-// // set error displaying for testing purposes
-// ini_set('display_errors', 1);
-// error_reporting(E_ALL & ~E_NOTICE);
-// 
-// // start sessions
-// session_start();
-
 // require core Fabriq base classes
 require_once('core/Fabriq.core.php');
 
@@ -24,28 +17,17 @@ require_once('core/bootstrap.class.php');
 Fabriq\Core\Bootstrap::init();
 
 // determine which site should be servied
-FabriqStack::determineSite();
+// FabriqStack::determineSite();
 
-// check to make sure application has been configured
+// // check to make sure application has been configured
 $installed = Fabriq::installed();
 
-// register default __autoload function
-// spl_autoload_register('fabriq_default_autoload');
-
-// include core files
-if ($installed) {
-	if ((file_exists('config/config.inc.php')) && (FabriqStack::site() == 'default')) {
-		require_once('config/config.inc.php');
-	} else {
-		require_once('sites/' . FabriqStack::site() . '/config/config.inc.php');
-	}
-}
 require_once('core/FabriqModules.core.php');
-if (file_exists('sites/' . FabriqStack::site() . '/app/PathMap.class.php')) {
-	require_once('sites/' . FabriqStack::site() . '/app/PathMap.class.php');
-} else {
+// if (file_exists('sites/' . FabriqStack::site() . '/app/PathMap.class.php')) {
+	// require_once('sites/' . FabriqStack::site() . '/app/PathMap.class.php');
+// } else {
 	require_once('app/PathMap.class.php');
-}
+// }
 
 // query variable
 $q = explode('/', $_GET['q']);
