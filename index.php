@@ -31,25 +31,11 @@ require_once('core/FabriqModules.core.php');
 
 // initialize database
 if ($installed) {
-	$db = new Database($_FDB['default']);
+	$db = new Database(Fabriq\Core\Databases::db_config('default'));
 	// get module handlers
 	FabriqModules::get_handlers();
 	// check fabriqinstall
 	FabriqModules::fabriqinstallReady();
-} else {
-	$_FAPP = array();
-	$_FAPP['templates']['default'] = 'fabriqinstall';
-	$appPath = '/';
-	$aPath = substr($_SERVER['REQUEST_URI'], 1);
-	$aPath = str_replace('index.php?q=', '', $aPath);
-	$aPath = explode('/', $aPath);
-	$i = 0;
-	while (($aPath[$i] != 'fabriqinstall') && ($i < count($aPath))) {
-		$appPath .= $aPath[$i] . '/';
-		$i++;
-	}
-	$_FAPP['url'] = "http://{$_SERVER['HTTP_HOST']}";
-	$_FAPP['apppath'] = str_replace('//', '/', $appPath);
 }
 
 // require the core files

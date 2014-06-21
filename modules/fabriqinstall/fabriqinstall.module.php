@@ -222,7 +222,8 @@ class fabriqinstall_module extends FabriqModule {
 					fwrite($fh, "	'user' => '{$_POST['user']}',\n");
 					fwrite($fh, "	'pwd' => '{$_POST['pwd']}',\n");
 					fwrite($fh, "	'db' => '{$_POST['db']}',\n");
-					fwrite($fh, "	'server' => '{$_POST['server']}'\n");
+					fwrite($fh, "	'server' => '{$_POST['server']}',\n");
+					fwrite($fh, "	'driver' => 'pdo'\n");
 					fwrite($fh, ");\n");
 					fclose($fh);
 				} else {
