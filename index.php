@@ -29,12 +29,6 @@ require_once('core/FabriqModules.core.php');
 	require_once('app/PathMap.class.php');
 // }
 
-// query variable
-$q = explode('/', $_GET['q']);
-if (trim($q[0]) == '') {
-	array_shift($q);
-}
-
 // initialize database
 if ($installed) {
 	$db = new Database($_FDB['default']);
