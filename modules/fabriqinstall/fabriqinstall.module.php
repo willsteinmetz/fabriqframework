@@ -199,37 +199,40 @@ class fabriqinstall_module extends FabriqModule {
 				// write out configuration file
 				$siteConfig = unserialize($_SESSION['FAB_INSTALL_site']);
 				$confFile = 'config/config.inc.php';
-				$fh = fopen($confFile, 'w');
-				fwrite($fh, "<?php\n");
-				fwrite($fh, "/**\n");
-				fwrite($fh, " * @file\n");
-				fwrite($fh, " * Base config file for a Fabriq app.\n");
-				fwrite($fh, " */\n\n");
-				fwrite($fh, "\$_FAPP = array(\n");
-				fwrite($fh, "	'title' => \"{$siteConfig['title']}\",\n");
-				fwrite($fh, "	'title_pos' => '{$siteConfig['title_pos']}',\n");
-				fwrite($fh, "	'title_sep' => \"{$siteConfig['title_sep']}\",\n");
-				fwrite($fh, "	'cleanurls' => {$siteConfig['cleanurls']},\n");
-				fwrite($fh, "	'cdefault' => 'homepage',\n");
-				fwrite($fh, "	'adefault' => 'index',\n");
-				fwrite($fh, "	'url' => '{$siteConfig['url']}',\n");
-				fwrite($fh, "	'apppath' => '{$siteConfig['apppath']}',\n");
-				fwrite($fh, "	'templates' => array(\n");
-				fwrite($fh, "		'default' => 'application'\n");
-				fwrite($fh, "	)\n");
-				fwrite($fh, ");\n\n");
-				fwrite($fh, "\$_FDB['default'] = array(\n");
-				fwrite($fh, "	'user' => '{$_POST['user']}',\n");
-				fwrite($fh, "	'pwd' => '{$_POST['pwd']}',\n");
-				fwrite($fh, "	'db' => '{$_POST['db']}',\n");
-				fwrite($fh, "	'server' => '{$_POST['server']}'\n");
-				fwrite($fh, ");\n");
-				fclose($fh);
+				if ($fh = fopen($confFile, 'w')) {
+					fwrite($fh, "<?php\n");
+					fwrite($fh, "/**\n");
+					fwrite($fh, " * @file\n");
+					fwrite($fh, " * Base config file for a Fabriq app.\n");
+					fwrite($fh, " */\n\n");
+					fwrite($fh, "\$_FAPP = array(\n");
+					fwrite($fh, "	'title' => \"{$siteConfig['title']}\",\n");
+					fwrite($fh, "	'title_pos' => '{$siteConfig['title_pos']}',\n");
+					fwrite($fh, "	'title_sep' => \"{$siteConfig['title_sep']}\",\n");
+					fwrite($fh, "	'cleanurls' => {$siteConfig['cleanurls']},\n");
+					fwrite($fh, "	'cdefault' => 'homepage',\n");
+					fwrite($fh, "	'adefault' => 'index',\n");
+					fwrite($fh, "	'url' => '{$siteConfig['url']}',\n");
+					fwrite($fh, "	'apppath' => '{$siteConfig['apppath']}',\n");
+					fwrite($fh, "	'templates' => array(\n");
+					fwrite($fh, "		'default' => 'application'\n");
+					fwrite($fh, "	)\n");
+					fwrite($fh, ");\n\n");
+					fwrite($fh, "\$_FDB['default'] = array(\n");
+					fwrite($fh, "	'user' => '{$_POST['user']}',\n");
+					fwrite($fh, "	'pwd' => '{$_POST['pwd']}',\n");
+					fwrite($fh, "	'db' => '{$_POST['db']}',\n");
+					fwrite($fh, "	'server' => '{$_POST['server']}'\n");
+					fwrite($fh, ");\n");
+					fclose($fh);
+				} else {
+					throw new Exception('Could not create the config file.');
+				}
 				
 				// write default controller if the file isn't already there
 				// file may exist from being created in a dev environment or this is
 				// a distributed web app
-				$contFile = 'sites/' . FabriqStack::site() . "/app/controllers/homepage.controller.php";
+				$contFile = "app/controllers/homepage.controller.php";
 				if (!file_exists($contFile)) {
 					$fh = fopen($contFile, 'w');
 					fwrite($fh, "<?php\n");
@@ -244,10 +247,10 @@ class fabriqinstall_module extends FabriqModule {
 				// write default action if it doesn't already exist
 				// may already exist from being created in a dev environmentor this is
 				// a distributed web app
-				if (!is_dir('sites/' . FabriqStack::site() . "/app/views/homepage")) {
-					mkdir('sites/' . FabriqStack::site() . "/app/views/homepage");
+				if (!is_dir("app/views/homepage")) {
+					mkdir("app/views/homepage");
 				}
-				$actionFile = 'sites/' . FabriqStack::site() . "/app/views/homepage/index.view.php";
+				$actionFile = "app/views/homepage/index.view.php";
 				if (!file_exists($actionFile)) {
 					$fh = fopen($actionFile, 'w');
 					fwrite($fh, "<h1>homepage#index</h1>\n");
@@ -429,7 +432,7 @@ class fabriqinstall_module extends FabriqModule {
 				$user->banned = 0;
 				$user->forcepwdreset = 0;
 				$user->id = $user->create();
-				$user->encpwd = crypt($user->encpwd, $user->id);
+				$user->encpwd = crypt($user->encpwd, sha1($user->id));
 				$user->update();
 				
 				$role = FabriqModules::new_model('roles', 'Roles');

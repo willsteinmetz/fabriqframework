@@ -7,7 +7,7 @@
 			<li>If you have to create a new site's directory, refresh this page after creating the directory</li>
 		</ul>
 	</li>
-	<li>Be sure that <code>sites/<?php echo FabriqStack::site(); ?>/config</code>, <code>sites/<?php echo FabriqStack::site(); ?>/app/controllers</code>, and <code>sites/<?php echo FabriqStack::site(); ?>/app/views</code> directories has write permissions</li>
+	<li>Be sure that <code>config/</code>, <code>app/controllers/</code>, and <code>app/views/</code> directories has write permissions</li>
 	<li>
 		Be sure to have the following details about the database you are using available:
 		<ul>
