@@ -236,9 +236,17 @@ class fabriqinstall_module extends FabriqModule {
         if (!file_exists($contFile)) {
           $fh = fopen($contFile, 'w');
           fwrite($fh, "<?php\n");
-          fwrite($fh, "class homepage_controller extends Controller {\n");
-          fwrite($fh, "\tfunction index() {\n");
-          fwrite($fh, "\t\tFabriq::title('Welcome to {$siteConfig['title']}');\n");
+          fwrite($fh, "namespace Fabriq\App\Controllers {\n");
+          fwrite($fh, "\tclass HomepageController extends ApplicationController {\n");
+          fwrite($fh, "\t\tpublic function before() {\n");
+          fwrite($fh, "\t\t\tparent::before();\n");
+          fwrite($fh, "\t\t}\n\n");
+          fwrite($fh, "\t\tpublic function index() {\n");
+          fwrite($fh, "\t\t\t\\Fabriq::title('Welcome to {$siteConfig['title']}');\n");
+          fwrite($fh, "\t\t}\n\n");
+          fwrite($fh, "\t\tpublic function after() {\n");
+          fwrite($fh, "\t\t\tparent::after();\n");
+          fwrite($fh, "\t\t}\n");
           fwrite($fh, "\t}\n");
           fwrite($fh, "}\n");
           fclose($fh);

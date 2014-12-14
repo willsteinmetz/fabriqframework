@@ -53,11 +53,11 @@ PathMap::map_path();
 FabriqTemplates::init();
 
 // include the controller and action files
-if (file_exists('sites/' . FabriqStack::site() . '/app/controllers/application.controller.php')) {
-  require_once('sites/' . FabriqStack::site() . '/app/controllers/application.controller.php');
-} else {
-  require_once('app/controllers/application.controller.php');
-}
+//if (file_exists('sites/' . FabriqStack::site() . '/app/controllers/application.controller.php')) {
+//  require_once('sites/' . FabriqStack::site() . '/app/controllers/application.controller.php');
+//} else {
+//  require_once('app/controllers/application.controller.php');
+//}
 
 FabriqStack::processQueue();
 

@@ -9,7 +9,7 @@
  */
 
 namespace Fabriq\App\Controllers {
-  class Application {
+  class ApplicationController extends \Fabriq\Core\Controller {
     /**
      * Default actions to perform before an action is called
      * Always call the parent when overridden
