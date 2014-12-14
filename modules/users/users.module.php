@@ -8,7 +8,7 @@ class users_module extends FabriqModule {
 
   public function index() {
     if (FabriqModules::module('roles')->requiresPermission('administer users', $this->name)) {
-      $page = (PathMap::arg(2)) ? PathMap::arg(2) : 1;
+      $page = (Fabriq\Core\Routing::arg(2)) ? Fabriq\Core\Routing::arg(2) : 1;
       $users = FabriqModules::new_model('users', 'Users');
       $users->getList($page);
 
@@ -220,7 +220,7 @@ EMAIL;
 
     if (FabriqModules::module('roles')->requiresPermission('administer users', $this->name)) {
       $user = FabriqModules::new_model('users', 'Users');
-      $user->find(PathMap::arg(2));
+      $user->find(Fabriq\Core\Routing::arg(2));
       $u = null;
       $errors = array();
       $roles = null;

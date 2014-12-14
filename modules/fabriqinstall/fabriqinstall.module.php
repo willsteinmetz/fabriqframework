@@ -19,10 +19,10 @@ class fabriqinstall_module extends FabriqModule {
     }
 
     // make sure that we're good to run the requested action
-    if (($processing->action == 'install') && $installed && (PathMap::arg(2) < 4)) {
+    if (($processing->action == 'install') && $installed && (Fabriq\Core\Routing::arg(2) < 4)) {
           header("Location: " . PathMap::build_path(Fabriq\Core\Config::get('cdefault'), Fabriq\Core\Config::get('adefault')));
       exit();
-    } else if (($processing->action == 'install') && $installed && (PathMap::arg(2) == 4)) {
+    } else if (($processing->action == 'install') && $installed && (Fabriq\Core\Routing::arg(2) == 4)) {
       // determine which version is installed
       if (!isset($_POST['submit'])) {
         global $db;
@@ -80,7 +80,7 @@ class fabriqinstall_module extends FabriqModule {
    * Determine which install step to go to
    */
   public function install() {
-    switch (PathMap::arg(2)) {
+    switch (Fabriq\Core\Routing::arg(2)) {
       case 2:
         $this->install_step2();
       break;
@@ -95,7 +95,7 @@ class fabriqinstall_module extends FabriqModule {
       break;
       case 1: default:
         $this->install_step1();
-        PathMap::arg(2, 1);
+        Fabriq\Core\Routing::arg(2, 1);
       break;
     }
   }
@@ -161,7 +161,7 @@ class fabriqinstall_module extends FabriqModule {
 
     // go back to site configuration step if the session isn't set
     if (!isset($_SESSION['FAB_INSTALL_site']) || ($_SESSION['FAB_INSTALL_site'] == '')) {
-      PathMap::arg(2, 2);
+      Fabriq\Core\Routing::arg(2, 2);
       $this->install_step2();
     }
 
@@ -502,7 +502,7 @@ EMAIL;
    */
   public function update() {
     if (FabriqModules::module('roles')->hasRole('administrator')) {
-      switch (PathMap::arg(2)) {
+      switch (Fabriq\Core\Routing::arg(2)) {
         case 2:
           $this->update_step2();
         break;
@@ -514,7 +514,7 @@ EMAIL;
         break;
         case 1: default:
           $this->update_step1();
-          PathMap::arg(2, 1);
+          Fabriq\Core\Routing::arg(2, 1);
         break;
       }
     }
